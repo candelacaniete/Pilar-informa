@@ -1,0 +1,401 @@
+import Link from 'next/link'
+import { ArrowRight, Clock } from 'lucide-react'
+import SearchBar from '@/components/public/SearchBar'
+import SectionHeading from '@/components/public/SectionHeading'
+import BusinessCard from '@/components/public/BusinessCard'
+import BusinessCTA from '@/components/public/BusinessCTA'
+import {
+  getCategorias,
+  getNegociosActivos,
+  getNoticias,
+  getEventos,
+  getPromociones,
+} from '@/lib/data'
+import { formatDate, formatShortDate } from '@/lib/utils'
+
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=1800&q=80'
+
+const discoverCards = [
+  {
+    slug: 'gastronomia',
+    title: 'Gastronomía',
+    description: 'Restaurantes, cafés y bares',
+    image:
+      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    slug: 'salud',
+    title: 'Salud',
+    description: 'Profesionales, clínicas y centros',
+    image:
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    slug: 'servicios',
+    title: 'Servicios',
+    description: 'Todo lo que necesitás para resolver',
+    image:
+      'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    slug: 'compras',
+    title: 'Compras',
+    description: 'Comercios y emprendimientos locales',
+    image:
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80',
+  },
+]
+
+export default async function HomePage() {
+  const [categorias, noticias, destacados, eventos, promociones] = await Promise.all([
+    getCategorias(),
+    getNoticias({ limit: 4 }),
+    getNegociosActivos({ destacados: true, limit: 3 }),
+    getEventos({ fromToday: true, limit: 3 }),
+    getPromociones({ limit: 3 }),
+  ])
+
+  const homeCats = categorias.slice(0, 7)
+  const [featuredNews, ...secondaryNews] = noticias
+
+  return (
+    <div>
+      <section className="relative overflow-hidden border-b border-line/60">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url('${HERO_IMAGE}')` }}
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-ink/85 via-ink/72 to-paper"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-paper via-paper/90 to-transparent"
+          aria-hidden
+        />
+
+        <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-14 md:px-6 md:pb-16 md:pt-20">
+          <div className="fade-up max-w-3xl">
+            <p className="text-sm font-extrabold uppercase tracking-[0.28em] text-teal-soft md:text-base">
+              Pilar Informa
+            </p>
+            <h1 className="mt-4 font-display text-[2.85rem] font-semibold leading-[1.02] text-white md:text-6xl lg:text-[4.4rem]">
+              Todo Pilar.
+              <br />
+              En un solo lugar.
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
+              Noticias, comercios, servicios, eventos y todo lo que pasa cerca tuyo.
+            </p>
+          </div>
+
+          <div className="fade-up mt-8 max-w-2xl md:mt-10" style={{ animationDelay: '80ms' }}>
+            <SearchBar />
+            <p className="mt-3 rounded-lg bg-ink/35 px-3 py-2 text-sm text-white/90 backdrop-blur-sm md:inline-block md:bg-ink/40">
+              Restaurantes · Peluquerías · Abogados · Gimnasios · Veterinarias
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+        <div className="fade-up" style={{ animationDelay: '120ms' }}>
+          <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted">
+            Explorá por categoría
+          </h2>
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+            {homeCats.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/categoria/${cat.slug}`}
+                className="group flex flex-col items-center gap-2 rounded-2xl border border-line/70 bg-white/70 px-3 py-4 text-center transition hover:-translate-y-0.5 hover:border-teal/30 hover:bg-white hover:shadow-soft"
+              >
+                <span className="text-2xl transition group-hover:scale-110" aria-hidden>
+                  {cat.icono}
+                </span>
+                <span className="text-xs font-semibold text-ink-soft group-hover:text-ink">
+                  {cat.nombre}
+                </span>
+              </Link>
+            ))}
+            <Link
+              href="/agenda"
+              className="group flex flex-col items-center gap-2 rounded-2xl border border-line/70 bg-white/70 px-3 py-4 text-center transition hover:-translate-y-0.5 hover:border-teal/30 hover:bg-white hover:shadow-soft"
+            >
+              <span className="text-2xl transition group-hover:scale-110" aria-hidden>
+                🎭
+              </span>
+              <span className="text-xs font-semibold text-ink-soft group-hover:text-ink">
+                Eventos
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {featuredNews ? (
+        <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6 md:pb-20">
+          <SectionHeading
+            eyebrow="Medio local"
+            title="Lo último de Pilar"
+            action={
+              <Link
+                href="/noticias"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal transition hover:text-teal-dark"
+              >
+                Ver todas las noticias
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+
+          <div className="grid gap-6 lg:grid-cols-[1.45fr_1fr]">
+            <Link
+              href={`/noticias/${featuredNews.slug}`}
+              className="group relative overflow-hidden rounded-[1.5rem] bg-ink text-white shadow-soft"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={featuredNews.imagen}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-60"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
+              <div className="relative flex min-h-[340px] flex-col justify-end p-6 md:min-h-[420px] md:p-8">
+                <span className="w-fit rounded-md bg-teal px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide">
+                  {featuredNews.categoria}
+                </span>
+                <h3 className="mt-3 max-w-xl font-display text-2xl font-semibold leading-snug md:text-3xl lg:text-[2.1rem]">
+                  {featuredNews.titulo}
+                </h3>
+                <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/75 md:text-base">
+                  {featuredNews.bajada}
+                </p>
+                <p className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-white/60">
+                  <Clock className="h-3.5 w-3.5" />
+                  Pilar · {formatDate(featuredNews.publicado_en)}
+                </p>
+              </div>
+            </Link>
+
+            <div className="flex flex-col gap-4">
+              {secondaryNews.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/noticias/${item.slug}`}
+                  className="group flex gap-4 rounded-2xl border border-line/70 bg-white p-3 transition hover:border-teal/25 hover:shadow-soft md:p-4"
+                >
+                  <div className="h-24 w-28 shrink-0 overflow-hidden rounded-xl md:h-28 md:w-32">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.imagen}
+                      alt=""
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex min-w-0 flex-col justify-center">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-teal">
+                      {item.categoria}
+                    </p>
+                    <h3 className="mt-1 font-display text-lg font-semibold leading-snug text-ink group-hover:text-teal-dark">
+                      {item.titulo}
+                    </h3>
+                    <p className="mt-2 text-xs text-muted">
+                      Pilar · {formatDate(item.publicado_en)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="border-y border-line/60 bg-white/50 py-16 md:py-20">
+        <div className="mx-auto max-w-6xl px-4 md:px-6">
+          <SectionHeading
+            eyebrow="Descubrimiento"
+            title="Descubrí lugares cerca tuyo"
+            subtitle="Encontrá dónde comer, comprar, resolver trámites o disfrutar tu tiempo libre."
+            action={
+              <Link
+                href="/guia"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-teal px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-dark"
+              >
+                Explorar guía
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {discoverCards.map((card) => (
+              <Link
+                key={card.slug}
+                href={`/categoria/${card.slug}`}
+                className="group relative overflow-hidden rounded-2xl"
+              >
+                <div className="aspect-[4/5] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={card.image}
+                    alt=""
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <h3 className="font-display text-2xl font-semibold text-white">{card.title}</h3>
+                  <p className="mt-1 text-sm text-white/75">{card.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+        <SectionHeading
+          eyebrow="Guía local"
+          title="Negocios destacados"
+          subtitle="Perfiles verificados que la gente de Pilar está mirando."
+          action={
+            <Link
+              href="/guia"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal transition hover:text-teal-dark"
+            >
+              Ver la guía
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          }
+        />
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {destacados.map((business) => (
+            <BusinessCard key={business.id} business={business} />
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-paper-deep/60 py-16 md:py-20">
+        <div className="mx-auto max-w-6xl px-4 md:px-6">
+          <SectionHeading
+            eyebrow="Agenda"
+            title="Qué hacer en Pilar"
+            action={
+              <Link
+                href="/agenda"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal transition hover:text-teal-dark"
+              >
+                Ver agenda
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+          <div className="grid gap-4 md:grid-cols-3">
+            {eventos.map((event) => (
+              <Link
+                key={event.id}
+                href={`/eventos/${event.slug}`}
+                className="group overflow-hidden rounded-2xl border border-line/70 bg-white transition hover:-translate-y-0.5 hover:shadow-lift"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={event.imagen}
+                    alt=""
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-teal">
+                    {formatShortDate(event.fecha)} · {event.ubicacion}
+                  </p>
+                  <h3 className="mt-2 font-display text-xl font-semibold text-ink">{event.titulo}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{event.descripcion}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+        <SectionHeading
+          eyebrow="Beneficios"
+          title="Promociones en Pilar"
+          action={
+            <Link
+              href="/promociones"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal transition hover:text-teal-dark"
+            >
+              Ver promociones
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          }
+        />
+        <div className="grid gap-4 md:grid-cols-3">
+          {promociones.map((promo) => (
+            <Link
+              key={promo.id}
+              href="/promociones"
+              className="group relative overflow-hidden rounded-2xl border border-line/70 bg-white transition hover:shadow-lift"
+            >
+              <div className="aspect-[16/9] overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={promo.imagen}
+                  alt=""
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div className="p-5">
+                <span className="inline-flex rounded-md bg-amber-soft px-2 py-1 text-xs font-bold text-amber">
+                  {promo.descuento}
+                </span>
+                <h3 className="mt-3 font-display text-xl font-semibold text-ink">{promo.titulo}</h3>
+                <p className="mt-2 text-sm text-muted">{promo.descripcion}</p>
+                <p className="mt-3 text-xs font-medium text-ink-soft">
+                  Válido hasta {formatDate(promo.valido_hasta)}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl space-y-6 px-4 pb-16 md:px-6 md:pb-24">
+        <BusinessCTA />
+
+        <Link
+          href="/mapa"
+          className="group relative flex min-h-[200px] overflow-hidden rounded-[1.75rem] border border-line/70"
+        >
+          <div className="map-grid absolute inset-0" />
+          <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/85 to-transparent" />
+          <div className="relative flex flex-col justify-center p-6 md:p-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Mapa</p>
+            <h3 className="mt-2 font-display text-2xl font-semibold text-ink md:text-3xl">
+              Explorá Pilar en el mapa
+            </h3>
+            <p className="mt-2 max-w-md text-sm text-muted md:text-base">
+              Encontrá lugares cerca tuyo. Comer, comprar, salud, servicios y eventos.
+            </p>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-teal">
+              Abrir mapa
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+            </span>
+          </div>
+          <span className="absolute left-[35%] top-[40%] h-3.5 w-3.5 rounded-full bg-teal shadow-[0_0_0_6px_rgba(14,124,117,0.2)]" />
+          <span className="absolute left-[55%] top-[55%] h-3 w-3 rounded-full bg-amber shadow-[0_0_0_5px_rgba(201,133,42,0.2)]" />
+          <span className="absolute left-[70%] top-[30%] h-3 w-3 rounded-full bg-ink shadow-[0_0_0_5px_rgba(18,24,22,0.12)]" />
+        </Link>
+      </section>
+    </div>
+  )
+}
