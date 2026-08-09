@@ -12,9 +12,12 @@ export default function AdminShell({ children }) {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col md:flex-row">
+    <div className="admin-shell min-h-dvh w-full max-w-[100vw] overflow-x-hidden">
       <AdminNav />
-      <div className="min-w-0 w-full flex-1">{children}</div>
+      {/* En desktop dejamos espacio para el sidebar fijo */}
+      <div className="w-full md:pl-64">
+        <div className="mx-auto w-full max-w-5xl min-w-0">{children}</div>
+      </div>
     </div>
   )
 }

@@ -139,7 +139,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="w-full min-w-0 max-w-full space-y-6">
       <Section title="Datos básicos" subtitle="Lo primero que ve la gente en la guía.">
         <Field label="Nombre del negocio">
           <input
@@ -161,7 +161,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
             className={inputClass}
           />
         </Field>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Categoría">
             <select
               required
@@ -219,7 +219,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
             placeholder="Pilar Centro, Del Viso…"
           />
         </Field>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Latitud" hint="Opcional, para el mapa">
             <input
               value={form.lat}
@@ -240,7 +240,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       </Section>
 
       <Section title="Contacto" subtitle="Cómo te pueden escribir o encontrar.">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Teléfono">
             <input value={form.telefono} onChange={(e) => set('telefono', e.target.value)} className={inputClass} />
           </Field>
@@ -274,7 +274,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       </Section>
 
       <Section title="Plan y pago" subtitle="Todos los negocios pagan para aparecer. No hay plan gratis.">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Plan">
             <select value={form.plan} onChange={(e) => set('plan', e.target.value)} className={inputClass}>
               <option value="destacado">Destacado</option>
@@ -316,19 +316,19 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         </label>
       </Section>
 
-      <div className="sticky bottom-0 -mx-4 border-t border-slate-200 bg-slate-100/95 px-4 py-4 backdrop-blur md:-mx-8 md:px-8">
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+      <div className="sticky bottom-0 border-t border-slate-200 bg-slate-100/95 py-4 backdrop-blur">
+        <div className="flex flex-col gap-3 md:flex-row md:justify-end">
           <button
             type="button"
             onClick={() => router.push('/admin/negocios')}
-            className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 md:w-auto"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-teal px-5 py-3 text-sm font-semibold text-white hover:bg-teal-dark disabled:opacity-60"
+            className="w-full rounded-xl bg-teal px-5 py-3 text-sm font-semibold text-white hover:bg-teal-dark disabled:opacity-60 md:w-auto"
           >
             {saving ? 'Guardando…' : 'Guardar cambios'}
           </button>
@@ -340,23 +340,23 @@ export default function BusinessForm({ categorias = [], initial = null }) {
 
 function Section({ title, subtitle, children }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+    <section className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 md:p-6">
       <h2 className="text-lg font-bold text-slate-900">{title}</h2>
       {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
-      <div className="mt-5 space-y-4">{children}</div>
+      <div className="mt-5 min-w-0 space-y-4">{children}</div>
     </section>
   )
 }
 
 function Field({ label, hint, children }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="text-sm font-medium text-slate-700">{label}</span>
       {hint && <span className="mt-0.5 block text-xs text-slate-500">{hint}</span>}
-      <div className="mt-1.5">{children}</div>
+      <div className="mt-1.5 min-w-0">{children}</div>
     </label>
   )
 }
 
 const inputClass =
-  'w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal focus:ring-2 focus:ring-teal/20'
+  'box-border w-full min-w-0 max-w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal focus:ring-2 focus:ring-teal/20'
