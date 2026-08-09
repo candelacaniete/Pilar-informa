@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-manrope), "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-newsreader), "Newsreader", Georgia, "Times New Roman", serif;
+
+  --color-paper: #f6f4f0;
+  --color-paper-deep: #ebe7df;
+  --color-ink: #121816;
+  --color-ink-soft: #2a322e;
+  --color-muted: #5f6963;
+  --color-line: #d9d4cb;
+  --color-teal: #0e7c75;
+  --color-teal-dark: #0a5c57;
+  --color-teal-soft: #e4f3f1;
+  --color-amber: #c9852a;
+  --color-amber-soft: #f8eedc;
+  --color-danger: #c23b3b;
+  --color-danger-soft: #fdecec;
+
+  --shadow-soft: 0 8px 28px rgba(18, 24, 22, 0.06);
+  --shadow-lift: 0 14px 40px rgba(18, 24, 22, 0.1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-teal) 28%, white);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .map-grid {
+    background-color: #dfe9e6;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+      radial-gradient(circle at 20% 30%, rgba(14, 124, 117, 0.12), transparent 35%),
+      radial-gradient(circle at 70% 60%, rgba(18, 24, 22, 0.06), transparent 40%),
+      linear-gradient(135deg, #d5e4df 0%, #e8efe9 45%, #d2ddd8 100%);
+    background-size:
+      28px 28px,
+      28px 28px,
+      100% 100%,
+      100% 100%,
+      100% 100%;
+  }
+
+  .fade-up {
+    animation: fadeUp 0.55s ease-out both;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,48 +1,85 @@
 # Pilar Informa
 
-Prototipo visual de **Pilar Informa** — la plataforma digital local de Pilar, Provincia de Buenos Aires.
+Plataforma digital local de Pilar (Buenos Aires): noticias + guía comercial + agenda + promociones + mapa.
 
 > Todo Pilar. En un solo lugar.
 
-Combina medio de información local, guía comercial, directorio de servicios, agenda, promociones y mapa de descubrimiento.
-
 ## Stack
 
-- React
-- Vite
-- Tailwind CSS
-- Lucide React
-- React Router
+- **Next.js 15** (App Router)
+- **React 19**
+- **Tailwind CSS 4**
+- **Supabase** (Auth, Postgres, Storage)
+- Deploy pensado para **Vercel**
 
-## Cómo correr
+## Cómo correr en local
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-Abrí la URL que muestre Vite (por defecto `http://localhost:5173`).
+Abrí `http://localhost:3000`.
 
-## Rutas del prototipo
+Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo** con datos de ejemplo.
 
-| Ruta | Pantalla |
-|------|----------|
+## Configurar Supabase
+
+1. Creá un proyecto en [supabase.com](https://supabase.com).
+2. En el SQL Editor, ejecutá en orden:
+   - `supabase/schema.sql`
+   - `supabase/seed.sql`
+3. En Storage, creá un bucket público llamado `media`.
+4. En Authentication, creá un usuario (email/password).
+5. Insertá ese usuario como admin:
+
+```sql
+insert into public.admins (id, email, nombre)
+values ('UUID-DEL-USUARIO', 'admin@pilarinforma.ar', 'Administrador');
+```
+
+6. Completá `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://TU-PROYECTO.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+## Panel de administración
+
+Ruta: `/admin`
+
+- Login con email/password (Supabase Auth)
+- Solo usuarios en la tabla `admins` pueden escribir
+- Carga de negocios, noticias, eventos y promociones
+- Indicadores de vencimiento de plan (todos los negocios pagan; no hay plan gratis)
+- No hay autogestión pública: el contenido lo carga el administrador
+
+## Rutas públicas
+
+| Ruta | Descripción |
+|------|-------------|
 | `/` | Home |
-| `/noticias` | Noticias |
 | `/guia` | Guía de negocios |
-| `/negocio/:slug` | Perfil de negocio |
-| `/eventos` | Agenda |
+| `/categoria/[slug]` | Negocios por categoría |
+| `/negocio/[slug]` | Perfil de negocio + JSON-LD |
+| `/noticias` · `/noticias/[slug]` | Medio local |
+| `/agenda` · `/eventos/[slug]` | Agenda |
 | `/promociones` | Promociones |
-| `/mapa` | Mapa mock |
+| `/mapa` | Mapa mock con pines dinámicos |
+| `/sitemap.xml` · `/robots.txt` | SEO |
 
-## Datos mock
+## Vercel
 
-El contenido vive en archivos locales:
+- Framework Preset: **Next.js**
+- Build Command: `npm run build`
+- Output: automático (Next.js)
+- Agregá las mismas env vars del `.env.example`
 
-- `src/data/news.js`
-- `src/data/businesses.js`
-- `src/data/events.js`
-- `src/data/categories.js`
-- `src/data/promotions.js`
+## Modelo de negocio (producto)
 
-No hay backend, autenticación ni integraciones externas. Es una maqueta navegable para presentar el producto.
+- Todos los negocios pagan para aparecer (`plan`: destacado | premium).
+- No hay alta pública ni autogestión.
+- El administrador opera el día a día desde `/admin`.
