@@ -86,7 +86,7 @@ export default function Guide() {
               key={name}
               type="button"
               onClick={() => toggleCategory(name)}
-              className={`rounded-full border px-3.5 py-2 text-sm font-medium transition ${
+              className={`rounded-xl border px-3.5 py-2 text-sm font-medium transition ${
                 active
                   ? 'border-teal bg-teal text-white'
                   : 'border-line bg-white text-ink-soft hover:border-teal/30 hover:text-ink'

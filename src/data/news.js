@@ -10,7 +10,7 @@ export const news = [
     category: 'Ciudad',
     featured: true,
     image:
-      'https://images.unsplash.com/photo-1477959858617-67f85b6b3098?auto=format&fit=crop&w=1400&q=80',
+      'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1400&q=80',
   },
   {
     id: 'gastronomia-del-viso',
@@ -49,7 +49,7 @@ export const news = [
     category: 'Tránsito',
     featured: false,
     image:
-      'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'feria-emprendedores',
@@ -62,7 +62,7 @@ export const news = [
     category: 'Agenda',
     featured: false,
     image:
-      'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'clubes-deportivos',

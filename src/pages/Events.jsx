@@ -40,7 +40,7 @@ export default function Events() {
             key={filter.id}
             type="button"
             onClick={() => setActive(filter.id)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+            className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
               active === filter.id
                 ? 'border-teal bg-teal text-white'
                 : 'border-line bg-white text-ink-soft hover:border-teal/30'
