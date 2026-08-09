@@ -12,9 +12,9 @@ export default function AdminShell({ children }) {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-7xl">
+    <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col md:flex-row">
       <AdminNav />
-      <div className="min-w-0 flex-1">{children}</div>
+      <div className="min-w-0 w-full flex-1">{children}</div>
     </div>
   )
 }

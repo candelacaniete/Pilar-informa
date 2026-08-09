@@ -12,7 +12,7 @@ import {
   Tag,
   X,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 const items = [
@@ -27,6 +27,17 @@ export default function AdminNav() {
   const pathname = usePathname()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   const logout = async () => {
     const supabase = createClient()
@@ -45,11 +56,11 @@ export default function AdminNav() {
             key={item.href}
             href={item.href}
             onClick={() => setOpen(false)}
-            className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-3.5 text-base font-semibold transition md:py-3 md:text-sm ${
               active ? 'bg-teal text-white' : 'text-slate-700 hover:bg-slate-100'
             }`}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-5 w-5 md:h-4 md:w-4" />
             {item.label}
           </Link>
         )
@@ -57,17 +68,17 @@ export default function AdminNav() {
       <button
         type="button"
         onClick={logout}
-        className="mt-4 flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-slate-600 hover:bg-slate-100"
+        className="mt-4 flex items-center gap-3 rounded-xl px-3 py-3.5 text-left text-base font-semibold text-slate-600 hover:bg-slate-100 md:py-3 md:text-sm"
       >
-        <LogOut className="h-4 w-4" />
+        <LogOut className="h-5 w-5 md:h-4 md:w-4" />
         Cerrar sesión
       </button>
     </nav>
   )
 
   return (
-    <>
-      <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white md:block">
+    <div className="w-full shrink-0 md:w-64">
+      <aside className="hidden h-full border-r border-slate-200 bg-white md:block">
         <div className="border-b border-slate-200 px-5 py-5">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Pilar Informa</p>
           <p className="mt-1 text-lg font-bold text-slate-900">Panel de carga</p>
@@ -76,7 +87,7 @@ export default function AdminNav() {
         <NavLinks />
       </aside>
 
-      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 md:hidden">
+      <div className="sticky top-0 z-40 flex w-full items-center justify-between border-b border-slate-200 bg-white px-4 py-3 md:hidden">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-teal">Admin</p>
           <p className="font-bold text-slate-900">Pilar Informa</p>
@@ -84,8 +95,9 @@ export default function AdminNav() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200"
-          aria-label="Menú"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-slate-200"
+          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={open}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -94,14 +106,19 @@ export default function AdminNav() {
       {open && (
         <div className="fixed inset-0 z-50 bg-white md:hidden">
           <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-            <p className="font-bold">Menú</p>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Cerrar">
+            <p className="font-bold text-slate-900">Menú</p>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-slate-200"
+              aria-label="Cerrar"
+            >
               <X className="h-5 w-5" />
             </button>
           </div>
           <NavLinks />
         </div>
       )}
-    </>
+    </div>
   )
 }
