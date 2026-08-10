@@ -1,5 +1,6 @@
 import { ToastProvider } from '@/components/admin/Toast'
 import AdminShell from '@/components/admin/AdminShell'
+import './admin.css'
 
 export const metadata = {
   title: 'Panel de administración',
@@ -9,7 +10,7 @@ export const metadata = {
 export default function AdminLayout({ children }) {
   return (
     <ToastProvider>
-      <div className="min-h-dvh max-w-[100vw] overflow-x-hidden bg-slate-100 text-slate-900">
+      <div className="admin-root">
         <AdminShell>{children}</AdminShell>
       </div>
     </ToastProvider>

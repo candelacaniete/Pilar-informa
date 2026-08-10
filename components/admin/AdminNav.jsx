@@ -39,7 +39,7 @@ function NavLinks({ pathname, onNavigate, onLogout }) {
             }`}
           >
             <Icon className="h-5 w-5 shrink-0 md:h-4 md:w-4" />
-            {item.label}
+            <span>{item.label}</span>
           </Link>
         )
       })}
@@ -49,7 +49,7 @@ function NavLinks({ pathname, onNavigate, onLogout }) {
         className="mt-4 flex items-center gap-3 rounded-xl px-3 py-3.5 text-left text-base font-semibold text-slate-600 hover:bg-slate-100 md:py-3 md:text-sm"
       >
         <LogOut className="h-5 w-5 shrink-0 md:h-4 md:w-4" />
-        Cerrar sesión
+        <span>Cerrar sesión</span>
       </button>
     </nav>
   )
@@ -80,10 +80,9 @@ export default function AdminNav() {
 
   return (
     <>
-      {/* Barra superior mobile: bloque a ancho completo, nunca al lado del contenido */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white md:hidden">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="min-w-0">
+      <header className="admin-mobile-bar">
+        <div className="admin-mobile-bar-inner">
+          <div style={{ minWidth: 0 }}>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-teal">Admin</p>
             <p className="truncate font-bold text-slate-900">Pilar Informa</p>
           </div>
@@ -98,8 +97,7 @@ export default function AdminNav() {
         </div>
       </header>
 
-      {/* Sidebar desktop fijo */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white md:flex">
+      <aside className="admin-sidebar">
         <div className="border-b border-slate-200 px-5 py-5">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Pilar Informa</p>
           <p className="mt-1 text-lg font-bold text-slate-900">Panel de carga</p>
@@ -108,9 +106,8 @@ export default function AdminNav() {
         <NavLinks pathname={pathname} onNavigate={() => {}} onLogout={logout} />
       </aside>
 
-      {/* Menú mobile fullscreen */}
-      {open && (
-        <div className="fixed inset-0 z-50 bg-white md:hidden">
+      {open ? (
+        <div className="admin-drawer">
           <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
             <p className="font-bold text-slate-900">Menú</p>
             <button
@@ -122,13 +119,9 @@ export default function AdminNav() {
               <X className="h-5 w-5" />
             </button>
           </div>
-          <NavLinks
-            pathname={pathname}
-            onNavigate={() => setOpen(false)}
-            onLogout={logout}
-          />
+          <NavLinks pathname={pathname} onNavigate={() => setOpen(false)} onLogout={logout} />
         </div>
-      )}
+      ) : null}
     </>
   )
 }
