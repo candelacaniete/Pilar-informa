@@ -78,8 +78,14 @@ Ruta: `/admin`
 - Output: automático (Next.js)
 - Agregá las mismas env vars del `.env.example`
 
-## Modelo de negocio (producto)
+## Orden de negocios
 
-- Todos los negocios pagan para aparecer (`plan`: destacado | premium).
-- No hay alta pública ni autogestión.
-- El administrador opera el día a día desde `/admin`.
+Los negocios se ordenan por:
+
+1. Plan (Premium antes que Destacado)
+2. Campo `prioridad` (número más bajo = más arriba; `0` es el primer lugar)
+3. Nombre
+
+En `/admin/negocios` Pablo puede usar **Subir / Bajar**, o editar el número en el formulario del negocio.
+
+Si la base ya existía, ejecutá también `supabase/migrations/001_prioridad.sql`.
