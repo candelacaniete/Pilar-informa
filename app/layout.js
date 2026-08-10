@@ -23,12 +23,21 @@ export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="es-AR">
-      <body className={`${manrope.variable} ${newsreader.variable} font-sans antialiased`}>
+    <html lang="es-AR" className="overflow-x-hidden">
+      <body
+        className={`${manrope.variable} ${newsreader.variable} max-w-[100vw] overflow-x-hidden font-sans antialiased`}
+      >
         {children}
       </body>
     </html>
   )
 }
+

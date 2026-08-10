@@ -18,7 +18,7 @@ export default function NegociosFilters({ categorias = [] }) {
   }
 
   return (
-    <div className={`mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-3 ${pending ? 'opacity-70' : ''}`}>
+    <div className={`mt-6 grid min-w-0 grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-3 ${pending ? 'opacity-70' : ''}`}>
       <label className="block text-sm">
         <span className="font-medium text-slate-700">Buscar</span>
         <input

@@ -143,7 +143,7 @@ export default function SimpleContentForm({ type, initial = null, negocios = [] 
               placeholder="Escribí la noticia acá…"
             />
           </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Field label="Categoría">
               <input value={form.categoria} onChange={(e) => set('categoria', e.target.value)} className={inputClass} />
             </Field>
@@ -178,7 +178,7 @@ export default function SimpleContentForm({ type, initial = null, negocios = [] 
               className={inputClass}
             />
           </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Field label="Fecha">
               <input
                 type="date"
@@ -214,7 +214,7 @@ export default function SimpleContentForm({ type, initial = null, negocios = [] 
               className={inputClass}
             />
           </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Field label="Válido desde">
               <input
                 type="date"
@@ -280,7 +280,7 @@ function Field({ label, hint, children }) {
 }
 
 const inputClass =
-  'w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal focus:ring-2 focus:ring-teal/20'
+  'box-border w-full min-w-0 max-w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal focus:ring-2 focus:ring-teal/20'
 
 function getDefaults(type, initial, negocios) {
   if (type === 'noticia') {

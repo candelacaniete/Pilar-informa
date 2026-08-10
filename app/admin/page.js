@@ -37,7 +37,7 @@ export default async function AdminDashboardPage() {
   ]
 
   return (
-    <div className="px-4 py-6 md:px-8 md:py-8">
+    <div className="admin-page">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Hola 👋</h1>
@@ -61,7 +61,7 @@ export default async function AdminDashboardPage() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="admin-cards mt-6">
         {cards.map((card) => {
           const Icon = card.icon
           return (

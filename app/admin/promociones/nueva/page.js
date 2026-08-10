@@ -7,7 +7,7 @@ export default async function NuevaPromocionPage() {
   const negocios = await getAllNegociosAdmin()
 
   return (
-    <div className="px-4 py-6 md:px-8 md:py-8">
+    <div className="admin-page">
       <Link
         href="/admin/promociones"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-teal"
