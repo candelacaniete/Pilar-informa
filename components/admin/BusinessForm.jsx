@@ -29,6 +29,7 @@ const empty = {
   plan: 'destacado',
   fecha_pago: '',
   plan_vence: '',
+  prioridad: '100',
   verificado: true,
   foto: '',
 }
@@ -51,6 +52,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       cantidad_opiniones: String(initial.cantidad_opiniones ?? 0),
       fecha_pago: initial.fecha_pago || '',
       plan_vence: initial.plan_vence ? String(initial.plan_vence).slice(0, 10) : '',
+      prioridad: String(initial.prioridad ?? 100),
       horarios_texto: horariosTexto(initial.horarios),
       foto,
     }
@@ -93,6 +95,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       plan: form.plan,
       fecha_pago: form.fecha_pago || null,
       plan_vence: form.plan_vence ? new Date(form.plan_vence).toISOString() : null,
+      prioridad: Number.isFinite(Number(form.prioridad)) ? Number(form.prioridad) : 100,
       verificado: Boolean(form.verificado),
     }
 
@@ -301,6 +304,19 @@ export default function BusinessForm({ categorias = [], initial = null }) {
               type="date"
               value={form.plan_vence}
               onChange={(e) => set('plan_vence', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field
+            label="Orden de aparición"
+            hint="Cuanto más bajo el número, más arriba aparece. Usá 0 para el primer lugar. También podés subir/bajar desde el listado."
+          >
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={form.prioridad}
+              onChange={(e) => set('prioridad', e.target.value)}
               className={inputClass}
             />
           </Field>

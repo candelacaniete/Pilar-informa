@@ -26,7 +26,7 @@ with cats as (
 insert into public.negocios (
   nombre, slug, categoria_id, subcategoria, descripcion_corta, descripcion_larga,
   direccion, localidad, lat, lng, telefono, whatsapp, web, horarios,
-  rating, cantidad_opiniones, estado, plan, fecha_pago, plan_vence, verificado
+  rating, cantidad_opiniones, estado, plan, fecha_pago, plan_vence, prioridad, verificado
 )
 select * from (values
   (
@@ -39,7 +39,7 @@ select * from (values
     -34.4587, -58.9142, '+54 11 5555-0101', '+54 9 11 5555-0101', 'casamarea.ar',
     '{"texto":"Lun a Dom · 8:00 a 20:00"}'::jsonb,
     4.8, 126, 'activo'::public.negocio_estado, 'premium'::public.negocio_plan,
-    current_date - 20, now() + interval '40 days', true
+    current_date - 20, now() + interval '40 days', 0, true
   ),
   (
     'Estudio Norte', 'estudio-norte',
@@ -51,7 +51,7 @@ select * from (values
     -34.4612, -58.9085, '+54 11 5555-0202', '+54 9 11 5555-0202', 'estudionorte.com.ar',
     '{"texto":"Lun a Vie · 9:00 a 18:00"}'::jsonb,
     4.9, 48, 'activo'::public.negocio_estado, 'destacado'::public.negocio_plan,
-    current_date - 10, now() + interval '5 days', true
+    current_date - 10, now() + interval '5 days', 10, true
   ),
   (
     'Vet Pilar', 'vet-pilar',
@@ -63,7 +63,7 @@ select * from (values
     -34.4470, -58.9680, '+54 11 5555-0303', '+54 9 11 5555-0303', 'vetpilar.com.ar',
     '{"texto":"Lun a Sáb · 9:00 a 21:00 · Dom guardia"}'::jsonb,
     4.7, 203, 'activo'::public.negocio_estado, 'premium'::public.negocio_plan,
-    current_date - 5, now() + interval '25 days', true
+    current_date - 5, now() + interval '25 days', 10, true
   ),
   (
     'Aura Studio', 'belleza-aura',
@@ -75,7 +75,7 @@ select * from (values
     -34.4560, -58.9120, '+54 11 5555-0505', '+54 9 11 5555-0505', 'aurastudio.ar',
     '{"texto":"Mar a Sáb · 10:00 a 19:00"}'::jsonb,
     4.9, 167, 'activo'::public.negocio_estado, 'destacado'::public.negocio_plan,
-    current_date - 25, now() + interval '2 days', false
+    current_date - 25, now() + interval '2 days', 20, false
   ),
   (
     'Pulse Fitness', 'pulse-fitness',
@@ -87,12 +87,12 @@ select * from (values
     -34.4720, -58.9350, '+54 11 5555-0909', '+54 9 11 5555-0909', 'pulsefitness.ar',
     '{"texto":"Lun a Vie · 7:00 a 22:00 · Sáb 8 a 14"}'::jsonb,
     4.6, 188, 'activo'::public.negocio_estado, 'destacado'::public.negocio_plan,
-    current_date - 40, now() - interval '3 days', true
+    current_date - 40, now() - interval '3 days', 30, true
   )
 ) as v(
   nombre, slug, categoria_id, subcategoria, descripcion_corta, descripcion_larga,
   direccion, localidad, lat, lng, telefono, whatsapp, web, horarios,
-  rating, cantidad_opiniones, estado, plan, fecha_pago, plan_vence, verificado
+  rating, cantidad_opiniones, estado, plan, fecha_pago, plan_vence, prioridad, verificado
 )
 on conflict (slug) do nothing;
 

@@ -74,6 +74,7 @@ create table if not exists public.negocios (
   plan public.negocio_plan not null default 'destacado',
   fecha_pago date,
   plan_vence timestamptz,
+  prioridad integer not null default 100,
   verificado boolean not null default true,
   creado_en timestamptz not null default now(),
   actualizado_en timestamptz not null default now()
@@ -83,6 +84,7 @@ create index if not exists negocios_categoria_idx on public.negocios (categoria_
 create index if not exists negocios_estado_idx on public.negocios (estado);
 create index if not exists negocios_plan_idx on public.negocios (plan);
 create index if not exists negocios_plan_vence_idx on public.negocios (plan_vence);
+create index if not exists negocios_prioridad_idx on public.negocios (prioridad);
 create index if not exists negocios_slug_idx on public.negocios (slug);
 
 create or replace function public.set_actualizado_en()
