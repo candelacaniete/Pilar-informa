@@ -29,13 +29,16 @@ export default function AdminRecuperarPage() {
         return
       }
 
-      const redirectTo = authRedirectUrl('/admin/nueva-contrasena')
+      const redirectTo = authRedirectUrl(
+        '/admin/nueva-contrasena',
+        typeof window !== 'undefined' ? window.location.origin : undefined
+      )
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo,
       })
 
       if (resetError) {
-        setError(resetErrorMessage(resetError))
+        setError(resetErrorMessage(resetError, redirectTo))
         return
       }
 
