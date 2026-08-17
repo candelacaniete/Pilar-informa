@@ -1,5 +1,6 @@
 import { Manrope, Newsreader } from 'next/font/google'
 import './globals.css'
+import { safeSiteUrl } from '@/lib/supabase/config'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -20,7 +21,7 @@ export const metadata = {
   },
   description:
     'Noticias, comercios, servicios, eventos y todo lo que pasa en Pilar, Provincia de Buenos Aires.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(safeSiteUrl()),
 }
 
 export const viewport = {
