@@ -47,6 +47,21 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
+### URLs de Auth en Supabase (importante para producción)
+
+En Supabase → **Authentication** → **URL Configuration**:
+
+| Campo | Valor en producción |
+|-------|---------------------|
+| **Site URL** | `https://pilar-informa-eosin.vercel.app` (tu dominio real) |
+| **Redirect URLs** | `https://pilar-informa-eosin.vercel.app/**` y `http://localhost:3000/**` |
+
+Si **Site URL** sigue en `http://localhost:3000`, los emails de reset de contraseña te mandan a localhost y fallan.
+
+En la app, usá **Recuperar acceso** en `/admin/recuperar` (no el botón de reset del panel de Supabase) para que el enlace apunte a tu dominio.
+
+En Vercel, `NEXT_PUBLIC_SITE_URL` tiene que ser la misma URL pública (`https://pilar-informa-eosin.vercel.app`).
+
 ## Panel de administración
 
 Ruta: `/admin`
