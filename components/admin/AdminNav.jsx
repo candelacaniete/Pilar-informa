@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   Building2,
   CalendarDays,
+  Cross,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -21,6 +22,7 @@ const items = [
   { href: '/admin/noticias', label: 'Noticias', icon: Newspaper },
   { href: '/admin/eventos', label: 'Eventos', icon: CalendarDays },
   { href: '/admin/promociones', label: 'Promociones', icon: Tag },
+  { href: '/admin/farmacias', label: 'Farmacias de turno', icon: Cross },
 ]
 
 function NavLinks({ pathname, onNavigate, onLogout }) {

@@ -15,6 +15,7 @@ export default async function sitemap() {
     '/noticias',
     '/agenda',
     '/promociones',
+    '/farmacias',
     '/mapa',
   ].map((path) => ({
     url: `${base}${path}`,
