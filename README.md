@@ -30,6 +30,7 @@ Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo**
 2. En el SQL Editor, ejecutá en orden:
    - `supabase/schema.sql`
    - `supabase/seed.sql`
+   Si el proyecto ya existía: `supabase/migrations/001_prioridad.sql` y `supabase/migrations/002_farmacias_turno.sql`.
 3. En Storage, creá un bucket público llamado `media`.
 4. En Authentication, creá un usuario (email/password).
 5. Insertá ese usuario como admin:
@@ -77,7 +78,7 @@ Ruta: `/admin`
 
 - Login con email/password (Supabase Auth)
 - Solo usuarios en la tabla `admins` pueden escribir
-- Carga de negocios, noticias, eventos y promociones
+- Carga de negocios, noticias, eventos, promociones y **farmacias de turno**
 - Indicadores de vencimiento de plan (todos los negocios pagan; no hay plan gratis)
 - No hay autogestión pública: el contenido lo carga el administrador
 
@@ -92,8 +93,19 @@ Ruta: `/admin`
 | `/noticias` · `/noticias/[slug]` | Medio local |
 | `/agenda` · `/eventos/[slug]` | Agenda |
 | `/promociones` | Promociones |
+| `/farmacias` | Farmacias de turno |
 | `/mapa` | Mapa mock con pines dinámicos |
 | `/sitemap.xml` · `/robots.txt` | SEO |
+
+## Pilar (asistente)
+
+Botón flotante en la web pública. Responde en lenguaje natural **solo con datos de la base** (negocios, promos, eventos, noticias, farmacias de turno). Anónimo, sin historial, **12 consultas por día** por navegador.
+
+Opcional: `GEMINI_API_KEY` en Vercel (Google AI Studio, modelo `gemini-2.0-flash`). Sin la key, Pilar igual responde con las mismas reglas usando los datos cargados.
+
+## PWA
+
+La web es instalable (Agregar a pantalla de inicio). Manifest + íconos + service worker básico.
 
 ## Vercel
 
@@ -112,4 +124,6 @@ Los negocios se ordenan por:
 
 En `/admin/negocios` Pablo puede usar **Subir / Bajar**, o editar el número en el formulario del negocio.
 
-Si la base ya existía, ejecutá también `supabase/migrations/001_prioridad.sql`.
+Si la base ya existía, ejecutá también `supabase/migrations/001_prioridad.sql` y `supabase/migrations/002_farmacias_turno.sql`.
+
+Después del migration 002, ejecutá `supabase/seed_farmacias.sql` para cargar turnos de ejemplo.

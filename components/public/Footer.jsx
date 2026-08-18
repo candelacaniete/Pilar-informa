@@ -7,6 +7,7 @@ const links = [
   { href: '/guia', label: 'Guía' },
   { href: '/agenda', label: 'Eventos' },
   { href: '/promociones', label: 'Promociones' },
+  { href: '/farmacias', label: 'Farmacias de turno' },
   { href: '/#sumar-negocio', label: 'Sumar mi negocio' },
 ]
 

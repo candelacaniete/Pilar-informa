@@ -198,6 +198,31 @@ before update on public.promociones
 for each row execute function public.set_actualizado_en();
 
 -- -----------------------------------------------------------------------------
+-- Farmacias de turno (carga manual)
+-- -----------------------------------------------------------------------------
+create table if not exists public.farmacias_turno (
+  id uuid primary key default gen_random_uuid(),
+  nombre text not null,
+  direccion text,
+  localidad text not null,
+  telefono text,
+  whatsapp text,
+  fecha date not null,
+  horario text not null default '8:00 a 22:00',
+  notas text,
+  creado_en timestamptz not null default now(),
+  actualizado_en timestamptz not null default now()
+);
+
+create index if not exists farmacias_turno_fecha_idx on public.farmacias_turno (fecha);
+create index if not exists farmacias_turno_localidad_idx on public.farmacias_turno (localidad);
+
+drop trigger if exists farmacias_turno_set_actualizado_en on public.farmacias_turno;
+create trigger farmacias_turno_set_actualizado_en
+before update on public.farmacias_turno
+for each row execute function public.set_actualizado_en();
+
+-- -----------------------------------------------------------------------------
 -- RLS
 -- Lectura pública solo de contenido activo/publicado.
 -- Escritura únicamente para admins autenticados.
@@ -209,6 +234,7 @@ alter table public.negocio_fotos enable row level security;
 alter table public.noticias enable row level security;
 alter table public.eventos enable row level security;
 alter table public.promociones enable row level security;
+alter table public.farmacias_turno enable row level security;
 
 -- Admins: solo el propio usuario o admins pueden leer; escritura solo service/manual
 drop policy if exists "admins_select_own_or_admin" on public.admins;
@@ -328,6 +354,20 @@ create policy "promociones_public_read"
 drop policy if exists "promociones_admin_write" on public.promociones;
 create policy "promociones_admin_write"
   on public.promociones for all
+  to authenticated
+  using (public.es_admin())
+  with check (public.es_admin());
+
+-- Farmacias de turno: lectura pública, escritura admin
+drop policy if exists "farmacias_turno_public_read" on public.farmacias_turno;
+create policy "farmacias_turno_public_read"
+  on public.farmacias_turno for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "farmacias_turno_admin_write" on public.farmacias_turno;
+create policy "farmacias_turno_admin_write"
+  on public.farmacias_turno for all
   to authenticated
   using (public.es_admin())
   with check (public.es_admin());

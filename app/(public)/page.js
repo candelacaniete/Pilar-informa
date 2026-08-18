@@ -10,6 +10,7 @@ import {
   getNoticias,
   getEventos,
   getPromociones,
+  getFarmaciasTurno,
 } from '@/lib/data'
 import { formatDate, formatShortDate } from '@/lib/utils'
 
@@ -48,12 +49,13 @@ const discoverCards = [
 ]
 
 export default async function HomePage() {
-  const [categorias, noticias, destacados, eventos, promociones] = await Promise.all([
+  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy] = await Promise.all([
     getCategorias(),
     getNoticias({ limit: 4 }),
     getNegociosActivos({ destacados: true, limit: 3 }),
     getEventos({ fromToday: true, limit: 3 }),
     getPromociones({ limit: 3 }),
+    getFarmaciasTurno(),
   ])
 
   const homeCats = categorias.slice(0, 7)
@@ -134,6 +136,31 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {farmaciasHoy.length ? (
+        <section className="mx-auto max-w-6xl px-4 pb-4 md:px-6">
+          <div className="rounded-2xl border border-teal/20 bg-teal-soft/60 px-5 py-5 md:px-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Hoy</p>
+                <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Farmacias de turno</h2>
+              </div>
+              <Link href="/farmacias" className="text-sm font-semibold text-teal hover:text-teal-dark">
+                Ver la semana →
+              </Link>
+            </div>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+              {farmaciasHoy.slice(0, 3).map((f) => (
+                <li key={f.id} className="rounded-xl bg-white/80 px-4 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-teal">{f.localidad}</p>
+                  <p className="mt-0.5 font-semibold text-ink">{f.nombre}</p>
+                  <p className="text-xs text-muted">{f.horario}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       {featuredNews ? (
         <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6 md:pb-20">

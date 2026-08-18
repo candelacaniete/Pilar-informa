@@ -88,6 +88,18 @@ select * from (values
     '{"texto":"Lun a Vie · 7:00 a 22:00 · Sáb 8 a 14"}'::jsonb,
     4.6, 188, 'activo'::public.negocio_estado, 'destacado'::public.negocio_plan,
     current_date - 40, now() - interval '3 days', 30, true
+  ),
+  (
+    'Parrilla Lo de Juan', 'parrilla-lo-de-juan',
+    (select id from cats where slug = 'gastronomia'),
+    'Parrilla',
+    'Carnes a la parrilla, pastas y patio con parrillero a la vista.',
+    'Parrilla de barrio en Del Viso, con cortes clásicos, ensaladas y menú ejecutivo de mediodía.',
+    'Av. Hipólito Yrigoyen 2340, Del Viso', 'Del Viso',
+    -34.4492, -58.9635, '+54 11 5555-0707', '+54 9 11 5555-0707', null,
+    '{"texto":"Mar a Dom · 12:00 a 15:30 y 20:00 a 00:00"}'::jsonb,
+    4.5, 94, 'activo'::public.negocio_estado, 'destacado'::public.negocio_plan,
+    current_date - 12, now() + interval '22 days', 15, true
   )
 ) as v(
   nombre, slug, categoria_id, subcategoria, descripcion_corta, descripcion_larga,
@@ -104,7 +116,8 @@ from (values
   ('estudio-norte', 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'),
   ('vet-pilar', 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=1200&q=80'),
   ('belleza-aura', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80'),
-  ('pulse-fitness', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80')
+  ('pulse-fitness', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80'),
+  ('parrilla-lo-de-juan', 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80')
 ) as v(slug, url)
 join public.negocios n on n.slug = v.slug
 on conflict do nothing;
@@ -174,6 +187,19 @@ from (values
    'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1000&q=80')
 ) as v(slug, titulo, descuento, descripcion, imagen)
 join public.negocios n on n.slug = v.slug;
+
+-- Farmacias de turno (horarios de ejemplo para la demo)
+insert into public.farmacias_turno (nombre, direccion, localidad, telefono, whatsapp, fecha, horario, notas) values
+  ('Farmacia Santa Rita', 'Av. Víctor Vergani 850, Pilar Centro', 'Pilar Centro', '+54 230 444-1101', '+54 9 230 444-1101', current_date, '24 horas', 'Guardia completa. Entrega de recetas hasta las 22 hs.'),
+  ('Farmacia Del Viso', 'Ruta 8 Km 53.2, Del Viso', 'Del Viso', '+54 230 444-2202', '+54 9 230 444-2202', current_date, '8:00 a 22:00', 'Atención con receta digital.'),
+  ('Farmacia Zelaya', 'Calle Principal 120, Zelaya', 'Zelaya', '+54 230 444-3303', '+54 9 230 444-3303', current_date, '8:00 a 21:00', 'Cerca de la estación.'),
+  ('Farmacia Derqui Central', 'Av. Hipólito Yrigoyen 450, Derqui', 'Derqui', '+54 230 444-4404', null, current_date + 1, '8:00 a 22:00', 'Turno de mañana y tarde.'),
+  ('Farmacia Manzanares', 'Camino Real 980, Manzanares', 'Manzanares', '+54 230 444-5505', '+54 9 230 444-5505', current_date + 1, '9:00 a 21:00', null),
+  ('Farmacia La Lonja', 'Av. Caamaño 2100, La Lonja', 'La Lonja', '+54 230 444-6606', null, current_date + 2, '8:30 a 20:30', null),
+  ('Farmacia Villa Rosa', 'Ruta 25 y Calle 12, Villa Rosa', 'Villa Rosa', '+54 230 444-7707', '+54 9 230 444-7707', current_date + 3, '8:00 a 22:00', 'Feriados: consultar WhatsApp.'),
+  ('Farmacia Fátima', 'Av. Champagnat 340, Fátima', 'Fátima', '+54 230 444-8808', null, current_date + 4, '9:00 a 21:00', null),
+  ('Farmacia Santa Rita', 'Av. Víctor Vergani 850, Pilar Centro', 'Pilar Centro', '+54 230 444-1101', '+54 9 230 444-1101', current_date + 5, '24 horas', 'Fin de semana: guardia 24 hs.'),
+  ('Farmacia Del Viso', 'Ruta 8 Km 53.2, Del Viso', 'Del Viso', '+54 230 444-2202', '+54 9 230 444-2202', current_date + 6, '8:00 a 22:00', null);
 
 -- -----------------------------------------------------------------------------
 -- IMPORTANTE: crear el primer administrador

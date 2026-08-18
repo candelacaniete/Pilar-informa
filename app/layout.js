@@ -22,12 +22,25 @@ export const metadata = {
   description:
     'Noticias, comercios, servicios, eventos y todo lo que pasa en Pilar, Provincia de Buenos Aires.',
   metadataBase: new URL(safeSiteUrl()),
+  appleWebApp: {
+    capable: true,
+    title: 'Pilar Informa',
+    statusBarStyle: 'default',
+  },
+  icons: {
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/icons/apple-touch-icon.png',
+  },
 }
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
+  themeColor: '#0e7c75',
 }
 
 export default function RootLayout({ children }) {

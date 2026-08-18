@@ -1,9 +1,12 @@
 import Header from '@/components/public/Header'
 import Footer from '@/components/public/Footer'
+import PilarChat from '@/components/public/PilarChat'
+import PwaRegister from '@/components/public/PwaRegister'
 
 export default function PublicLayout({ children }) {
   return (
     <div className="flex min-h-dvh flex-col bg-paper">
+      <PwaRegister />
       <div
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
@@ -15,6 +18,7 @@ export default function PublicLayout({ children }) {
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <PilarChat />
     </div>
   )
 }
