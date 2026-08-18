@@ -39,13 +39,16 @@ insert into public.admins (id, email, nombre)
 values ('UUID-DEL-USUARIO', 'admin@pilarinforma.ar', 'Administrador');
 ```
 
-6. Completá `.env.local`:
+6. Completá `.env.local` (y las mismas variables en Vercel):
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://TU-PROYECTO.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
+
+**Importante:** `NEXT_PUBLIC_SUPABASE_URL` es el **Project URL** de Supabase → Settings → API.  
+No uses la URL de la web (`vercel.app`), ni `/rest/v1`, ni barra final al final.
 
 ### URLs de Auth en Supabase (importante para producción)
 
@@ -60,7 +63,13 @@ Si **Site URL** sigue en `http://localhost:3000`, los emails de reset de contras
 
 En la app, usá **Recuperar acceso** en `/admin/recuperar` (no el botón de reset del panel de Supabase) para que el enlace apunte a tu dominio.
 
-En Vercel, `NEXT_PUBLIC_SITE_URL` tiene que ser la misma URL pública (`https://pilar-informa-eosin.vercel.app`).
+En Vercel, `NEXT_PUBLIC_SITE_URL` tiene que ser la misma URL pública (`https://pilar-informa-eosin.vercel.app`). Si falta, la app igual usa el dominio actual en el navegador al pedir recuperación.
+
+**Si falla "No pudimos enviar el email":**
+
+1. El usuario tiene que existir en **Authentication → Users** (la fila en `admins` sola no alcanza).
+2. En **Redirect URLs** tiene que estar permitido `https://tu-dominio.vercel.app/**`.
+3. Supabase limita cuántos emails envía por hora; esperá unos minutos si probaste muchas veces.
 
 ## Panel de administración
 
