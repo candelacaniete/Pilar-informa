@@ -1,11 +1,14 @@
 export default function manifest() {
   return {
-    name: 'Pilar Informa',
-    short_name: 'Pilar Informa',
-    description: 'Noticias, guía local, eventos y Pilar, tu asistente de Pilar.',
-    start_url: '/',
+    name: 'Pilar',
+    short_name: 'Pilar',
+    description: 'Tu asistente de Pilar Informa: farmacias de turno, promos, eventos y locales.',
+    start_url: '/pilar',
+    scope: '/pilar',
+    id: '/pilar',
     display: 'standalone',
-    background_color: '#f6f4f0',
+    orientation: 'portrait',
+    background_color: '#0e7c75',
     theme_color: '#0e7c75',
     lang: 'es-AR',
     icons: [

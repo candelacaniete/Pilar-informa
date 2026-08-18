@@ -94,6 +94,7 @@ Ruta: `/admin`
 | `/agenda` · `/eventos/[slug]` | Agenda |
 | `/promociones` | Promociones |
 | `/farmacias` | Farmacias de turno |
+| `/pilar` | App de la asistente Pilar (PWA) |
 | `/mapa` | Mapa mock con pines dinámicos |
 | `/sitemap.xml` · `/robots.txt` | SEO |
 
@@ -103,9 +104,11 @@ Botón flotante en la web pública. Responde en lenguaje natural **solo con dato
 
 Opcional: `GEMINI_API_KEY` en Vercel (Google AI Studio, modelo `gemini-2.0-flash`). Sin la key, Pilar igual responde con las mismas reglas usando los datos cargados.
 
-## PWA
+## PWA (app Pilar)
 
-La web es instalable (Agregar a pantalla de inicio). Manifest + íconos + service worker básico.
+La PWA **no es la web completa**: al instalarla se abre `/pilar` (pantalla de bienvenida + chat a pantalla completa).
+
+En iPhone: entrar a `/pilar` desde Safari → Compartir → Agregar a pantalla de inicio. En la home de Pilar Informa hay una sección **Instalá a Pilar** con el paso a paso.
 
 ## Vercel
 

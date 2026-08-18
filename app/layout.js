@@ -24,7 +24,7 @@ export const metadata = {
   metadataBase: new URL(safeSiteUrl()),
   appleWebApp: {
     capable: true,
-    title: 'Pilar Informa',
+    title: 'Pilar',
     statusBarStyle: 'default',
   },
   icons: {

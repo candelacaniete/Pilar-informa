@@ -8,6 +8,7 @@ const links = [
   { href: '/agenda', label: 'Eventos' },
   { href: '/promociones', label: 'Promociones' },
   { href: '/farmacias', label: 'Farmacias de turno' },
+  { href: '/#instalar-pilar', label: 'Instalar Pilar' },
   { href: '/#sumar-negocio', label: 'Sumar mi negocio' },
 ]
 
