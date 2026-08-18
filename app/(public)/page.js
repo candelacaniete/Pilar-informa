@@ -4,6 +4,7 @@ import SearchBar from '@/components/public/SearchBar'
 import SectionHeading from '@/components/public/SectionHeading'
 import BusinessCard from '@/components/public/BusinessCard'
 import BusinessCTA from '@/components/public/BusinessCTA'
+import InstalaPilar from '@/components/public/InstalaPilar'
 import {
   getCategorias,
   getNegociosActivos,
@@ -397,6 +398,7 @@ export default async function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl space-y-6 px-4 pb-16 md:px-6 md:pb-24">
+        <InstalaPilar />
         <BusinessCTA />
 
         <Link
