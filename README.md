@@ -25,6 +25,8 @@ Abrí la URL que muestre Vite (por defecto `http://localhost:5173`).
 
 `npm run dev` sirve la SPA. Los rewrites de Open Graph para bots (WhatsApp, Facebook, etc.) viven en `vercel.json` y se prueban con `vercel dev` o un deploy de preview.
 
+Vercel tiene que construir esto como **Vite** (`dist/`), no como Next.js. `vercel.json` fija `framework`, `buildCommand` y `outputDirectory` para no heredar el preset viejo del proyecto.
+
 ## Rutas
 
 | Ruta | Pantalla |
