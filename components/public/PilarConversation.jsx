@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Send } from 'lucide-react'
 
 export const PILAR_SUGGESTIONS = [
@@ -15,27 +15,78 @@ const WELCOME = {
   text: 'Hola, soy Pilar. Preguntame por farmacias de turno, promos, eventos o locales de la guía. Respondo solo con lo que está cargado en Pilar Informa.',
 }
 
+function readConsent() {
+  if (typeof document === 'undefined') return null
+  const match = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('cookie_consent='))
+  if (!match) return null
+  const value = match.split('=').slice(1).join('=')
+  if (value === 'accepted' || value === 'rejected') return value
+  return null
+}
+
 export default function PilarConversation({ compact = false }) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [remaining, setRemaining] = useState(null)
+  const [consent, setConsent] = useState(null)
   const [messages, setMessages] = useState([WELCOME])
   const bottomRef = useRef(null)
 
-  useEffect(() => {
+  const refreshQuota = useCallback(() => {
     fetch('/api/pilar')
       .then((r) => r.json())
-      .then((d) => setRemaining(d.remaining))
+      .then((d) => {
+        if (d.needsConsent) {
+          setRemaining(null)
+          return
+        }
+        if (typeof d.remaining === 'number') setRemaining(d.remaining)
+      })
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    setConsent(readConsent())
+    const onConsent = (e) => {
+      const value = e?.detail ?? readConsent()
+      setConsent(value)
+      if (value === 'accepted') refreshQuota()
+      else setRemaining(null)
+    }
+    window.addEventListener('pilar:cookie-consent', onConsent)
+    return () => window.removeEventListener('pilar:cookie-consent', onConsent)
+  }, [refreshQuota])
+
+  useEffect(() => {
+    if (consent === 'accepted') refreshQuota()
+  }, [consent, refreshQuota])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  const chatBlocked = consent !== 'accepted'
+
   const send = async (text) => {
     const message = (text || input).trim()
     if (!message || loading) return
+
+    if (chatBlocked) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'pilar',
+          text:
+            consent === 'rejected'
+              ? 'Para chatear con Pilar hace falta aceptar las cookies técnicas del sitio. Podés cambiarlo borrando la cookie cookie_consent o desde la página de Cookies.'
+              : 'Antes de chatear, aceptá las cookies desde el aviso del sitio. Son solo técnicas para el límite de consultas.',
+        },
+      ])
+      return
+    }
+
     setInput('')
     setMessages((prev) => [...prev, { role: 'user', text: message }])
     setLoading(true)
@@ -48,6 +99,7 @@ export default function PilarConversation({ compact = false }) {
       })
       const data = await res.json()
       if (typeof data.remaining === 'number') setRemaining(data.remaining)
+      if (data.needsConsent) setConsent(readConsent())
 
       if (!res.ok) {
         setMessages((prev) => [
@@ -121,8 +173,16 @@ export default function PilarConversation({ compact = false }) {
             <Send className="h-4 w-4" />
           </button>
         </form>
-        {remaining !== null ? (
-          <p className="mt-2 text-center text-[11px] text-muted">Te quedan {remaining} consultas hoy</p>
+        {chatBlocked ? (
+          <p className="mt-2 text-center text-[11px] text-muted">
+            {consent === 'rejected'
+              ? 'Chat pausado: rechazaste las cookies técnicas.'
+              : 'Aceptá las cookies del aviso para chatear con Pilar.'}
+          </p>
+        ) : remaining !== null ? (
+          <p className="mt-2 text-center text-[11px] text-muted">
+            Te quedan {remaining} consultas este mes
+          </p>
         ) : null}
       </div>
     </div>

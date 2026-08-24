@@ -30,8 +30,9 @@ Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo**
 2. En el SQL Editor, ejecutá en orden:
    - `supabase/schema.sql`
    - `supabase/seed.sql`
-   Si el proyecto ya existía: las migraciones en `supabase/migrations/` (001…007).
+   Si el proyecto ya existía: las migraciones en `supabase/migrations/` (001…008).
    **Importante para fotos del admin:** corré `007_storage_media_bucket.sql`
+   **Importante para el tope mensual de Pilar:** corré `008_pilar_uso_mensual.sql`
    (crea el bucket público `media` + policies RLS). Sin eso, al subir una imagen
    vas a ver: “No se pudo subir la imagen. Revisá el bucket 'media'.”
 3. En Storage debería aparecer el bucket público `media` (lo crea la migración 007;
@@ -104,7 +105,7 @@ Ruta: `/admin`
 
 ## Pilar (asistente)
 
-Botón flotante en la web pública. Responde en lenguaje natural **solo con datos de la base** (negocios, promos, eventos, noticias, farmacias de turno). Anónimo, sin historial, **12 consultas por día** por navegador.
+Botón flotante en la web pública. Responde en lenguaje natural **solo con datos de la base** (negocios, promos, eventos, noticias, farmacias de turno). Anónimo, sin historial, **35 consultas por mes** (calendario Argentina) por navegador (`pilar_uid` + tabla `pilar_uso_mensual`, con respaldo en cookie). Requiere aceptar cookies técnicas.
 
 Opcional: `GEMINI_API_KEY` en Vercel (Google AI Studio, modelo `gemini-2.0-flash`). Sin la key, Pilar igual responde con las mismas reglas usando los datos cargados.
 

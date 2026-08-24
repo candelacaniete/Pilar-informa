@@ -1,5 +1,6 @@
 import { Manrope, Newsreader } from 'next/font/google'
 import './globals.css'
+import CookieConsent from '@/components/public/CookieConsent'
 import { safeSiteUrl } from '@/lib/supabase/config'
 import {
   BRAND,
@@ -70,6 +71,7 @@ export default function RootLayout({ children }) {
         className={`${manrope.variable} ${newsreader.variable} max-w-[100vw] overflow-x-hidden font-sans antialiased`}
       >
         {children}
+        <CookieConsent />
       </body>
     </html>
   )

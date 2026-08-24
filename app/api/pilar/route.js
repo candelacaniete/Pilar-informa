@@ -1,39 +1,40 @@
 import { NextResponse } from 'next/server'
 import { gatherPilarContext } from '@/lib/pilar/context'
 import { buildPilarReply } from '@/lib/pilar/answer'
-import { PILAR_DAILY_LIMIT, readPilarQuota } from '@/lib/pilar/quota'
-import { todayInPilar } from '@/lib/utils'
+import {
+  PILAR_MONTHLY_LIMIT,
+  checkAndIncrementPilarQuota,
+  getPilarQuotaStatus,
+  hasAcceptedCookies,
+  monthlyLimitMessage,
+} from '@/lib/pilar/quota'
 
-const COOKIE = 'pilar_q'
+export async function GET() {
+  if (!(await hasAcceptedCookies())) {
+    return NextResponse.json({
+      remaining: null,
+      limit: PILAR_MONTHLY_LIMIT,
+      needsConsent: true,
+    })
+  }
 
-function parseQuota(raw) {
-  if (!raw || !raw.includes(':')) return { date: todayInPilar(), count: 0 }
-  const [date, count] = raw.split(':')
-  const n = Number(count)
-  if (date !== todayInPilar() || Number.isNaN(n)) return { date: todayInPilar(), count: 0 }
-  return { date, count: n }
-}
-
-function quotaFromRequest(request) {
-  return parseQuota(request.cookies.get(COOKIE)?.value)
-}
-
-function withQuotaCookie(response, count) {
-  response.cookies.set(COOKIE, `${todayInPilar()}:${count}`, {
-    httpOnly: true,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24,
-  })
-  return response
-}
-
-export async function GET(request) {
-  const quota = quotaFromRequest(request)
-  return NextResponse.json({
-    remaining: Math.max(0, PILAR_DAILY_LIMIT - quota.count),
-    limit: PILAR_DAILY_LIMIT,
-  })
+  try {
+    const status = await getPilarQuotaStatus()
+    return NextResponse.json({
+      remaining: status.remaining,
+      limit: status.limit,
+      used: status.used,
+      monthKey: status.monthKey,
+      needsConsent: false,
+    })
+  } catch (err) {
+    console.error('Pilar quota GET error:', err)
+    return NextResponse.json({
+      remaining: PILAR_MONTHLY_LIMIT,
+      limit: PILAR_MONTHLY_LIMIT,
+      needsConsent: false,
+    })
+  }
 }
 
 export async function POST(request) {
@@ -49,13 +50,37 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Escribí una pregunta corta.' }, { status: 400 })
   }
 
-  const quota = quotaFromRequest(request)
-  if (quota.count >= PILAR_DAILY_LIMIT) {
+  if (!(await hasAcceptedCookies())) {
     return NextResponse.json(
       {
-        error: `Llegaste al límite de ${PILAR_DAILY_LIMIT} consultas por día. Volvé mañana.`,
+        error:
+          'Para chatear con Pilar necesitamos guardar unas cookies técnicas. Aceptá las cookies desde el aviso del sitio.',
+        remaining: null,
+        limit: PILAR_MONTHLY_LIMIT,
+        needsConsent: true,
+      },
+      { status: 403 },
+    )
+  }
+
+  let quota
+  try {
+    quota = await checkAndIncrementPilarQuota()
+  } catch (err) {
+    console.error('Pilar quota check error:', err)
+    return NextResponse.json(
+      { error: 'No pude responder ahora. Probá de nuevo en un momento.' },
+      { status: 500 },
+    )
+  }
+
+  if (!quota.allowed) {
+    return NextResponse.json(
+      {
+        error: monthlyLimitMessage(),
         remaining: 0,
-        limit: PILAR_DAILY_LIMIT,
+        limit: quota.limit,
+        used: quota.used,
       },
       { status: 429 },
     )
@@ -64,12 +89,12 @@ export async function POST(request) {
   try {
     const context = await gatherPilarContext(message)
     const reply = await buildPilarReply(message, context)
-    const nextCount = quota.count + 1
-    const remaining = PILAR_DAILY_LIMIT - nextCount
-    return withQuotaCookie(
-      NextResponse.json({ reply, remaining, limit: PILAR_DAILY_LIMIT }),
-      nextCount,
-    )
+    return NextResponse.json({
+      reply,
+      remaining: quota.remaining,
+      limit: quota.limit,
+      used: quota.used,
+    })
   } catch (err) {
     console.error('Pilar API error:', err)
     return NextResponse.json(
