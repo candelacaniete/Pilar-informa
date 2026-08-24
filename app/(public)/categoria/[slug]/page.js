@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
-import BannerSlots from '@/components/public/BannerSlots'
+import BannerSlot from '@/components/public/BannerSlot'
 import { getBannersForMonth, getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
-import { emptyCategoriaSlots } from '@/lib/banners'
+import { emptyCategoriaSlots, getBannerSlot } from '@/lib/banners'
 import { getCategoryAeo } from '@/lib/seo/categoryCopy'
 import { buildPageMetadata, categoryCollectionJsonLd } from '@/lib/seo/metadata'
 
@@ -34,6 +34,10 @@ export default async function CategoriaPage({ params }) {
       : getBannersForMonth({ ubicacion: 'categoria', categoriaId: categoria.id }),
   ])
   const bannerSlots = categoria.cerrada ? [] : emptyCategoriaSlots(banners)
+  const showBanners = bannerSlots.length > 0
+  const mid = Math.ceil(negocios.length / 2)
+  const firstHalf = negocios.slice(0, mid)
+  const secondHalf = negocios.slice(mid)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
@@ -82,26 +86,49 @@ export default async function CategoriaPage({ params }) {
         ) : null}
       </div>
 
-      {bannerSlots.length ? (
+      {showBanners ? (
         <div className="mt-8">
-          <BannerSlots slots={bannerSlots} columns={2} />
+          <BannerSlot {...getBannerSlot(bannerSlots, 1)} />
         </div>
       ) : null}
 
       {negocios.length > 0 ? (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {negocios.map((business) => (
-            <BusinessCard key={business.id} business={business} />
-          ))}
-        </div>
+        <>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {firstHalf.map((business) => (
+              <BusinessCard key={business.id} business={business} />
+            ))}
+          </div>
+
+          {showBanners ? (
+            <div className="my-8">
+              <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
+            </div>
+          ) : null}
+
+          {secondHalf.length ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {secondHalf.map((business) => (
+                <BusinessCard key={business.id} business={business} />
+              ))}
+            </div>
+          ) : null}
+        </>
       ) : (
-        <div className="mt-10 rounded-2xl border border-dashed border-line bg-white/60 px-6 py-16 text-center">
-          <p className="font-display text-2xl font-semibold text-ink">Todavía no hay negocios</p>
-          <p className="mt-2 text-sm text-muted">Volvé pronto o explorá otra categoría.</p>
-          <Link href="/guia" className="mt-6 inline-flex text-sm font-semibold text-teal">
-            Ir a la guía
-          </Link>
-        </div>
+        <>
+          {showBanners ? (
+            <div className="mt-8">
+              <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
+            </div>
+          ) : null}
+          <div className="mt-10 rounded-2xl border border-dashed border-line bg-white/60 px-6 py-16 text-center">
+            <p className="font-display text-2xl font-semibold text-ink">Todavía no hay negocios</p>
+            <p className="mt-2 text-sm text-muted">Volvé pronto o explorá otra categoría.</p>
+            <Link href="/guia" className="mt-6 inline-flex text-sm font-semibold text-teal">
+              Ir a la guía
+            </Link>
+          </div>
+        </>
       )}
     </div>
   )

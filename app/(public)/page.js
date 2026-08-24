@@ -15,8 +15,8 @@ import {
   getBannersForMonth,
 } from '@/lib/data'
 import { formatDate, formatShortDate } from '@/lib/utils'
-import { emptyHomeSlots } from '@/lib/banners'
-import BannerSlots from '@/components/public/BannerSlots'
+import { emptyHomeSlots, getBannerSlot } from '@/lib/banners'
+import BannerSlot from '@/components/public/BannerSlot'
 import { BRAND, BRAND_TAGLINE, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/lib/seo/site'
 import { buildPageMetadata, organizationJsonLd } from '@/lib/seo/metadata'
 
@@ -71,7 +71,7 @@ export default async function HomePage() {
     await Promise.all([
       getCategorias(),
       getNoticias({ limit: 4 }),
-      getNegociosActivos({ destacados: true, limit: 3 }),
+      getNegociosActivos({ destacados: true, limit: 6 }),
       getEventos({ fromToday: true, limit: 3 }),
       getPromociones({ limit: 3 }),
       getFarmaciasTurno(),
@@ -127,8 +127,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-4 pt-2 md:px-6">
-        <BannerSlots slots={bannerSlots} columns={4} />
+      {/* Banner home · slot 1 — debajo del hero */}
+      <section className="mx-auto max-w-6xl px-4 pb-2 pt-4 md:px-6">
+        <BannerSlot {...getBannerSlot(bannerSlots, 1)} />
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
@@ -190,6 +191,11 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      {/* Banner home · slot 2 — entre farmacias / noticias */}
+      <section className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+        <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
+      </section>
 
       {featuredNews ? (
         <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6 md:pb-20">
@@ -314,6 +320,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Banner home · slot 3 — entre descubrimiento y destacados */}
+      <section className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+        <BannerSlot {...getBannerSlot(bannerSlots, 3)} />
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
         <SectionHeading
           eyebrow="Guía local"
@@ -378,6 +389,11 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Banner home · slot 4 — entre agenda y promociones */}
+      <section className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+        <BannerSlot {...getBannerSlot(bannerSlots, 4)} />
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
