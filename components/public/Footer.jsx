@@ -74,7 +74,17 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-paper/45 md:flex-row md:items-center md:justify-between md:px-6">
           <p>© {new Date().getFullYear()} Guía Pilar</p>
-          <p>Tu guía local de Pilar</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <Link href="/privacidad" className="hover:text-teal-soft">
+              Privacidad
+            </Link>
+            <Link href="/terminos" className="hover:text-teal-soft">
+              Términos
+            </Link>
+            <Link href="/cookies" className="hover:text-teal-soft">
+              Cookies
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
