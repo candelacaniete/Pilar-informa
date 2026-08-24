@@ -66,7 +66,7 @@ export default function CookiesPage() {
         <p>
           El chat es anónimo: no guardamos el historial de conversación. Contamos hasta 35 mensajes
           por mes calendario (hora de Argentina) por navegador, usando las cookies de arriba. Si
-          rechazás las cookies, podés usar el sitio con normalidad, pero el chat puede no estar
+          rechazás las cookies, podés usar el sitio con normalidad, pero el chat no estará
           disponible.
         </p>
       </LegalSection>
