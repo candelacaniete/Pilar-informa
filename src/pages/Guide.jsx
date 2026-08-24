@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Check, SlidersHorizontal } from 'lucide-react'
 import SearchBar from '../components/SearchBar'
 import BusinessCard from '../components/BusinessCard'
+import Seo from '../components/Seo'
 import { businesses } from '../data/businesses'
 import { guideCategories, localities } from '../data/categories'
 
@@ -59,13 +60,18 @@ export default function Guide() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
+      <Seo
+        title="Guía de comercios, profesionales y servicios en Pilar"
+        description="Buscá restaurantes, peluquerías, veterinarias, farmacias, oficios y profesionales de Pilar, Del Viso, Derqui y alrededores."
+        path="/guia"
+      />
       <div className="max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Guía</p>
         <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
-          Guía de Pilar
+          Guía de comercios y servicios en Pilar
         </h1>
         <p className="mt-3 text-base text-muted md:text-lg">
-          Tu guía local de comercios, profesionales y servicios.
+          Directorio local de comercios, profesionales y oficios del partido de Pilar.
         </p>
       </div>
 

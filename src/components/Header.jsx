@@ -71,13 +71,6 @@ export default function Header() {
           </button>
 
           <Link
-            to="/mapa"
-            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-paper-deep hover:text-ink md:inline-flex"
-          >
-            Mapa
-          </Link>
-
-          <Link
             to="/#sumar-negocio"
             className="hidden rounded-lg bg-teal px-3.5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:bg-teal-dark md:inline-flex"
           >
@@ -132,16 +125,6 @@ export default function Header() {
                 {item.label}
               </NavLink>
             ))}
-            <NavLink
-              to="/mapa"
-              className={({ isActive }) =>
-                `rounded-xl px-4 py-3.5 text-lg font-medium transition-colors ${
-                  isActive ? 'bg-teal-soft text-teal-dark' : 'text-ink hover:bg-paper-deep'
-                }`
-              }
-            >
-              Mapa
-            </NavLink>
             <Link
               to="/#sumar-negocio"
               className="mt-4 rounded-xl bg-teal px-4 py-3.5 text-center text-base font-semibold text-white"

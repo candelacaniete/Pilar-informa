@@ -6,6 +6,7 @@ export const events = [
     dateLabel: 'Sábado 15',
     dateFilter: 'fin-de-semana',
     time: '11:00 a 20:00',
+    startDate: '2026-08-15T11:00:00-03:00',
     location: 'Plaza 12 de Octubre',
     locality: 'Pilar Centro',
     description: 'Emprendedores, gastronomía y música en vivo.',
@@ -19,6 +20,7 @@ export const events = [
     dateLabel: 'Domingo 16',
     dateFilter: 'fin-de-semana',
     time: '16:00 a 22:00',
+    startDate: '2026-08-16T16:00:00-03:00',
     location: 'Centro Cultural',
     locality: 'Pilar Centro',
     description: 'Música, teatro callejero y muestras de artistas locales.',
@@ -32,6 +34,7 @@ export const events = [
     dateLabel: 'Hoy',
     dateFilter: 'hoy',
     time: '20:30',
+    startDate: '2026-08-24T20:30:00-03:00',
     location: 'Plaza San Martín',
     locality: 'Derqui',
     description: 'Proyección familiar con food trucks y manta recomendada.',
@@ -45,6 +48,7 @@ export const events = [
     dateLabel: 'Miércoles 12',
     dateFilter: 'esta-semana',
     time: '9:00 a 14:00',
+    startDate: '2026-08-12T09:00:00-03:00',
     location: 'Predio Municipal',
     locality: 'Pilar',
     description: 'Verduras, panificados, miel y productos de la zona.',
@@ -58,6 +62,7 @@ export const events = [
     dateLabel: 'Sábado 15',
     dateFilter: 'fin-de-semana',
     time: '9:00 a 18:00',
+    startDate: '2026-08-15T09:00:00-03:00',
     location: 'Club Norte',
     locality: 'Villa Rosa',
     description: 'Categorías mixtas y premios para los primeros puestos.',
@@ -71,6 +76,7 @@ export const events = [
     dateLabel: 'Jueves 13',
     dateFilter: 'esta-semana',
     time: '18:00',
+    startDate: '2026-08-13T18:00:00-03:00',
     location: 'Atelier Manzanares',
     locality: 'Manzanares',
     description: 'Una tarde para crear con barro, sin experiencia previa.',
@@ -78,3 +84,5 @@ export const events = [
       'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=1000&q=80',
   },
 ]
+
+export const getEventBySlug = (slug) => events.find((item) => item.slug === slug)

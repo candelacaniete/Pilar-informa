@@ -243,5 +243,11 @@ export const businesses = [
 
 export const getBusinessBySlug = (slug) => businesses.find((b) => b.slug === slug)
 export const getFeaturedBusinesses = () => businesses.filter((b) => b.featured)
-export const getRelatedBusinesses = (slug, limit = 3) =>
-  businesses.filter((b) => b.slug !== slug).slice(0, limit)
+export const getBusinessesByCategory = (categoryName) =>
+  businesses.filter((b) => b.category === categoryName)
+export const getRelatedBusinesses = (slug, limit = 3) => {
+  const current = getBusinessBySlug(slug)
+  const rest = businesses.filter((b) => b.slug !== slug)
+  const same = current ? rest.filter((b) => b.category === current.category) : []
+  return [...same, ...rest.filter((b) => !same.includes(b))].slice(0, limit)
+}

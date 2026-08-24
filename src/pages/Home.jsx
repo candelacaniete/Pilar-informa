@@ -4,11 +4,15 @@ import SearchBar from '../components/SearchBar'
 import SectionHeading from '../components/SectionHeading'
 import BusinessCard from '../components/BusinessCard'
 import BusinessCTA from '../components/BusinessCTA'
+import Seo from '../components/Seo'
+import JsonLd from '../components/JsonLd'
 import { homeCategories, discoverCards } from '../data/categories'
 import { getFeaturedNews, getSecondaryNews } from '../data/news'
 import { getFeaturedBusinesses } from '../data/businesses'
 import { events } from '../data/events'
 import { promotions } from '../data/promotions'
+import { BRAND, BRAND_TAGLINE, DEFAULT_DESCRIPTION } from '../seo/site'
+import { organizationJsonLd } from '../seo/schema'
 
 export default function Home() {
   const featured = getFeaturedNews()
@@ -19,6 +23,9 @@ export default function Home() {
 
   return (
     <div>
+      <Seo title={`${BRAND} — ${BRAND_TAGLINE}`} description={DEFAULT_DESCRIPTION} path="/" />
+      <JsonLd data={organizationJsonLd()} />
+
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-line/60">
         <div
@@ -37,7 +44,7 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-14 md:px-6 md:pb-16 md:pt-20">
           <div className="fade-up max-w-3xl">
             <p className="text-sm font-extrabold uppercase tracking-[0.28em] text-teal-soft md:text-base">
-              Pilar Informa
+              Guía Pilar
             </p>
             <h1 className="mt-4 font-display text-[2.85rem] font-semibold leading-[1.02] text-white md:text-6xl lg:text-[4.4rem]">
               Todo Pilar.
@@ -67,8 +74,8 @@ export default function Home() {
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
             {homeCategories.map((cat) => (
               <Link
-                key={cat.id}
-                to={cat.id === 'eventos' ? '/eventos' : `/guia?categoria=${encodeURIComponent(cat.name)}`}
+                key={cat.slug}
+                to={cat.href || `/categoria/${cat.slug}`}
                 className="group flex flex-col items-center gap-2 rounded-2xl border border-line/70 bg-white/70 px-3 py-4 text-center transition hover:-translate-y-0.5 hover:border-teal/30 hover:bg-white hover:shadow-soft"
               >
                 <span className="text-2xl transition group-hover:scale-110" aria-hidden>
@@ -101,12 +108,12 @@ export default function Home() {
 
         <div className="grid gap-6 lg:grid-cols-[1.45fr_1fr]">
           <Link
-            to="/noticias"
+            to={`/noticias/${featured.slug}`}
             className="group relative overflow-hidden rounded-[1.5rem] bg-ink text-white shadow-soft"
           >
             <img
               src={featured.image}
-              alt=""
+              alt={featured.title}
               className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-60"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
@@ -131,13 +138,13 @@ export default function Home() {
             {secondary.map((item) => (
               <Link
                 key={item.id}
-                to="/noticias"
+                to={`/noticias/${item.slug}`}
                 className="group flex gap-4 rounded-2xl border border-line/70 bg-white p-3 transition hover:border-teal/25 hover:shadow-soft md:p-4"
               >
                 <div className="h-24 w-28 shrink-0 overflow-hidden rounded-xl md:h-28 md:w-32">
                   <img
                     src={item.image}
-                    alt=""
+                    alt={item.title}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
@@ -180,14 +187,14 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {discoverCards.map((card) => (
               <Link
-                key={card.id}
-                to={`/guia?categoria=${encodeURIComponent(card.title)}`}
+                key={card.slug}
+                to={`/categoria/${card.slug}`}
                 className="group relative overflow-hidden rounded-2xl"
               >
                 <div className="aspect-[4/5] overflow-hidden">
                   <img
                     src={card.image}
-                    alt=""
+                    alt={card.title}
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
@@ -246,13 +253,13 @@ export default function Home() {
             {upcomingEvents.map((event) => (
               <Link
                 key={event.id}
-                to="/eventos"
+                to={`/eventos/${event.slug}`}
                 className="group overflow-hidden rounded-2xl border border-line/70 bg-white transition hover:-translate-y-0.5 hover:shadow-lift"
               >
                 <div className="aspect-[16/10] overflow-hidden">
                   <img
                     src={event.image}
-                    alt=""
+                    alt={event.title}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
@@ -297,7 +304,7 @@ export default function Home() {
               <div className="aspect-[16/9] overflow-hidden">
                 <img
                   src={promo.image}
-                  alt=""
+                  alt={promo.title}
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
@@ -315,33 +322,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA + MAP TEASER */}
-      <section className="mx-auto max-w-6xl space-y-6 px-4 pb-16 md:px-6 md:pb-24">
+      <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6 md:pb-24">
         <BusinessCTA />
-
-        <Link
-          to="/mapa"
-          className="group relative flex min-h-[200px] overflow-hidden rounded-[1.75rem] border border-line/70"
-        >
-          <div className="map-grid absolute inset-0" />
-          <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/85 to-transparent" />
-          <div className="relative flex flex-col justify-center p-6 md:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Mapa</p>
-            <h3 className="mt-2 font-display text-2xl font-semibold text-ink md:text-3xl">
-              Explorá Pilar en el mapa
-            </h3>
-            <p className="mt-2 max-w-md text-sm text-muted md:text-base">
-              Encontrá lugares cerca tuyo. Comer, comprar, salud, servicios y eventos.
-            </p>
-            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-teal">
-              Abrir mapa
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-            </span>
-          </div>
-          <span className="absolute left-[35%] top-[40%] h-3.5 w-3.5 rounded-full bg-teal shadow-[0_0_0_6px_rgba(14,124,117,0.2)]" />
-          <span className="absolute left-[55%] top-[55%] h-3 w-3 rounded-full bg-amber shadow-[0_0_0_5px_rgba(201,133,42,0.2)]" />
-          <span className="absolute left-[70%] top-[30%] h-3 w-3 rounded-full bg-ink shadow-[0_0_0_5px_rgba(18,24,22,0.12)]" />
-        </Link>
       </section>
     </div>
   )

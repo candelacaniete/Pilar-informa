@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, Star, X } from 'lucide-react'
 import { businesses } from '../data/businesses'
 import { mapFilters } from '../data/categories'
+import Seo from '../components/Seo'
 
 export default function MapPage() {
   const [activeFilter, setActiveFilter] = useState('todos')
@@ -20,6 +21,12 @@ export default function MapPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
+      <Seo
+        title="Mapa de Pilar"
+        description="Explorá comercios y servicios de Pilar en el mapa."
+        path="/mapa"
+        robots="noindex, nofollow"
+      />
       <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
         <aside className="rounded-[1.5rem] border border-line/70 bg-white p-5 shadow-soft md:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Mapa</p>

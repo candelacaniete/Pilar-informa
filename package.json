@@ -1,10 +1,11 @@
 {
-  "name": "pilar-informa",
+  "name": "guia-pilar",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-sitemap.js",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"

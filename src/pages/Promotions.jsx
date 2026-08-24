@@ -1,17 +1,23 @@
 import { Link } from 'react-router-dom'
 import { Tag } from 'lucide-react'
+import Seo from '../components/Seo'
 import { promotions } from '../data/promotions'
 
 export default function Promotions() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
+      <Seo
+        title="Promociones de comercios en Pilar"
+        description="Descuentos y beneficios de comercios locales de Pilar. Presentá la promo desde Guía Pilar."
+        path="/promociones"
+      />
       <div className="max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Beneficios</p>
         <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
           Promociones en Pilar
         </h1>
         <p className="mt-3 text-base text-muted md:text-lg">
-          Descuentos y beneficios de comercios locales. Presentá la promo desde Pilar Informa.
+          Descuentos y beneficios de comercios locales. Presentá la promo desde Guía Pilar.
         </p>
       </div>
 

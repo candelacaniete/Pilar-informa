@@ -7,6 +7,7 @@ const links = [
   { to: '/guia', label: 'Guía' },
   { to: '/eventos', label: 'Eventos' },
   { to: '/promociones', label: 'Promociones' },
+  { to: '/preguntas-frecuentes', label: 'Preguntas frecuentes' },
   { to: '/#sumar-negocio', label: 'Sumar mi negocio' },
 ]
 
@@ -80,7 +81,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-paper/45 md:flex-row md:items-center md:justify-between md:px-6">
-          <p>© 2026 Pilar Informa</p>
+          <p>© 2026 Guía Pilar</p>
           <p>Prototipo visual · Datos ficticios para presentación</p>
         </div>
       </div>

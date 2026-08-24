@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /mapa
+
+Sitemap: https://guiapilar.ar/sitemap.xml

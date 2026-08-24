@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { CalendarDays, MapPin } from 'lucide-react'
+import Seo from '../components/Seo'
 import { events } from '../data/events'
 
 const filters = [
@@ -24,6 +26,11 @@ export default function Events() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
+      <Seo
+        title="Agenda de eventos en Pilar"
+        description="Ferias, cultura, deporte y planes en Pilar Centro, Derqui, Villa Rosa y el resto del partido."
+        path="/eventos"
+      />
       <div className="max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Agenda</p>
         <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
@@ -53,36 +60,39 @@ export default function Events() {
 
       <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {filtered.map((event) => (
-          <article
+          <Link
             key={event.id}
+            to={`/eventos/${event.slug}`}
             className="group overflow-hidden rounded-2xl border border-line/70 bg-white transition hover:-translate-y-0.5 hover:shadow-lift"
           >
-            <div className="aspect-[16/10] overflow-hidden">
-              <img
-                src={event.image}
-                alt=""
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-            <div className="p-5">
-              <div className="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-teal">
-                <span className="inline-flex items-center gap-1">
-                  <CalendarDays className="h-3.5 w-3.5" />
-                  {event.dateLabel}
-                </span>
-                <span className="inline-flex items-center gap-1 normal-case tracking-normal text-muted">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {event.location}
-                </span>
+            <article>
+              <div className="aspect-[16/10] overflow-hidden">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
               </div>
-              <h2 className="mt-3 font-display text-xl font-semibold text-ink">{event.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{event.description}</p>
-              <p className="mt-4 text-xs font-medium text-ink-soft">
-                {event.time} · {event.locality}
-              </p>
-            </div>
-          </article>
+              <div className="p-5">
+                <div className="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-teal">
+                  <span className="inline-flex items-center gap-1">
+                    <CalendarDays className="h-3.5 w-3.5" />
+                    {event.dateLabel}
+                  </span>
+                  <span className="inline-flex items-center gap-1 normal-case tracking-normal text-muted">
+                    <MapPin className="h-3.5 w-3.5" />
+                    {event.location}
+                  </span>
+                </div>
+                <h2 className="mt-3 font-display text-xl font-semibold text-ink">{event.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{event.description}</p>
+                <p className="mt-4 text-xs font-medium text-ink-soft">
+                  {event.time} · {event.locality}
+                </p>
+              </div>
+            </article>
+          </Link>
         ))}
       </div>
 

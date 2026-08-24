@@ -10,15 +10,26 @@ import {
   Star,
 } from 'lucide-react'
 import BusinessCard from '../components/BusinessCard'
+import Seo from '../components/Seo'
+import JsonLd from '../components/JsonLd'
 import { getBusinessBySlug, getRelatedBusinesses } from '../data/businesses'
+import { getShareEntity } from '../seo/lookup'
+import { localBusinessJsonLd } from '../seo/schema'
 
 export default function BusinessProfile() {
   const { slug } = useParams()
   const business = getBusinessBySlug(slug)
+  const share = getShareEntity('negocio', slug)
 
   if (!business) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center md:px-6">
+        <Seo
+          title={share.title}
+          description={share.description}
+          path={share.path}
+          image={share.image}
+        />
         <h1 className="font-display text-3xl font-semibold">Negocio no encontrado</h1>
         <p className="mt-3 text-muted">Este perfil todavía no está en la guía.</p>
         <Link to="/guia" className="mt-6 inline-flex text-sm font-semibold text-teal">
@@ -30,11 +41,25 @@ export default function BusinessProfile() {
 
   const related = getRelatedBusinesses(business.slug)
   const wa = business.whatsapp.replace(/\D/g, '')
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.address)}`
 
   return (
     <div>
+      <Seo
+        title={share.title}
+        description={share.description}
+        path={share.path}
+        image={share.image}
+        type="business.business"
+      />
+      <JsonLd data={localBusinessJsonLd(business)} />
+
       <div className="relative h-56 overflow-hidden md:h-80">
-        <img src={business.image} alt="" className="h-full w-full object-cover" />
+        <img
+          src={business.image}
+          alt={`${business.name} en ${business.locality}`}
+          className="h-full w-full object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
       </div>
 
@@ -103,13 +128,15 @@ export default function BusinessProfile() {
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
               </a>
-              <button
-                type="button"
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-line px-5 py-3.5 text-sm font-semibold text-ink transition hover:border-teal/30 hover:bg-teal-soft"
               >
                 <Navigation className="h-4 w-4" />
                 Cómo llegar
-              </button>
+              </a>
             </div>
           </div>
 
@@ -117,15 +144,56 @@ export default function BusinessProfile() {
             {business.description}
           </p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoBlock icon={MapPin} label="Dirección" value={business.address} />
-            <InfoBlock icon={Clock} label="Horarios" value={business.hours} />
-            <InfoBlock icon={MessageCircle} label="WhatsApp" value={business.whatsapp} />
-            <InfoBlock
-              icon={ExternalLink}
-              label="Sitio web"
-              value={business.website || 'Sin sitio web'}
-            />
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
+              <h2 className="font-display text-xl font-semibold text-ink">Dónde queda</h2>
+              <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+                {business.address}
+              </p>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-teal"
+              >
+                <MapPin className="h-4 w-4" />
+                Cómo llegar
+              </a>
+            </section>
+
+            <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
+              <h2 className="font-display text-xl font-semibold text-ink">Horarios</h2>
+              <p className="mt-3 inline-flex items-start gap-2 text-sm leading-relaxed text-ink-soft">
+                <Clock className="mt-0.5 h-4 w-4 shrink-0" />
+                {business.hours}
+              </p>
+            </section>
+
+            <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
+              <h2 className="font-display text-xl font-semibold text-ink">Cómo contactarlos</h2>
+              <a
+                href={`https://wa.me/${wa}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {business.whatsapp}
+              </a>
+              {business.website ? (
+                <a
+                  href={`https://${business.website}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  {business.website}
+                </a>
+              ) : (
+                <p className="mt-2 text-sm text-muted">Sin sitio web</p>
+              )}
+            </section>
           </div>
         </div>
 
@@ -140,18 +208,6 @@ export default function BusinessProfile() {
           </div>
         </section>
       </div>
-    </div>
-  )
-}
-
-function InfoBlock({ icon: Icon, label, value }) {
-  return (
-    <div className="rounded-2xl border border-line/70 bg-paper/70 p-4">
-      <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
-        <Icon className="h-3.5 w-3.5" />
-        {label}
-      </p>
-      <p className="mt-2 text-sm font-medium leading-relaxed text-ink">{value}</p>
     </div>
   )
 }
