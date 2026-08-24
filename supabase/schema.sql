@@ -373,16 +373,44 @@ create policy "farmacias_turno_admin_write"
   with check (public.es_admin());
 
 -- -----------------------------------------------------------------------------
--- Storage: bucket de medios (ejecutar también en Storage si hace falta crear bucket)
+-- Storage: bucket de medios (también en migrations/007_storage_media_bucket.sql)
 -- -----------------------------------------------------------------------------
--- insert into storage.buckets (id, name, public)
--- values ('media', 'media', true)
--- on conflict (id) do nothing;
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'media',
+  'media',
+  true,
+  5242880,
+  array['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+)
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
 
--- Políticas típicas de storage (descomentar si el bucket existe):
--- create policy "media_public_read" on storage.objects
---   for select to anon, authenticated using (bucket_id = 'media');
--- create policy "media_admin_write" on storage.objects
---   for all to authenticated
---   using (bucket_id = 'media' and public.es_admin())
---   with check (bucket_id = 'media' and public.es_admin());
+drop policy if exists "media_public_read" on storage.objects;
+create policy "media_public_read"
+  on storage.objects for select
+  to anon, authenticated
+  using (bucket_id = 'media');
+
+drop policy if exists "media_admin_insert" on storage.objects;
+create policy "media_admin_insert"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'media' and public.es_admin());
+
+drop policy if exists "media_admin_update" on storage.objects;
+create policy "media_admin_update"
+  on storage.objects for update
+  to authenticated
+  using (bucket_id = 'media' and public.es_admin())
+  with check (bucket_id = 'media' and public.es_admin());
+
+drop policy if exists "media_admin_delete" on storage.objects;
+create policy "media_admin_delete"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'media' and public.es_admin());
+
+drop policy if exists "media_admin_write" on storage.objects;

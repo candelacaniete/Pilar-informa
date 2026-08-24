@@ -30,8 +30,12 @@ Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo**
 2. En el SQL Editor, ejecutá en orden:
    - `supabase/schema.sql`
    - `supabase/seed.sql`
-   Si el proyecto ya existía: `supabase/migrations/001_prioridad.sql` y `supabase/migrations/002_farmacias_turno.sql`.
-3. En Storage, creá un bucket público llamado `media`.
+   Si el proyecto ya existía: las migraciones en `supabase/migrations/` (001…007).
+   **Importante para fotos del admin:** corré `007_storage_media_bucket.sql`
+   (crea el bucket público `media` + policies RLS). Sin eso, al subir una imagen
+   vas a ver: “No se pudo subir la imagen. Revisá el bucket 'media'.”
+3. En Storage debería aparecer el bucket público `media` (lo crea la migración 007;
+   también se puede crear a mano en Storage → New bucket → public).
 4. En Authentication, creá un usuario (email/password).
 5. Insertá ese usuario como admin:
 
