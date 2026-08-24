@@ -11,6 +11,7 @@ import {
   Star,
 } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
+import PremiumGallery from '@/components/public/PremiumGallery'
 import { getNegocioBySlug, getNegociosActivos } from '@/lib/data'
 import { horariosTexto, planLabel, principalFoto } from '@/lib/utils'
 import { buildPageMetadata, localBusinessJsonLd } from '@/lib/seo/metadata'
@@ -156,6 +157,15 @@ export default async function NegocioPage({ params }) {
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-ink-soft md:text-lg">
             {negocio.descripcion_larga || negocio.descripcion_corta}
           </p>
+
+          {negocio.plan === 'premium' ? (
+            <PremiumGallery
+              images={[...(negocio.negocio_fotos || [])].sort(
+                (a, b) => (a.orden ?? 0) - (b.orden ?? 0),
+              )}
+              alt={negocio.nombre}
+            />
+          ) : null}
 
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">

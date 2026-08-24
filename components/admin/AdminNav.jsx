@@ -6,6 +6,7 @@ import {
   Building2,
   CalendarDays,
   Cross,
+  ImageIcon,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -19,6 +20,7 @@ import { createClient } from '@/lib/supabase/client'
 const items = [
   { href: '/admin', label: 'Inicio', icon: LayoutDashboard, exact: true },
   { href: '/admin/negocios', label: 'Negocios', icon: Building2 },
+  { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
   { href: '/admin/noticias', label: 'Noticias', icon: Newspaper },
   { href: '/admin/eventos', label: 'Eventos', icon: CalendarDays },
   { href: '/admin/promociones', label: 'Promociones', icon: Tag },

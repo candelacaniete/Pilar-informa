@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
-import { getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
+import BannerSlots from '@/components/public/BannerSlots'
+import { getBannersForMonth, getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
+import { emptyCategoriaSlots } from '@/lib/banners'
 import { getCategoryAeo } from '@/lib/seo/categoryCopy'
 import { buildPageMetadata, categoryCollectionJsonLd } from '@/lib/seo/metadata'
 
@@ -25,7 +27,13 @@ export default async function CategoriaPage({ params }) {
   if (!categoria) notFound()
 
   const aeo = getCategoryAeo(categoria)
-  const negocios = await getNegociosActivos({ categoriaSlug: slug })
+  const [negocios, banners] = await Promise.all([
+    getNegociosActivos({ categoriaSlug: slug }),
+    categoria.cerrada
+      ? Promise.resolve([])
+      : getBannersForMonth({ ubicacion: 'categoria', categoriaId: categoria.id }),
+  ])
+  const bannerSlots = categoria.cerrada ? [] : emptyCategoriaSlots(banners)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
@@ -51,6 +59,7 @@ export default async function CategoriaPage({ params }) {
               {categoria.icono}
             </span>
             {categoria.nombre}
+            {categoria.cerrada ? ' · exclusiva' : ''}
           </p>
           <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
             {aeo.h1}
@@ -60,8 +69,9 @@ export default async function CategoriaPage({ params }) {
             {aeo.description}
           </p>
           <p className="mt-4 text-sm text-ink-soft">
-            {negocios.length} {negocios.length === 1 ? 'lugar activo' : 'lugares activos'} en esta
-            categoría.
+            {categoria.cerrada
+              ? 'Categoría cerrada: solo miembros autorizados.'
+              : `${negocios.length} ${negocios.length === 1 ? 'lugar activo' : 'lugares activos'} en esta categoría.`}
           </p>
         </div>
         {aeo.image ? (
@@ -71,6 +81,12 @@ export default async function CategoriaPage({ params }) {
           </div>
         ) : null}
       </div>
+
+      {bannerSlots.length ? (
+        <div className="mt-8">
+          <BannerSlots slots={bannerSlots} columns={2} />
+        </div>
+      ) : null}
 
       {negocios.length > 0 ? (
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
