@@ -13,6 +13,7 @@ import {
 import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
 import { getNegocioBySlug, getNegociosActivos } from '@/lib/data'
+import { resolvePremiumGalleryFotos } from '@/lib/gallery'
 import { horariosTexto, planLabel, principalFoto } from '@/lib/utils'
 import { buildPageMetadata, localBusinessJsonLd } from '@/lib/seo/metadata'
 
@@ -41,12 +42,14 @@ export default async function NegocioPage({ params }) {
   const negocio = await getNegocioBySlug(slug)
   if (!negocio) notFound()
 
-  const fotos = [...(negocio.negocio_fotos || [])].sort(
-    (a, b) => (a.orden ?? 0) - (b.orden ?? 0),
+  const fotos = resolvePremiumGalleryFotos(
+    negocio.slug,
+    negocio.plan,
+    negocio.negocio_fotos,
   )
   const isPremium = negocio.plan === 'premium'
-  const showGallery = isPremium && fotos.some((f) => f?.url)
-  const image = principalFoto(negocio)
+  const showGallery = isPremium && fotos.length > 0
+  const image = principalFoto(negocio) || fotos[0]?.url || null
   const wa = (negocio.whatsapp || '').replace(/\D/g, '')
   const hours = horariosTexto(negocio.horarios)
   const mapsUrl =
