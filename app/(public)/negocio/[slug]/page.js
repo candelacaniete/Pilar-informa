@@ -11,6 +11,7 @@ import {
   Star,
 } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
+import PremiumGallery from '@/components/public/PremiumGallery'
 import { getNegocioBySlug, getNegociosActivos } from '@/lib/data'
 import { horariosTexto, planLabel, principalFoto, siteUrl } from '@/lib/utils'
 
@@ -185,6 +186,15 @@ export default async function NegocioPage({ params }) {
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-ink-soft md:text-lg">
             {negocio.descripcion_larga || negocio.descripcion_corta}
           </p>
+
+          {negocio.plan === 'premium' ? (
+            <PremiumGallery
+              images={[...(negocio.negocio_fotos || [])].sort(
+                (a, b) => (a.orden ?? 0) - (b.orden ?? 0),
+              )}
+              alt={negocio.nombre}
+            />
+          ) : null}
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <InfoBlock icon={MapPin} label="Dirección" value={negocio.direccion || '—'} />

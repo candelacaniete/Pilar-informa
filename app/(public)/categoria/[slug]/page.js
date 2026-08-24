@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
-import { getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
+import BannerSlots from '@/components/public/BannerSlots'
+import { getBannersForMonth, getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
+import { emptyCategoriaSlots } from '@/lib/banners'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
@@ -19,7 +21,14 @@ export default async function CategoriaPage({ params }) {
   const categoria = await getCategoriaBySlug(slug)
   if (!categoria) notFound()
 
-  const negocios = await getNegociosActivos({ categoriaSlug: slug })
+  const [negocios, banners] = await Promise.all([
+    getNegociosActivos({ categoriaSlug: slug }),
+    categoria.cerrada
+      ? Promise.resolve([])
+      : getBannersForMonth({ ubicacion: 'categoria', categoriaId: categoria.id }),
+  ])
+
+  const bannerSlots = categoria.cerrada ? [] : emptyCategoriaSlots(banners)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
@@ -32,7 +41,10 @@ export default async function CategoriaPage({ params }) {
       </Link>
 
       <div className="max-w-2xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Categoría</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">
+          Categoría
+          {categoria.cerrada ? ' · exclusiva' : ''}
+        </p>
         <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
           <span className="mr-3" aria-hidden>
             {categoria.icono}
@@ -40,10 +52,17 @@ export default async function CategoriaPage({ params }) {
           {categoria.nombre}
         </h1>
         <p className="mt-3 text-base text-muted md:text-lg">
-          {negocios.length}{' '}
-          {negocios.length === 1 ? 'lugar activo' : 'lugares activos'} en esta categoría.
+          {categoria.cerrada
+            ? 'Categoría cerrada: solo miembros autorizados.'
+            : `${negocios.length} ${negocios.length === 1 ? 'lugar activo' : 'lugares activos'} en esta categoría.`}
         </p>
       </div>
+
+      {bannerSlots.length ? (
+        <div className="mt-8">
+          <BannerSlots slots={bannerSlots} columns={2} />
+        </div>
+      ) : null}
 
       {negocios.length > 0 ? (
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

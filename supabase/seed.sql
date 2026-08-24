@@ -16,8 +16,13 @@ insert into public.categorias (nombre, slug, icono, orden) values
   ('Educación', 'educacion', '📚', 9),
   ('Mascotas', 'mascotas', '🐾', 10),
   ('Construcción', 'construccion', '🧱', 11),
-  ('Tecnología', 'tecnologia', '💻', 12)
+  ('Tecnología', 'tecnologia', '💻', 12),
+  ('Community Managers', 'community-managers', '📱', 13),
+  ('Creadores UGC', 'creadores-ugc', '🎬', 14)
 on conflict (slug) do nothing;
+
+-- Nota: después del schema base, ejecutar migrations/003_categorias_cerradas_banners.sql
+-- para cerrar Tecnología, allowlist Katem/Konstruct y tabla banners.
 
 -- Negocios de ejemplo
 with cats as (

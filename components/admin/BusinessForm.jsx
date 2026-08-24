@@ -32,17 +32,34 @@ const empty = {
   prioridad: '100',
   verificado: true,
   foto: '',
+  galeria: ['', '', '', '', ''],
 }
 
 export default function BusinessForm({ categorias = [], initial = null }) {
   const router = useRouter()
   const { showToast } = useToast()
+
+  const categoriasDisponibles = useMemo(() => {
+    const abiertas = categorias.filter((c) => !c.cerrada)
+    if (!initial?.categoria_id) return abiertas
+    const actual = categorias.find((c) => c.id === initial.categoria_id)
+    if (actual?.cerrada && !abiertas.some((c) => c.id === actual.id)) {
+      return [actual, ...abiertas]
+    }
+    return abiertas
+  }, [categorias, initial])
+
   const initialValues = useMemo(() => {
-    if (!initial) return { ...empty, categoria_id: categorias[0]?.id || '' }
-    const foto =
-      initial.negocio_fotos?.find((f) => f.es_principal)?.url ||
-      initial.negocio_fotos?.[0]?.url ||
-      ''
+    if (!initial) return { ...empty, categoria_id: categoriasDisponibles[0]?.id || '' }
+    const ordenadas = [...(initial.negocio_fotos || [])].sort(
+      (a, b) => (a.orden ?? 0) - (b.orden ?? 0),
+    )
+    const principal =
+      ordenadas.find((f) => f.es_principal)?.url || ordenadas[0]?.url || ''
+    const extras = ordenadas
+      .filter((f) => f.url && f.url !== principal)
+      .map((f) => f.url)
+    const galeria = [...extras, '', '', '', '', ''].slice(0, 5)
     return {
       ...empty,
       ...initial,
@@ -54,15 +71,23 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       plan_vence: initial.plan_vence ? String(initial.plan_vence).slice(0, 10) : '',
       prioridad: String(initial.prioridad ?? 100),
       horarios_texto: horariosTexto(initial.horarios),
-      foto,
+      foto: principal,
+      galeria,
     }
-  }, [initial, categorias])
+  }, [initial, categoriasDisponibles])
 
   const [form, setForm] = useState(initialValues)
   const [saving, setSaving] = useState(false)
   const [slugTouched, setSlugTouched] = useState(Boolean(initial))
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
+  const setGaleria = (index, url) => {
+    setForm((prev) => {
+      const next = [...(prev.galeria || [])]
+      next[index] = url
+      return { ...prev, galeria: next }
+    })
+  }
 
   const onNombre = (value) => {
     set('nombre', value)
@@ -101,11 +126,9 @@ export default function BusinessForm({ categorias = [], initial = null }) {
 
     try {
       if (!isSupabaseConfigured()) {
-        showToast('Negocio guardado en modo demo (sin base de datos)')
-        router.push('/admin/negocios')
+        showToast('Modo demo: configurá Supabase para guardar', 'error')
         return
       }
-
       const supabase = createClient()
       let negocioId = initial?.id
 
@@ -118,16 +141,25 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         negocioId = data.id
       }
 
-      if (form.foto && negocioId) {
-        // Reemplazar foto principal
+      if (negocioId) {
         await supabase.from('negocio_fotos').delete().eq('negocio_id', negocioId)
-        const { error: fotoError } = await supabase.from('negocio_fotos').insert({
-          negocio_id: negocioId,
-          url: form.foto,
-          orden: 0,
-          es_principal: true,
-        })
-        if (fotoError) throw fotoError
+        const urls = []
+        if (form.foto) urls.push(form.foto)
+        if (form.plan === 'premium') {
+          for (const url of form.galeria || []) {
+            if (url && !urls.includes(url) && urls.length < 6) urls.push(url)
+          }
+        }
+        if (urls.length) {
+          const rows = urls.map((url, orden) => ({
+            negocio_id: negocioId,
+            url,
+            orden,
+            es_principal: orden === 0,
+          }))
+          const { error: fotoError } = await supabase.from('negocio_fotos').insert(rows)
+          if (fotoError) throw fotoError
+        }
       }
 
       showToast(initial ? 'Cambios guardados correctamente' : 'Negocio publicado correctamente')
@@ -135,7 +167,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       router.refresh()
     } catch (err) {
       console.error(err)
-      showToast('No se pudo guardar. Revisá los datos e intentá de nuevo.', 'error')
+      showToast(err.message || 'No se pudo guardar. Revisá los datos e intentá de nuevo.', 'error')
     } finally {
       setSaving(false)
     }
@@ -172,9 +204,10 @@ export default function BusinessForm({ categorias = [], initial = null }) {
               onChange={(e) => set('categoria_id', e.target.value)}
               className={inputClass}
             >
-              {categorias.map((c) => (
+              {categoriasDisponibles.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.nombre}
+                  {c.cerrada ? ' (cerrada)' : ''}
                 </option>
               ))}
             </select>
@@ -267,13 +300,34 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         </Field>
       </Section>
 
-      <Section title="Fotos" subtitle="Una foto principal clara ayuda mucho.">
+      <Section
+        title="Fotos"
+        subtitle={
+          form.plan === 'premium'
+            ? 'Premium: hasta 6 fotos (1 principal + 5 de galería).'
+            : 'Destacado: una foto principal. La galería es solo Premium.'
+        }
+      >
         <ImageUpload
           label="Foto principal"
           folder="negocios"
           value={form.foto}
           onChange={(url) => set('foto', url)}
         />
+        {form.plan === 'premium' ? (
+          <div className="mt-4 space-y-3">
+            <p className="text-sm font-medium text-slate-700">Galería Premium (hasta 5 adicionales)</p>
+            {(form.galeria || []).map((url, index) => (
+              <ImageUpload
+                key={`galeria-${index}`}
+                label={`Foto ${index + 2}`}
+                folder="negocios"
+                value={url}
+                onChange={(next) => setGaleria(index, next)}
+              />
+            ))}
+          </div>
+        ) : null}
       </Section>
 
       <Section title="Plan y pago" subtitle="Todos los negocios pagan para aparecer. No hay plan gratis.">

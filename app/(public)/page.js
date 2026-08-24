@@ -12,8 +12,11 @@ import {
   getEventos,
   getPromociones,
   getFarmaciasTurno,
+  getBannersForMonth,
 } from '@/lib/data'
 import { formatDate, formatShortDate } from '@/lib/utils'
+import { emptyHomeSlots } from '@/lib/banners'
+import BannerSlots from '@/components/public/BannerSlots'
 
 const HERO_IMAGE =
   'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=1800&q=80'
@@ -50,17 +53,20 @@ const discoverCards = [
 ]
 
 export default async function HomePage() {
-  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy] = await Promise.all([
-    getCategorias(),
-    getNoticias({ limit: 4 }),
-    getNegociosActivos({ destacados: true, limit: 3 }),
-    getEventos({ fromToday: true, limit: 3 }),
-    getPromociones({ limit: 3 }),
-    getFarmaciasTurno(),
-  ])
+  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy, homeBanners] =
+    await Promise.all([
+      getCategorias(),
+      getNoticias({ limit: 4 }),
+      getNegociosActivos({ destacados: true, limit: 3 }),
+      getEventos({ fromToday: true, limit: 3 }),
+      getPromociones({ limit: 3 }),
+      getFarmaciasTurno(),
+      getBannersForMonth({ ubicacion: 'home' }),
+    ])
 
   const homeCats = categorias.slice(0, 7)
   const [featuredNews, ...secondaryNews] = noticias
+  const bannerSlots = emptyHomeSlots(homeBanners)
 
   return (
     <div>
@@ -101,6 +107,10 @@ export default async function HomePage() {
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-4 pt-2 md:px-6">
+        <BannerSlots slots={bannerSlots} columns={4} />
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">

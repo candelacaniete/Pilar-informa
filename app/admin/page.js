@@ -101,7 +101,9 @@ export default async function AdminDashboardPage() {
         </ul>
       </section>
 
-      <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <QuickLink href="/admin/negocios/nuevo" label="Nuevo negocio" />
+        <QuickLink href="/admin/banners/nuevo" label="Nuevo banner" />
         <QuickLink href="/admin/noticias/nueva" label="Nueva noticia" />
         <QuickLink href="/admin/eventos/nuevo" label="Nuevo evento" />
         <QuickLink href="/admin/promociones/nueva" label="Nueva promoción" />
