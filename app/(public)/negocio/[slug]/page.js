@@ -12,7 +12,8 @@ import {
 } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
-import { getNegocioBySlug, getNegociosActivos } from '@/lib/data'
+import ResenasSection from '@/components/public/ResenasSection'
+import { getNegocioBySlug, getNegociosActivos, getResenasPublicas } from '@/lib/data'
 import { resolvePremiumGalleryFotos } from '@/lib/gallery'
 import { horariosTexto, planLabel, principalFoto } from '@/lib/utils'
 import { buildPageMetadata, localBusinessJsonLd } from '@/lib/seo/metadata'
@@ -62,6 +63,8 @@ export default async function NegocioPage({ params }) {
   const related = (await getNegociosActivos({ categoriaSlug: negocio.categorias?.slug }))
     .filter((n) => n.id !== negocio.id)
     .slice(0, 3)
+
+  const resenas = await getResenasPublicas(negocio.id)
 
   const jsonLd = localBusinessJsonLd(negocio, image)
 
@@ -233,6 +236,8 @@ export default async function NegocioPage({ params }) {
               )}
             </section>
           </div>
+
+          <ResenasSection negocio={negocio} resenasIniciales={resenas} />
         </div>
 
         {related.length > 0 ? (

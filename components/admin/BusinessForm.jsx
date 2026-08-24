@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { horariosTexto, slugify } from '@/lib/utils'
 import ImageUpload from './ImageUpload'
+import CodigoResenaField from './CodigoResenaField'
 import { useToast } from './Toast'
 
 const empty = {
@@ -23,8 +24,6 @@ const empty = {
   instagram: '',
   web: '',
   horarios_texto: '',
-  rating: '0',
-  cantidad_opiniones: '0',
   estado: 'activo',
   plan: 'destacado',
   fecha_pago: '',
@@ -65,8 +64,6 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       ...initial,
       lat: initial.lat ?? '',
       lng: initial.lng ?? '',
-      rating: String(initial.rating ?? 0),
-      cantidad_opiniones: String(initial.cantidad_opiniones ?? 0),
       fecha_pago: initial.fecha_pago || '',
       plan_vence: initial.plan_vence ? String(initial.plan_vence).slice(0, 10) : '',
       prioridad: String(initial.prioridad ?? 100),
@@ -114,8 +111,6 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       instagram: form.instagram || null,
       web: form.web || null,
       horarios: { texto: form.horarios_texto || '' },
-      rating: Number(form.rating || 0),
-      cantidad_opiniones: Number(form.cantidad_opiniones || 0),
       estado: form.estado,
       plan: form.plan,
       fecha_pago: form.fecha_pago || null,
@@ -331,6 +326,16 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       </Section>
 
       <Section title="Plan y pago" subtitle="Todos los negocios pagan para aparecer. No hay plan gratis.">
+        {initial?.codigo_resena ? (
+          <CodigoResenaField codigo={initial.codigo_resena} />
+        ) : null}
+        {initial ? (
+          <p className="text-sm text-slate-600">
+            Calificación en la guía:{' '}
+            <strong>{Number(initial.rating || 0).toFixed(1)}</strong> ·{' '}
+            {initial.cantidad_opiniones || 0} reseñas (se actualiza sola)
+          </p>
+        ) : null}
         <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Plan">
             <select value={form.plan} onChange={(e) => set('plan', e.target.value)} className={inputClass}>

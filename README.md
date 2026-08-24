@@ -30,9 +30,10 @@ Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo**
 2. En el SQL Editor, ejecutá en orden:
    - `supabase/schema.sql`
    - `supabase/seed.sql`
-   Si el proyecto ya existía: las migraciones en `supabase/migrations/` (001…008).
+   Si el proyecto ya existía: las migraciones en `supabase/migrations/` (001…009).
    **Importante para fotos del admin:** corré `007_storage_media_bucket.sql`
    **Importante para el tope mensual de Pilar:** corré `008_pilar_uso_mensual.sql`
+   **Importante para reseñas verificadas:** corré `009_resenas_verificadas.sql`
    (crea el bucket público `media` + policies RLS). Sin eso, al subir una imagen
    vas a ver: “No se pudo subir la imagen. Revisá el bucket 'media'.”
 3. En Storage debería aparecer el bucket público `media` (lo crea la migración 007;
