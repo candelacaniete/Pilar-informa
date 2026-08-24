@@ -10,6 +10,7 @@ export default async function sitemap() {
     getCategorias(),
   ])
 
+  const legalPaths = new Set(['/privacidad', '/terminos', '/cookies'])
   const staticRoutes = [
     '',
     '/guia',
@@ -18,11 +19,14 @@ export default async function sitemap() {
     '/promociones',
     '/farmacias',
     '/pilar',
+    '/privacidad',
+    '/terminos',
+    '/cookies',
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: new Date(),
-    changeFrequency: path === '' ? 'daily' : 'weekly',
-    priority: path === '' ? 1 : 0.8,
+    changeFrequency: path === '' ? 'daily' : legalPaths.has(path) ? 'yearly' : 'weekly',
+    priority: path === '' ? 1 : legalPaths.has(path) ? 0.3 : 0.8,
   }))
 
   const categoriaRoutes = categorias.map((c) => ({
