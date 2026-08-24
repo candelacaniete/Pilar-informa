@@ -71,7 +71,7 @@ export default async function HomePage() {
     await Promise.all([
       getCategorias(),
       getNoticias({ limit: 4 }),
-      getNegociosActivos({ destacados: true, limit: 3 }),
+      getNegociosActivos({ destacados: true, limit: 6 }),
       getEventos({ fromToday: true, limit: 3 }),
       getPromociones({ limit: 3 }),
       getFarmaciasTurno(),
