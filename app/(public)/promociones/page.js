@@ -2,11 +2,14 @@ import Link from 'next/link'
 import { Tag } from 'lucide-react'
 import { getPromociones } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
+import { buildPageMetadata } from '@/lib/seo/metadata'
 
-export const metadata = {
-  title: 'Promociones',
-  description: 'Descuentos y beneficios de comercios locales en Pilar.',
-}
+export const metadata = buildPageMetadata({
+  title: 'Promociones de comercios en Pilar',
+  description:
+    'Descuentos y beneficios de comercios locales de Pilar. Presentá la promo desde Guía Pilar.',
+  path: '/promociones',
+})
 
 export default async function PromocionesPage() {
   const promociones = await getPromociones()
@@ -19,7 +22,7 @@ export default async function PromocionesPage() {
           Promociones en Pilar
         </h1>
         <p className="mt-3 text-base text-muted md:text-lg">
-          Descuentos y beneficios de comercios locales. Presentá la promo desde Pilar Informa.
+          Descuentos y beneficios de comercios locales. Presentá la promo desde Guía Pilar.
         </p>
       </div>
 

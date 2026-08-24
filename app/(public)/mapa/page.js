@@ -1,10 +1,13 @@
 import MapExplorer from '@/components/public/MapExplorer'
 import { getNegociosActivos } from '@/lib/data'
+import { buildPageMetadata } from '@/lib/seo/metadata'
 
-export const metadata = {
-  title: 'Mapa',
+export const metadata = buildPageMetadata({
+  title: 'Mapa de Pilar',
   description: 'Explorá comercios y servicios de Pilar en el mapa.',
-}
+  path: '/mapa',
+  noIndex: true,
+})
 
 export default async function MapaPage() {
   const negocios = await getNegociosActivos()

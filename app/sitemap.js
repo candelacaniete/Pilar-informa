@@ -1,12 +1,13 @@
-import { getNegociosActivos, getNoticias, getEventos } from '@/lib/data'
+import { getNegociosActivos, getNoticias, getEventos, getCategorias } from '@/lib/data'
 import { siteUrl } from '@/lib/utils'
 
 export default async function sitemap() {
   const base = siteUrl()
-  const [negocios, noticias, eventos] = await Promise.all([
+  const [negocios, noticias, eventos, categorias] = await Promise.all([
     getNegociosActivos(),
     getNoticias(),
     getEventos({ fromToday: false }),
+    getCategorias(),
   ])
 
   const staticRoutes = [
@@ -17,12 +18,18 @@ export default async function sitemap() {
     '/promociones',
     '/farmacias',
     '/pilar',
-    '/mapa',
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: new Date(),
     changeFrequency: path === '' ? 'daily' : 'weekly',
     priority: path === '' ? 1 : 0.8,
+  }))
+
+  const categoriaRoutes = categorias.map((c) => ({
+    url: `${base}/categoria/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.75,
   }))
 
   const negocioRoutes = negocios.map((n) => ({
@@ -46,5 +53,5 @@ export default async function sitemap() {
     priority: 0.5,
   }))
 
-  return [...staticRoutes, ...negocioRoutes, ...noticiaRoutes, ...eventoRoutes]
+  return [...staticRoutes, ...categoriaRoutes, ...negocioRoutes, ...noticiaRoutes, ...eventoRoutes]
 }

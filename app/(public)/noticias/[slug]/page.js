@@ -3,21 +3,19 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { getNoticiaBySlug, getNoticias } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
+import { buildPageMetadata, newsArticleJsonLd } from '@/lib/seo/metadata'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const noticia = await getNoticiaBySlug(slug)
   if (!noticia) return { title: 'Noticia no encontrada' }
-  return {
+  return buildPageMetadata({
     title: noticia.titulo,
     description: noticia.bajada || noticia.cuerpo?.slice(0, 160),
-    openGraph: {
-      title: noticia.titulo,
-      description: noticia.bajada,
-      images: noticia.imagen ? [{ url: noticia.imagen }] : undefined,
-      type: 'article',
-    },
-  }
+    path: `/noticias/${noticia.slug}`,
+    image: noticia.imagen,
+    type: 'article',
+  })
 }
 
 export default async function NoticiaDetallePage({ params }) {
@@ -31,6 +29,11 @@ export default async function NoticiaDetallePage({ params }) {
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd(noticia)) }}
+      />
+
       <Link
         href="/noticias"
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-teal"
@@ -48,13 +51,13 @@ export default async function NoticiaDetallePage({ params }) {
       <p className="mt-4 text-lg leading-relaxed text-muted">{noticia.bajada}</p>
       <p className="mt-5 inline-flex items-center gap-1.5 text-sm text-ink-soft">
         <Clock className="h-4 w-4" />
-        {noticia.autor || 'Redacción Pilar Informa'} · {formatDate(noticia.publicado_en)}
+        {noticia.autor || 'Redacción Guía Pilar'} · {formatDate(noticia.publicado_en)}
       </p>
 
       {noticia.imagen ? (
         <div className="mt-8 overflow-hidden rounded-[1.5rem]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={noticia.imagen} alt="" className="aspect-[16/10] w-full object-cover" />
+          <img src={noticia.imagen} alt={noticia.titulo} className="aspect-[16/10] w-full object-cover" />
         </div>
       ) : null}
 
