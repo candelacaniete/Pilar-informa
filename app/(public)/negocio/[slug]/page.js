@@ -63,36 +63,40 @@ export default async function NegocioPage({ params }) {
   const jsonLd = localBusinessJsonLd(negocio, image)
 
   return (
-    <div>
+    <div className="bg-paper pb-4 pt-8 md:pt-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {showGallery ? (
-        <PremiumGallery images={fotos} alt={negocio.nombre} />
-      ) : (
-        <div className="relative h-40 overflow-hidden sm:h-52 md:h-64">
-          {image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={image}
-              alt={`${negocio.nombre} en ${negocio.localidad || 'Pilar'}`}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="h-full w-full bg-paper-deep" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+      {!showGallery ? (
+        <div className="relative mx-auto mb-0 h-40 max-w-6xl overflow-hidden px-4 sm:h-52 md:h-64 md:px-6">
+          <div className="h-full overflow-hidden rounded-[1.5rem]">
+            {image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={image}
+                alt={`${negocio.nombre} en ${negocio.localidad || 'Pilar'}`}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="h-full w-full bg-paper-deep" />
+            )}
+            <div className="absolute inset-0 rounded-[1.5rem] bg-gradient-to-t from-ink/50 via-transparent to-transparent" />
+          </div>
         </div>
-      )}
+      ) : null}
 
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <div
           className={`relative rounded-[1.5rem] border border-line/70 bg-white p-5 shadow-lift md:p-8 ${
-            showGallery ? '-mt-4 md:-mt-6' : '-mt-12 md:-mt-16'
+            showGallery ? '' : '-mt-12 md:-mt-16'
           }`}
         >
+          {showGallery ? (
+            <PremiumGallery images={fotos} alt={negocio.nombre} />
+          ) : null}
+
           <Link
             href="/guia"
             className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-teal"
