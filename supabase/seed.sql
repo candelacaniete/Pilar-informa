@@ -127,6 +127,22 @@ from (values
 join public.negocios n on n.slug = v.slug
 on conflict do nothing;
 
+-- Galería Premium demo (Casa Marea): hasta 6 fotos
+insert into public.negocio_fotos (negocio_id, url, orden, es_principal)
+select n.id, v.url, v.orden, false
+from (values
+  ('casa-marea', 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80', 1),
+  ('casa-marea', 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80', 2),
+  ('casa-marea', 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=80', 3),
+  ('casa-marea', 'https://images.unsplash.com/photo-1453614512568-c4024d13c237?auto=format&fit=crop&w=1200&q=80', 4),
+  ('casa-marea', 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1200&q=80', 5)
+) as v(slug, url, orden)
+join public.negocios n on n.slug = v.slug
+where not exists (
+  select 1 from public.negocio_fotos f
+  where f.negocio_id = n.id and f.url = v.url
+);
+
 -- Noticias
 insert into public.noticias (titulo, slug, bajada, cuerpo, imagen, categoria, publicado_en, autor, estado) values
 (

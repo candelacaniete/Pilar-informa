@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import SearchBar from '@/components/public/SearchBar'
 import BusinessCard from '@/components/public/BusinessCard'
-import { getCategorias, getNegociosActivos } from '@/lib/data'
+import BannerSlot from '@/components/public/BannerSlot'
+import { getBannersForMonth, getCategorias, getNegociosActivos } from '@/lib/data'
+import { emptyCategoriaSlots, getBannerSlot } from '@/lib/banners'
 import { buildPageMetadata } from '@/lib/seo/metadata'
 
 export const metadata = buildPageMetadata({
@@ -44,6 +46,19 @@ export default async function GuiaPage({ searchParams }) {
 
     return matchesQuery && matchesCategoria
   })
+
+  // 2 banners: por categoría filtrada, o slots "Todas" (house) en listado general.
+  // Categorías cerradas no venden banners.
+  const showBanners = !categoriaActiva?.cerrada
+  const categoryBanners =
+    showBanners && categoriaActiva
+      ? await getBannersForMonth({ ubicacion: 'categoria', categoriaId: categoriaActiva.id })
+      : []
+  const bannerSlots = showBanners ? emptyCategoriaSlots(categoryBanners) : []
+
+  const mid = Math.ceil(filtered.length / 2)
+  const firstHalf = filtered.slice(0, mid)
+  const secondHalf = filtered.slice(mid)
 
   const buildHref = (slug) => {
     const next = new URLSearchParams()
@@ -110,17 +125,46 @@ export default async function GuiaPage({ searchParams }) {
         </p>
       </div>
 
+      {showBanners ? (
+        <div className="mt-6">
+          <BannerSlot {...getBannerSlot(bannerSlots, 1)} />
+        </div>
+      ) : null}
+
       {filtered.length > 0 ? (
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((business) => (
-            <BusinessCard key={business.id} business={business} />
-          ))}
-        </div>
+        <>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {firstHalf.map((business) => (
+              <BusinessCard key={business.id} business={business} />
+            ))}
+          </div>
+
+          {showBanners ? (
+            <div className="my-8">
+              <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
+            </div>
+          ) : null}
+
+          {secondHalf.length ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {secondHalf.map((business) => (
+                <BusinessCard key={business.id} business={business} />
+              ))}
+            </div>
+          ) : null}
+        </>
       ) : (
-        <div className="mt-8 rounded-2xl border border-dashed border-line bg-white/60 px-6 py-16 text-center">
-          <p className="font-display text-2xl font-semibold text-ink">No encontramos resultados</p>
-          <p className="mt-2 text-sm text-muted">Probá con otra búsqueda o sacá algún filtro.</p>
-        </div>
+        <>
+          {showBanners ? (
+            <div className="mt-8">
+              <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
+            </div>
+          ) : null}
+          <div className="mt-8 rounded-2xl border border-dashed border-line bg-white/60 px-6 py-16 text-center">
+            <p className="font-display text-2xl font-semibold text-ink">No encontramos resultados</p>
+            <p className="mt-2 text-sm text-muted">Probá con otra búsqueda o sacá algún filtro.</p>
+          </div>
+        </>
       )}
     </div>
   )
