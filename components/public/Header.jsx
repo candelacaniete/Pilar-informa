@@ -43,7 +43,12 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/70 bg-paper/90 backdrop-blur-md">
+    <>
+    <header
+      className={`sticky top-0 z-[70] border-b border-line/70 ${
+        open ? 'bg-paper' : 'bg-paper/90 backdrop-blur-md'
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:h-[4.25rem] md:px-6">
         <Logo />
 
@@ -111,8 +116,17 @@ export default function Header() {
         </div>
       )}
 
-      {open && (
-        <div className="fixed inset-0 top-16 z-40 bg-paper lg:hidden">
+    </header>
+
+    {open ? (
+      <>
+        <button
+          type="button"
+          className="fixed inset-0 z-[60] bg-ink/30 lg:hidden"
+          aria-label="Cerrar menú"
+          onClick={() => setOpen(false)}
+        />
+        <div className="fixed inset-x-0 bottom-0 top-16 z-[60] overflow-y-auto bg-paper lg:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-6">
             {navItems.map((item) => (
               <Link
@@ -131,7 +145,8 @@ export default function Header() {
             </Link>
           </nav>
         </div>
-      )}
-    </header>
+      </>
+    ) : null}
+    </>
   )
 }
