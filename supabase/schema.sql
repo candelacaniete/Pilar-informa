@@ -70,6 +70,7 @@ create table if not exists public.negocios (
   horarios jsonb not null default '{}'::jsonb,
   rating numeric(2,1) not null default 0,
   cantidad_opiniones integer not null default 0,
+  codigo_resena text not null,
   estado public.negocio_estado not null default 'activo',
   plan public.negocio_plan not null default 'destacado',
   fecha_pago date,
@@ -113,6 +114,21 @@ create table if not exists public.negocio_fotos (
 );
 
 create index if not exists negocio_fotos_negocio_idx on public.negocio_fotos (negocio_id, orden);
+
+-- Reseñas verificadas (código del negocio)
+create type public.resena_estado as enum ('publicada', 'oculta');
+
+create table if not exists public.resenas (
+  id uuid primary key default gen_random_uuid(),
+  negocio_id uuid not null references public.negocios (id) on delete cascade,
+  calificacion integer not null check (calificacion between 1 and 5),
+  texto text,
+  estado public.resena_estado not null default 'publicada',
+  ip_hash text,
+  creado_en timestamptz not null default now()
+);
+
+create index if not exists resenas_negocio_idx on public.resenas (negocio_id, creado_en desc);
 
 -- -----------------------------------------------------------------------------
 -- Noticias
@@ -231,6 +247,7 @@ alter table public.admins enable row level security;
 alter table public.categorias enable row level security;
 alter table public.negocios enable row level security;
 alter table public.negocio_fotos enable row level security;
+alter table public.resenas enable row level security;
 alter table public.noticias enable row level security;
 alter table public.eventos enable row level security;
 alter table public.promociones enable row level security;
@@ -302,6 +319,25 @@ create policy "fotos_public_read"
 drop policy if exists "fotos_admin_write" on public.negocio_fotos;
 create policy "fotos_admin_write"
   on public.negocio_fotos for all
+  to authenticated
+  using (public.es_admin())
+  with check (public.es_admin());
+
+drop policy if exists "resenas_public_read" on public.resenas;
+create policy "resenas_public_read"
+  on public.resenas for select
+  to anon, authenticated
+  using (
+    estado = 'publicada'
+    and exists (
+      select 1 from public.negocios n
+      where n.id = negocio_id and n.estado = 'activo'
+    )
+  );
+
+drop policy if exists "resenas_admin_all" on public.resenas;
+create policy "resenas_admin_all"
+  on public.resenas for all
   to authenticated
   using (public.es_admin())
   with check (public.es_admin());
