@@ -6,8 +6,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 const MAX_FOTOS = 6
 
 /**
- * Carrusel de presentación Premium (máx. 6 fotos).
- * Ancho contenido, flechas siempre visibles si hay más de 1 foto.
+ * Carrusel Premium (máx. 6 fotos).
+ * La imagen se ve completa (sin crop); el frame se adapta a su proporción.
  */
 export default function PremiumGallery({ images = [], alt = '' }) {
   const fotos = (images || []).filter((f) => f?.url).slice(0, MAX_FOTOS)
@@ -29,12 +29,13 @@ export default function PremiumGallery({ images = [], alt = '' }) {
   return (
     <section className="mb-6" aria-label={`Galería de ${alt || 'negocio'}`}>
       <div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-line/70 bg-paper-deep">
-        <div className="relative aspect-[16/9] sm:aspect-[2/1]">
+        <div className="relative flex min-h-[12rem] items-center justify-center sm:min-h-[14rem]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            key={current.url}
             src={current.url}
             alt={alt || 'Foto del negocio'}
-            className="h-full w-full object-cover"
+            className="block h-auto max-h-[70vh] w-auto max-w-full object-contain"
           />
 
           {canNavigate ? (
@@ -70,13 +71,13 @@ export default function PremiumGallery({ images = [], alt = '' }) {
               key={f.id || f.url}
               type="button"
               onClick={() => setIndex(i)}
-              className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border transition sm:h-16 sm:w-24 ${
+              className={`flex h-14 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-paper-deep transition sm:h-16 sm:w-24 ${
                 i === index ? 'border-teal ring-2 ring-teal/30' : 'border-line/70 opacity-80 hover:opacity-100'
               }`}
               aria-label={`Ir a foto ${i + 1}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={f.url} alt="" className="h-full w-full object-cover" />
+              <img src={f.url} alt="" className="max-h-full max-w-full object-contain" />
             </button>
           ))}
         </div>
