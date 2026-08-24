@@ -27,7 +27,7 @@ export default function PremiumGallery({ images = [], alt = '' }) {
   return (
     <section className="relative overflow-hidden bg-ink" aria-label={`Galería de ${alt || 'negocio'}`}>
       <div className="relative mx-auto max-w-6xl">
-        <div className="relative aspect-[16/7] sm:aspect-[21/8] md:aspect-[21/7]">
+        <div className="relative aspect-[2/1] sm:aspect-[21/9] md:aspect-[3/1]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={current.url}
