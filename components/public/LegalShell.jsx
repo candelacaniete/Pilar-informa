@@ -1,13 +1,5 @@
 import Link from 'next/link'
 
-export function LegalDraftNotice() {
-  return (
-    <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-950">
-      Borrador para revisión legal antes de publicar. No reemplaza el asesoramiento de un abogado.
-    </p>
-  )
-}
-
 export function LegalNav({ current }) {
   const items = [
     { href: '/privacidad', label: 'Privacidad' },
@@ -51,10 +43,7 @@ export function LegalShell({
       <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">
         {title}
       </h1>
-      <div className="mt-5">
-        <LegalDraftNotice />
-      </div>
-      <div className="legal-prose mt-10 space-y-8 text-base leading-relaxed text-ink-soft">
+      <div className="legal-prose mt-8 space-y-8 text-base leading-relaxed text-ink-soft">
         {children}
       </div>
       <p className="mt-12 border-t border-line/80 pt-6 text-sm text-muted">
