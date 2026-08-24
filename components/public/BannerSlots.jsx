@@ -1,8 +1,9 @@
 import Link from 'next/link'
+import { HOUSE_BANNER_COPY } from '@/lib/banners'
 
 /**
- * Grid de slots de banner. Si no hay banner asignado, muestra house CTA
- * para no romper el layout.
+ * @deprecated Preferir BannerSlot en posiciones individuales.
+ * Se mantiene por si algún layout necesita una fila temporal.
  */
 export default function BannerSlots({ slots = [], columns = 2, houseHref = '/#sumar-negocio' }) {
   if (!slots.length) return null
@@ -16,8 +17,9 @@ export default function BannerSlots({ slots = [], columns = 2, houseHref = '/#su
 
   return (
     <div className={`grid gap-3 ${colClass}`}>
-      {slots.map(({ slot, banner }) =>
-        banner ? (
+      {slots.map(({ slot, banner }) => {
+        const copy = HOUSE_BANNER_COPY[slot] || HOUSE_BANNER_COPY[1]
+        return banner ? (
           <a
             key={`banner-${slot}`}
             href={banner.link_url}
@@ -45,11 +47,11 @@ export default function BannerSlots({ slots = [], columns = 2, houseHref = '/#su
             href={houseHref}
             className="flex aspect-[16/6] flex-col items-center justify-center rounded-2xl border border-dashed border-teal/35 bg-teal-soft/40 px-4 text-center transition hover:border-teal/50 hover:bg-teal-soft/70 sm:aspect-[21/9]"
           >
-            <p className="text-sm font-semibold text-teal-dark">¿Querés aparecer acá?</p>
-            <p className="mt-1 text-xs text-ink-soft">Escribinos y reservá este espacio del mes.</p>
+            <p className="text-sm font-semibold text-teal-dark">{copy.title}</p>
+            <p className="mt-1 text-xs text-ink-soft">{copy.text}</p>
           </Link>
-        ),
-      )}
+        )
+      })}
     </div>
   )
 }
