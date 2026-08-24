@@ -12,6 +12,7 @@ export default async function AdminDashboardPage() {
       hint: 'Aparecen en la guía pública',
       icon: Building2,
       color: 'bg-teal-soft text-teal-dark',
+      href: '/admin/negocios?estado=activo',
     },
     {
       label: 'Por vencer esta semana',
@@ -19,6 +20,7 @@ export default async function AdminDashboardPage() {
       hint: 'Contactalos para renovar',
       icon: AlertTriangle,
       color: 'bg-danger-soft text-danger',
+      href: '/admin/negocios?vence=semana',
     },
     {
       label: 'Por vencer este mes',
@@ -26,6 +28,7 @@ export default async function AdminDashboardPage() {
       hint: 'Próximos 30 días',
       icon: CalendarClock,
       color: 'bg-amber-soft text-amber',
+      href: '/admin/negocios?vence=mes',
     },
     {
       label: 'Planes vencidos',
@@ -33,6 +36,7 @@ export default async function AdminDashboardPage() {
       hint: 'Ya no deberían estar activos',
       icon: Newspaper,
       color: 'bg-slate-200 text-slate-700',
+      href: '/admin/negocios?estado=vencido',
     },
   ]
 
@@ -65,14 +69,18 @@ export default async function AdminDashboardPage() {
         {cards.map((card) => {
           const Icon = card.icon
           return (
-            <div key={card.label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <Link
+              key={card.label}
+              href={card.href}
+              className="cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-teal/40 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+            >
               <div className={`inline-flex rounded-xl p-2.5 ${card.color}`}>
                 <Icon className="h-5 w-5" />
               </div>
               <p className="mt-4 text-3xl font-bold text-slate-900">{card.value}</p>
               <p className="mt-1 text-sm font-semibold text-slate-800">{card.label}</p>
               <p className="mt-1 text-xs text-slate-500">{card.hint}</p>
-            </div>
+            </Link>
           )
         })}
       </div>

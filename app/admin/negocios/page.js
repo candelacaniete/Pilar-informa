@@ -2,14 +2,25 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Plus } from 'lucide-react'
 import { getAllNegociosAdmin, getCategorias } from '@/lib/data'
+import { daysUntil } from '@/lib/utils'
 import NegociosFilters from '@/components/admin/NegociosFilters'
 import NegociosList from '@/components/admin/NegociosList'
+
+function matchesVence(negocio, vence) {
+  if (!vence || vence === 'todos') return true
+  const d = daysUntil(negocio.plan_vence)
+  if (d === null || d < 0) return false
+  if (vence === 'semana') return d <= 7
+  if (vence === 'mes') return d <= 30
+  return true
+}
 
 export default async function AdminNegociosPage({ searchParams }) {
   const params = await searchParams
   const q = (params.q || '').toLowerCase()
   const categoria = params.categoria || 'todas'
   const estado = params.estado || 'todos'
+  const vence = params.vence || 'todos'
 
   const [negocios, categorias] = await Promise.all([getAllNegociosAdmin(), getCategorias()])
 
@@ -19,7 +30,8 @@ export default async function AdminNegociosPage({ searchParams }) {
     const matchCat =
       categoria === 'todas' || n.categoria_id === categoria || n.categorias?.slug === categoria
     const matchEstado = estado === 'todos' || n.estado === estado
-    return matchQ && matchCat && matchEstado
+    const matchVence = matchesVence(n, vence)
+    return matchQ && matchCat && matchEstado && matchVence
   })
 
   return (
@@ -48,6 +60,8 @@ export default async function AdminNegociosPage({ searchParams }) {
       <p className="mt-5 text-sm text-slate-500">
         {filtered.length} {filtered.length === 1 ? 'negocio' : 'negocios'}
         {categoria !== 'todas' ? ' · orden de esta categoría' : ''}
+        {vence === 'semana' ? ' · por vencer esta semana' : ''}
+        {vence === 'mes' ? ' · por vencer este mes' : ''}
       </p>
 
       <NegociosList negocios={filtered} categoriaFiltro={categoria} />
