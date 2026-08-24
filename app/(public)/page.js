@@ -33,7 +33,7 @@ export const metadata = {
 }
 
 const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=1800&q=80'
+  'https://images.unsplash.com/photo-1607252111857-f3ac1e40babc?auto=format&fit=crop&w=1800&q=80'
 
 const discoverCards = [
   {
