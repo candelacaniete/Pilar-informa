@@ -41,7 +41,17 @@ export default function ImageUpload({ value, onChange, folder = 'general', label
       showToast('Imagen subida correctamente')
     } catch (err) {
       console.error(err)
-      showToast('No se pudo subir la imagen. Revisá el bucket “media”.', 'error')
+      const detail = err?.message || err?.error_description || err?.error || ''
+      const hint =
+        /bucket|not found|NoSuchBucket/i.test(String(detail))
+          ? ' Falta crear el bucket “media” (migración 007).'
+          : /row-level security|policy|permission|denied|not allowed/i.test(String(detail))
+            ? ' Revisá que tu usuario esté en public.admins (es_admin).'
+            : ''
+      showToast(
+        `No se pudo subir la imagen.${hint || ' Revisá el bucket “media”.'}${detail ? ` (${detail})` : ''}`,
+        'error',
+      )
     } finally {
       setUploading(false)
     }
