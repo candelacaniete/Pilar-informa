@@ -3,9 +3,14 @@
 import { useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-/** Carrusel de hasta 6 fotos — solo se monta en fichas Premium. */
+const MAX_FOTOS = 6
+
+/**
+ * Carrusel de presentación Premium (máx. 6 fotos).
+ * Se muestra por encima del nombre del negocio.
+ */
 export default function PremiumGallery({ images = [], alt = '' }) {
-  const fotos = (images || []).filter((f) => f?.url).slice(0, 6)
+  const fotos = (images || []).filter((f) => f?.url).slice(0, MAX_FOTOS)
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
@@ -20,64 +25,73 @@ export default function PremiumGallery({ images = [], alt = '' }) {
   }
 
   return (
-    <section className="mt-8">
-      <h2 className="font-display text-2xl font-semibold text-ink">Galería</h2>
-      <div className="relative mt-4 overflow-hidden rounded-[1.5rem] border border-line/70 bg-ink">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={current.url}
-          alt={alt || 'Foto del negocio'}
-          className="aspect-[16/10] w-full object-cover"
-        />
+    <section className="relative overflow-hidden bg-ink" aria-label={`Galería de ${alt || 'negocio'}`}>
+      <div className="relative mx-auto max-w-6xl">
+        <div className="relative aspect-[16/7] sm:aspect-[21/8] md:aspect-[21/7]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={current.url}
+            alt={alt || 'Foto del negocio'}
+            className="h-full w-full object-cover"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-ink/15"
+            aria-hidden
+          />
+
+          {fotos.length > 1 ? (
+            <>
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                className="absolute left-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-soft sm:h-10 sm:w-10"
+                aria-label="Anterior"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                className="absolute right-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-soft sm:h-10 sm:w-10"
+                aria-label="Siguiente"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+              <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                {fotos.map((f, i) => (
+                  <button
+                    key={f.id || f.url}
+                    type="button"
+                    onClick={() => setIndex(i)}
+                    className={`h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2 ${
+                      i === index ? 'bg-white' : 'bg-white/40'
+                    }`}
+                    aria-label={`Foto ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
+
         {fotos.length > 1 ? (
-          <>
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              className="absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-soft"
-              aria-label="Anterior"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              className="absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-soft"
-              aria-label="Siguiente"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-              {fotos.map((f, i) => (
-                <button
-                  key={f.id || f.url}
-                  type="button"
-                  onClick={() => setIndex(i)}
-                  className={`h-2 w-2 rounded-full ${i === index ? 'bg-white' : 'bg-white/40'}`}
-                  aria-label={`Foto ${i + 1}`}
-                />
-              ))}
-            </div>
-          </>
+          <div className="flex gap-2 overflow-x-auto bg-paper/95 px-4 py-2.5 md:px-6">
+            {fotos.map((f, i) => (
+              <button
+                key={f.id || f.url}
+                type="button"
+                onClick={() => setIndex(i)}
+                className={`h-12 w-16 shrink-0 overflow-hidden rounded-md border sm:h-14 sm:w-20 ${
+                  i === index ? 'border-teal ring-1 ring-teal/40' : 'border-line/70'
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={f.url} alt="" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
         ) : null}
       </div>
-      {fotos.length > 1 ? (
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-          {fotos.map((f, i) => (
-            <button
-              key={f.id || f.url}
-              type="button"
-              onClick={() => setIndex(i)}
-              className={`h-16 w-24 shrink-0 overflow-hidden rounded-lg border ${
-                i === index ? 'border-teal' : 'border-line/70'
-              }`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={f.url} alt="" className="h-full w-full object-cover" />
-            </button>
-          ))}
-        </div>
-      ) : null}
     </section>
   )
 }

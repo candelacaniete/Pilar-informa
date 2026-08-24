@@ -41,6 +41,11 @@ export default async function NegocioPage({ params }) {
   const negocio = await getNegocioBySlug(slug)
   if (!negocio) notFound()
 
+  const fotos = [...(negocio.negocio_fotos || [])].sort(
+    (a, b) => (a.orden ?? 0) - (b.orden ?? 0),
+  )
+  const isPremium = negocio.plan === 'premium'
+  const showGallery = isPremium && fotos.some((f) => f?.url)
   const image = principalFoto(negocio)
   const wa = (negocio.whatsapp || '').replace(/\D/g, '')
   const hours = horariosTexto(negocio.horarios)
@@ -64,22 +69,30 @@ export default async function NegocioPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="relative h-56 overflow-hidden md:h-80">
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={`${negocio.nombre} en ${negocio.localidad || 'Pilar'}`}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="h-full w-full bg-paper-deep" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
-      </div>
+      {showGallery ? (
+        <PremiumGallery images={fotos} alt={negocio.nombre} />
+      ) : (
+        <div className="relative h-40 overflow-hidden sm:h-52 md:h-64">
+          {image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={image}
+              alt={`${negocio.nombre} en ${negocio.localidad || 'Pilar'}`}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full bg-paper-deep" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+        </div>
+      )}
 
       <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <div className="relative -mt-16 rounded-[1.5rem] border border-line/70 bg-white p-5 shadow-lift md:-mt-20 md:p-8">
+        <div
+          className={`relative rounded-[1.5rem] border border-line/70 bg-white p-5 shadow-lift md:p-8 ${
+            showGallery ? '-mt-4 md:-mt-6' : '-mt-12 md:-mt-16'
+          }`}
+        >
           <Link
             href="/guia"
             className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-teal"
@@ -157,15 +170,6 @@ export default async function NegocioPage({ params }) {
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-ink-soft md:text-lg">
             {negocio.descripcion_larga || negocio.descripcion_corta}
           </p>
-
-          {negocio.plan === 'premium' ? (
-            <PremiumGallery
-              images={[...(negocio.negocio_fotos || [])].sort(
-                (a, b) => (a.orden ?? 0) - (b.orden ?? 0),
-              )}
-              alt={negocio.nombre}
-            />
-          ) : null}
 
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
