@@ -13,7 +13,8 @@ import {
 import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
 import { getNegocioBySlug, getNegociosActivos } from '@/lib/data'
-import { horariosTexto, planLabel, principalFoto, siteUrl } from '@/lib/utils'
+import { horariosTexto, planLabel, principalFoto } from '@/lib/utils'
+import { buildPageMetadata, localBusinessJsonLd } from '@/lib/seo/metadata'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
@@ -26,16 +27,13 @@ export async function generateMetadata({ params }) {
     negocio.descripcion_larga ||
     `${negocio.nombre} en ${negocio.localidad || 'Pilar'}`
 
-  return {
-    title: negocio.nombre,
+  return buildPageMetadata({
+    title: `${negocio.nombre} en ${negocio.localidad || 'Pilar'}`,
     description,
-    openGraph: {
-      title: negocio.nombre,
-      description,
-      images: image ? [{ url: image }] : undefined,
-      type: 'website',
-    },
-  }
+    path: `/negocio/${negocio.slug}`,
+    image,
+    type: 'website',
+  })
 }
 
 export default async function NegocioPage({ params }) {
@@ -57,38 +55,7 @@ export default async function NegocioPage({ params }) {
     .filter((n) => n.id !== negocio.id)
     .slice(0, 3)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: negocio.nombre,
-    description: negocio.descripcion_corta || negocio.descripcion_larga,
-    image: image || undefined,
-    url: `${siteUrl()}/negocio/${negocio.slug}`,
-    telephone: negocio.telefono || negocio.whatsapp || undefined,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: negocio.direccion || undefined,
-      addressLocality: negocio.localidad || 'Pilar',
-      addressRegion: 'Buenos Aires',
-      addressCountry: 'AR',
-    },
-    geo:
-      negocio.lat && negocio.lng
-        ? {
-            '@type': 'GeoCoordinates',
-            latitude: negocio.lat,
-            longitude: negocio.lng,
-          }
-        : undefined,
-    aggregateRating:
-      negocio.rating > 0
-        ? {
-            '@type': 'AggregateRating',
-            ratingValue: negocio.rating,
-            reviewCount: negocio.cantidad_opiniones || 1,
-          }
-        : undefined,
-  }
+  const jsonLd = localBusinessJsonLd(negocio, image)
 
   return (
     <div>
@@ -100,7 +67,11 @@ export default async function NegocioPage({ params }) {
       <div className="relative h-56 overflow-hidden md:h-80">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt="" className="h-full w-full object-cover" />
+          <img
+            src={image}
+            alt={`${negocio.nombre} en ${negocio.localidad || 'Pilar'}`}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="h-full w-full bg-paper-deep" />
         )}
@@ -196,19 +167,60 @@ export default async function NegocioPage({ params }) {
             />
           ) : null}
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoBlock icon={MapPin} label="Dirección" value={negocio.direccion || '—'} />
-            <InfoBlock icon={Clock} label="Horarios" value={hours || 'Consultar'} />
-            <InfoBlock
-              icon={MessageCircle}
-              label="WhatsApp"
-              value={negocio.whatsapp || 'No informado'}
-            />
-            <InfoBlock
-              icon={ExternalLink}
-              label="Sitio web"
-              value={negocio.web || 'Sin sitio web'}
-            />
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
+              <h2 className="font-display text-xl font-semibold text-ink">Dónde queda</h2>
+              <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+                {negocio.direccion || 'Dirección a confirmar'}
+              </p>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-teal"
+              >
+                <MapPin className="h-4 w-4" />
+                Cómo llegar
+              </a>
+            </section>
+
+            <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
+              <h2 className="font-display text-xl font-semibold text-ink">Horarios</h2>
+              <p className="mt-3 inline-flex items-start gap-2 text-sm leading-relaxed text-ink-soft">
+                <Clock className="mt-0.5 h-4 w-4 shrink-0" />
+                {hours || 'Consultar'}
+              </p>
+            </section>
+
+            <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
+              <h2 className="font-display text-xl font-semibold text-ink">Cómo contactarlos</h2>
+              {wa ? (
+                <a
+                  href={`https://wa.me/${wa}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  {negocio.whatsapp}
+                </a>
+              ) : (
+                <p className="mt-3 text-sm text-muted">WhatsApp no informado</p>
+              )}
+              {negocio.web ? (
+                <a
+                  href={negocio.web.startsWith('http') ? negocio.web : `https://${negocio.web}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  {negocio.web}
+                </a>
+              ) : (
+                <p className="mt-2 text-sm text-muted">Sin sitio web</p>
+              )}
+            </section>
           </div>
         </div>
 
@@ -227,18 +239,6 @@ export default async function NegocioPage({ params }) {
           <div className="h-14" />
         )}
       </div>
-    </div>
-  )
-}
-
-function InfoBlock({ icon: Icon, label, value }) {
-  return (
-    <div className="rounded-2xl border border-line/70 bg-paper/70 p-4">
-      <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
-        <Icon className="h-3.5 w-3.5" />
-        {label}
-      </p>
-      <p className="mt-2 text-sm font-medium leading-relaxed text-ink">{value}</p>
     </div>
   )
 }

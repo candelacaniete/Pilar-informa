@@ -17,6 +17,20 @@ import {
 import { formatDate, formatShortDate } from '@/lib/utils'
 import { emptyHomeSlots } from '@/lib/banners'
 import BannerSlots from '@/components/public/BannerSlots'
+import { BRAND, BRAND_TAGLINE, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/lib/seo/site'
+import { buildPageMetadata, organizationJsonLd } from '@/lib/seo/metadata'
+
+export const metadata = {
+  ...buildPageMetadata({
+    title: `${BRAND} — ${BRAND_TAGLINE}`,
+    description: DEFAULT_DESCRIPTION,
+    path: '/',
+    image: DEFAULT_OG_IMAGE,
+  }),
+  title: {
+    absolute: `${BRAND} — ${BRAND_TAGLINE}`,
+  },
+}
 
 const HERO_IMAGE =
   'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=1800&q=80'
@@ -70,6 +84,10 @@ export default async function HomePage() {
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+      />
       <section className="relative overflow-hidden border-b border-line/60">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -88,7 +106,7 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-14 md:px-6 md:pb-16 md:pt-20">
           <div className="fade-up max-w-3xl">
             <p className="text-sm font-extrabold uppercase tracking-[0.28em] text-teal-soft md:text-base">
-              Pilar Informa
+              Guía Pilar
             </p>
             <h1 className="mt-4 font-display text-[2.85rem] font-semibold leading-[1.02] text-white md:text-6xl lg:text-[4.4rem]">
               Todo Pilar.
@@ -410,30 +428,6 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl space-y-6 px-4 pb-16 md:px-6 md:pb-24">
         <InstalaPilar />
         <BusinessCTA />
-
-        <Link
-          href="/mapa"
-          className="group relative flex min-h-[200px] overflow-hidden rounded-[1.75rem] border border-line/70"
-        >
-          <div className="map-grid absolute inset-0" />
-          <div className="absolute inset-0 bg-gradient-to-r from-paper via-paper/85 to-transparent" />
-          <div className="relative flex flex-col justify-center p-6 md:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal">Mapa</p>
-            <h3 className="mt-2 font-display text-2xl font-semibold text-ink md:text-3xl">
-              Explorá Pilar en el mapa
-            </h3>
-            <p className="mt-2 max-w-md text-sm text-muted md:text-base">
-              Encontrá lugares cerca tuyo. Comer, comprar, salud, servicios y eventos.
-            </p>
-            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-teal">
-              Abrir mapa
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-            </span>
-          </div>
-          <span className="absolute left-[35%] top-[40%] h-3.5 w-3.5 rounded-full bg-teal shadow-[0_0_0_6px_rgba(14,124,117,0.2)]" />
-          <span className="absolute left-[55%] top-[55%] h-3 w-3 rounded-full bg-amber shadow-[0_0_0_5px_rgba(201,133,42,0.2)]" />
-          <span className="absolute left-[70%] top-[30%] h-3 w-3 rounded-full bg-ink shadow-[0_0_0_5px_rgba(18,24,22,0.12)]" />
-        </Link>
       </section>
     </div>
   )

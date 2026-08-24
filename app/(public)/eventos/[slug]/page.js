@@ -3,20 +3,18 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft, CalendarDays, Clock, MapPin } from 'lucide-react'
 import { getEventoBySlug, getEventos } from '@/lib/data'
 import { formatDate, formatShortDate } from '@/lib/utils'
+import { buildPageMetadata, eventJsonLd } from '@/lib/seo/metadata'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const evento = await getEventoBySlug(slug)
   if (!evento) return { title: 'Evento no encontrado' }
-  return {
+  return buildPageMetadata({
     title: evento.titulo,
     description: evento.descripcion,
-    openGraph: {
-      title: evento.titulo,
-      description: evento.descripcion,
-      images: evento.imagen ? [{ url: evento.imagen }] : undefined,
-    },
-  }
+    path: `/eventos/${evento.slug}`,
+    image: evento.imagen,
+  })
 }
 
 export default async function EventoDetallePage({ params }) {
@@ -30,6 +28,11 @@ export default async function EventoDetallePage({ params }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd(evento)) }}
+      />
+
       <Link
         href="/agenda"
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-teal"
@@ -41,7 +44,7 @@ export default async function EventoDetallePage({ params }) {
       {evento.imagen ? (
         <div className="overflow-hidden rounded-[1.5rem]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={evento.imagen} alt="" className="aspect-[16/9] w-full object-cover" />
+          <img src={evento.imagen} alt={evento.titulo} className="aspect-[16/9] w-full object-cover" />
         </div>
       ) : null}
 

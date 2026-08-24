@@ -2,11 +2,13 @@ import Link from 'next/link'
 import { ArrowLeft, Clock } from 'lucide-react'
 import { getNoticias } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
+import { buildPageMetadata } from '@/lib/seo/metadata'
 
-export const metadata = {
-  title: 'Noticias',
-  description: 'Lo último de Pilar: ciudad, cultura, gastronomía y agenda local.',
-}
+export const metadata = buildPageMetadata({
+  title: 'Noticias de Pilar',
+  description: 'Lo último de Pilar: obras, tránsito, gastronomía, cultura y agenda local del partido.',
+  path: '/noticias',
+})
 
 export default async function NoticiasPage() {
   const items = await getNoticias()

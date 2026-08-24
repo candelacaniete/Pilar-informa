@@ -2,11 +2,14 @@ import Link from 'next/link'
 import { CalendarDays, MapPin } from 'lucide-react'
 import { getEventos } from '@/lib/data'
 import { formatShortDate } from '@/lib/utils'
+import { buildPageMetadata } from '@/lib/seo/metadata'
 
-export const metadata = {
-  title: 'Agenda',
-  description: 'Qué hacer en Pilar: ferias, cultura, deporte y planes para armar tu semana.',
-}
+export const metadata = buildPageMetadata({
+  title: 'Agenda de eventos en Pilar',
+  description:
+    'Ferias, cultura, deporte y planes en Pilar Centro, Derqui, Villa Rosa y el resto del partido.',
+  path: '/agenda',
+})
 
 export default async function AgendaPage() {
   const eventos = await getEventos({ fromToday: true })

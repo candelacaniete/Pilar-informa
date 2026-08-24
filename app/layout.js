@@ -1,6 +1,13 @@
 import { Manrope, Newsreader } from 'next/font/google'
 import './globals.css'
 import { safeSiteUrl } from '@/lib/supabase/config'
+import {
+  BRAND,
+  BRAND_TAGLINE,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+  TITLE_TEMPLATE,
+} from '@/lib/seo/site'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -16,15 +23,28 @@ const newsreader = Newsreader({
 
 export const metadata = {
   title: {
-    default: 'Pilar Informa — Todo Pilar. En un solo lugar.',
-    template: '%s · Pilar Informa',
+    default: `${BRAND} — ${BRAND_TAGLINE}`,
+    template: TITLE_TEMPLATE,
   },
-  description:
-    'Noticias, comercios, servicios, eventos y todo lo que pasa en Pilar, Provincia de Buenos Aires.',
+  description: DEFAULT_DESCRIPTION,
   metadataBase: new URL(safeSiteUrl()),
+  openGraph: {
+    title: `${BRAND} — ${BRAND_TAGLINE}`,
+    description: DEFAULT_DESCRIPTION,
+    siteName: BRAND,
+    locale: 'es_AR',
+    type: 'website',
+    images: [{ url: DEFAULT_OG_IMAGE }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${BRAND} — ${BRAND_TAGLINE}`,
+    description: DEFAULT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
   appleWebApp: {
     capable: true,
-    title: 'Pilar',
+    title: BRAND,
     statusBarStyle: 'default',
   },
   icons: {
@@ -54,4 +74,3 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-

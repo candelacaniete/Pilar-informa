@@ -77,13 +77,6 @@ export default function Header() {
           </button>
 
           <Link
-            href="/mapa"
-            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-paper-deep md:inline-flex"
-          >
-            Mapa
-          </Link>
-
-          <Link
             href="/#sumar-negocio"
             className="hidden rounded-lg bg-teal px-3.5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:bg-teal-dark md:inline-flex"
           >
@@ -130,9 +123,6 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/mapa" className="rounded-xl px-4 py-3.5 text-lg font-medium text-ink hover:bg-paper-deep">
-              Mapa
-            </Link>
             <Link
               href="/#sumar-negocio"
               className="mt-4 rounded-xl bg-teal px-4 py-3.5 text-center text-base font-semibold text-white"
