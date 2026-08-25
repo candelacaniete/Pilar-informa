@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
+import { FUENTE_ALTA_OPTIONS } from '@/lib/metrics/config'
+import { recordNegocioEvents } from '@/lib/metrics/negocioEvents'
 import { horariosTexto, slugify } from '@/lib/utils'
 import ImageUpload from './ImageUpload'
 import CodigoResenaField from './CodigoResenaField'
@@ -30,6 +32,7 @@ const empty = {
   plan_vence: '',
   prioridad: '100',
   verificado: true,
+  fuente_alta: '',
   foto: '',
   galeria: ['', '', '', '', ''],
 }
@@ -68,6 +71,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       plan_vence: initial.plan_vence ? String(initial.plan_vence).slice(0, 10) : '',
       prioridad: String(initial.prioridad ?? 100),
       horarios_texto: horariosTexto(initial.horarios),
+      fuente_alta: initial.fuente_alta || '',
       foto: principal,
       galeria,
     }
@@ -95,6 +99,12 @@ export default function BusinessForm({ categorias = [], initial = null }) {
     event.preventDefault()
     setSaving(true)
 
+    if (!initial && !form.fuente_alta) {
+      showToast('Elegí la fuente del alta del negocio.', 'error')
+      setSaving(false)
+      return
+    }
+
     const payload = {
       nombre: form.nombre.trim(),
       slug: slugify(form.slug || form.nombre),
@@ -117,6 +127,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       plan_vence: form.plan_vence ? new Date(form.plan_vence).toISOString() : null,
       prioridad: Number.isFinite(Number(form.prioridad)) ? Number(form.prioridad) : 100,
       verificado: Boolean(form.verificado),
+      fuente_alta: form.fuente_alta || null,
     }
 
     try {
@@ -126,6 +137,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       }
       const supabase = createClient()
       let negocioId = initial?.id
+      const isNew = !initial?.id
 
       if (initial?.id) {
         const { error } = await supabase.from('negocios').update(payload).eq('id', initial.id)
@@ -137,6 +149,20 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       }
 
       if (negocioId) {
+        await recordNegocioEvents(supabase, {
+          negocioId,
+          isNew,
+          before: initial
+            ? {
+                plan: initial.plan,
+                estado: initial.estado,
+                plan_vence: initial.plan_vence,
+                fecha_pago: initial.fecha_pago,
+              }
+            : null,
+          after: payload,
+        })
+
         await supabase.from('negocio_fotos').delete().eq('negocio_id', negocioId)
         const urls = []
         if (form.foto) urls.push(form.foto)
@@ -349,6 +375,28 @@ export default function BusinessForm({ categorias = [], initial = null }) {
               <option value="activo">Activo (se ve en la web)</option>
               <option value="pausado">Pausado (oculto)</option>
               <option value="vencido">Vencido</option>
+            </select>
+          </Field>
+          <Field
+            label={initial ? 'Fuente del alta (opcional)' : 'Fuente del alta'}
+            hint={
+              initial
+                ? 'Las altas viejas pueden quedar sin registrar.'
+                : 'Obligatorio en altas nuevas.'
+            }
+          >
+            <select
+              required={!initial}
+              value={form.fuente_alta}
+              onChange={(e) => set('fuente_alta', e.target.value)}
+              className={inputClass}
+            >
+              <option value="">{initial ? 'Sin registrar' : 'Elegí una opción'}</option>
+              {FUENTE_ALTA_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
             </select>
           </Field>
           <Field label="Fecha de pago">

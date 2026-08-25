@@ -2,10 +2,10 @@ import Link from 'next/link'
 import { AlertTriangle, Building2, CalendarClock, Newspaper, Plus } from 'lucide-react'
 import MetricsDashboard from '@/components/admin/MetricsDashboard'
 import { getAdminDashboardStats } from '@/lib/data'
-import { getAdminMetricsPhase1 } from '@/lib/metrics/dashboard'
+import { getAdminMetrics } from '@/lib/metrics/dashboard'
 
 export default async function AdminDashboardPage() {
-  const [stats, metrics] = await Promise.all([getAdminDashboardStats(), getAdminMetricsPhase1()])
+  const [stats, metrics] = await Promise.all([getAdminDashboardStats(), getAdminMetrics()])
 
   const cards = [
     {

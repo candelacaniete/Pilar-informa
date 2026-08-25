@@ -35,6 +35,8 @@ Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo**
    **Importante para el tope mensual de Pilar:** corré `008_pilar_uso_mensual.sql`
    **Importante para reseñas verificadas:** corré `009_resenas_verificadas.sql`
    **Importante para plan Básico:** corré `010_negocio_plan_basico.sql`
+   **Importante para métricas Fase 2:** corré `011`…`015` (fuente_alta, proyección,
+   metas, negocio_eventos, RPC `pilar_stats_mes`)
    (crea el bucket público `media` + policies RLS). Sin eso, al subir una imagen
    vas a ver: “No se pudo subir la imagen. Revisá el bucket 'media'.”
 3. En Storage debería aparecer el bucket público `media` (lo crea la migración 007;

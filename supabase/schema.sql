@@ -77,6 +77,10 @@ create table if not exists public.negocios (
   plan_vence timestamptz,
   prioridad integer not null default 100,
   verificado boolean not null default true,
+  fuente_alta text check (
+    fuente_alta is null
+    or fuente_alta in ('cartera', 'redes', 'organico', 'referido', 'otro')
+  ),
   creado_en timestamptz not null default now(),
   actualizado_en timestamptz not null default now()
 );
@@ -129,6 +133,51 @@ create table if not exists public.resenas (
 );
 
 create index if not exists resenas_negocio_idx on public.resenas (negocio_id, creado_en desc);
+
+-- Eventos de ciclo de vida (renovación / baja)
+create type public.negocio_evento_tipo as enum ('alta', 'renovacion', 'baja', 'cambio_plan');
+
+create table if not exists public.negocio_eventos (
+  id uuid primary key default gen_random_uuid(),
+  negocio_id uuid not null references public.negocios (id) on delete cascade,
+  tipo_evento public.negocio_evento_tipo not null,
+  fecha timestamptz not null default now(),
+  detalle jsonb not null default '{}'::jsonb,
+  creado_en timestamptz not null default now()
+);
+
+create index if not exists negocio_eventos_tipo_fecha_idx
+  on public.negocio_eventos (tipo_evento, fecha desc);
+create index if not exists negocio_eventos_negocio_fecha_idx
+  on public.negocio_eventos (negocio_id, fecha desc);
+
+-- -----------------------------------------------------------------------------
+-- Métricas admin (proyección + metas)
+-- -----------------------------------------------------------------------------
+create table if not exists public.metricas_proyeccion (
+  id uuid primary key default gen_random_uuid(),
+  mes date not null,
+  monto_ars integer not null check (monto_ars >= 0),
+  notas text,
+  creado_en timestamptz not null default now(),
+  actualizado_en timestamptz not null default now(),
+  constraint metricas_proyeccion_mes_primer_dia check (mes = date_trunc('month', mes)::date),
+  constraint metricas_proyeccion_mes_unique unique (mes)
+);
+
+create table if not exists public.metricas_metas (
+  id uuid primary key default gen_random_uuid(),
+  periodo text,
+  tipo text not null check (tipo in ('trimestral', 'semestral')),
+  valor_objetivo integer not null check (valor_objetivo > 0),
+  desde date not null,
+  hasta date not null,
+  activo boolean not null default true,
+  notas text,
+  creado_en timestamptz not null default now(),
+  actualizado_en timestamptz not null default now(),
+  constraint metricas_metas_rango check (hasta >= desde)
+);
 
 -- -----------------------------------------------------------------------------
 -- Noticias
@@ -252,6 +301,9 @@ alter table public.noticias enable row level security;
 alter table public.eventos enable row level security;
 alter table public.promociones enable row level security;
 alter table public.farmacias_turno enable row level security;
+alter table public.negocio_eventos enable row level security;
+alter table public.metricas_proyeccion enable row level security;
+alter table public.metricas_metas enable row level security;
 
 -- Admins: solo el propio usuario o admins pueden leer; escritura solo service/manual
 drop policy if exists "admins_select_own_or_admin" on public.admins;
@@ -404,6 +456,27 @@ create policy "farmacias_turno_public_read"
 drop policy if exists "farmacias_turno_admin_write" on public.farmacias_turno;
 create policy "farmacias_turno_admin_write"
   on public.farmacias_turno for all
+  to authenticated
+  using (public.es_admin())
+  with check (public.es_admin());
+
+drop policy if exists "negocio_eventos_admin_all" on public.negocio_eventos;
+create policy "negocio_eventos_admin_all"
+  on public.negocio_eventos for all
+  to authenticated
+  using (public.es_admin())
+  with check (public.es_admin());
+
+drop policy if exists "metricas_proyeccion_admin_all" on public.metricas_proyeccion;
+create policy "metricas_proyeccion_admin_all"
+  on public.metricas_proyeccion for all
+  to authenticated
+  using (public.es_admin())
+  with check (public.es_admin());
+
+drop policy if exists "metricas_metas_admin_all" on public.metricas_metas;
+create policy "metricas_metas_admin_all"
+  on public.metricas_metas for all
   to authenticated
   using (public.es_admin())
   with check (public.es_admin());
