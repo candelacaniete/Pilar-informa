@@ -41,6 +41,14 @@ export default function MetricsDashboard({ metrics }) {
         </p>
       </div>
 
+      {metrics.schemaFlags && Object.values(metrics.schemaFlags).some((v) => !v) ? (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Algunas tablas/columnas de Fase 2 todavía no están en Supabase (migraciones 011–015).
+          El dashboard muestra los números base igual; proyección, metas, eventos, Pilar y
+          fuente_alta se activan cuando corras esas migraciones.
+        </div>
+      ) : null}
+
       <MetricsLayer
         layer={METRICS_LAYER.OPERATIONAL}
         title="Operación interna"

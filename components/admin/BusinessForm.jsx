@@ -105,7 +105,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       return
     }
 
-    const payload = {
+    const payloadBase = {
       nombre: form.nombre.trim(),
       slug: slugify(form.slug || form.nombre),
       categoria_id: form.categoria_id,
@@ -127,7 +127,20 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       plan_vence: form.plan_vence ? new Date(form.plan_vence).toISOString() : null,
       prioridad: Number.isFinite(Number(form.prioridad)) ? Number(form.prioridad) : 100,
       verificado: Boolean(form.verificado),
+    }
+    const payloadWithFuente = {
+      ...payloadBase,
       fuente_alta: form.fuente_alta || null,
+    }
+
+    const isMissingFuenteColumn = (error) => {
+      const msg = String(error?.message || '').toLowerCase()
+      return (
+        error?.code === '42703' ||
+        error?.code === 'PGRST204' ||
+        msg.includes('fuente_alta') ||
+        msg.includes('schema cache')
+      )
     }
 
     try {
@@ -138,30 +151,43 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       const supabase = createClient()
       let negocioId = initial?.id
       const isNew = !initial?.id
+      let payload = payloadWithFuente
 
       if (initial?.id) {
-        const { error } = await supabase.from('negocios').update(payload).eq('id', initial.id)
+        let { error } = await supabase.from('negocios').update(payload).eq('id', initial.id)
+        if (error && isMissingFuenteColumn(error)) {
+          payload = payloadBase
+          ;({ error } = await supabase.from('negocios').update(payload).eq('id', initial.id))
+        }
         if (error) throw error
       } else {
-        const { data, error } = await supabase.from('negocios').insert(payload).select('id').single()
+        let { data, error } = await supabase.from('negocios').insert(payload).select('id').single()
+        if (error && isMissingFuenteColumn(error)) {
+          payload = payloadBase
+          ;({ data, error } = await supabase.from('negocios').insert(payload).select('id').single())
+        }
         if (error) throw error
         negocioId = data.id
       }
 
       if (negocioId) {
-        await recordNegocioEvents(supabase, {
-          negocioId,
-          isNew,
-          before: initial
-            ? {
-                plan: initial.plan,
-                estado: initial.estado,
-                plan_vence: initial.plan_vence,
-                fecha_pago: initial.fecha_pago,
-              }
-            : null,
-          after: payload,
-        })
+        try {
+          await recordNegocioEvents(supabase, {
+            negocioId,
+            isNew,
+            before: initial
+              ? {
+                  plan: initial.plan,
+                  estado: initial.estado,
+                  plan_vence: initial.plan_vence,
+                  fecha_pago: initial.fecha_pago,
+                }
+              : null,
+            after: { ...payload, fuente_alta: form.fuente_alta || null },
+          })
+        } catch (eventErr) {
+          console.warn('No se pudieron registrar eventos de negocio:', eventErr)
+        }
 
         await supabase.from('negocio_fotos').delete().eq('negocio_id', negocioId)
         const urls = []
