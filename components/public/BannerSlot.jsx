@@ -8,7 +8,7 @@ import { HOUSE_BANNER_COPY } from '@/lib/banners'
 export default function BannerSlot({
   slot = 1,
   banner = null,
-  houseHref = '/#sumar-negocio',
+  houseHref = '/sumar-negocio',
   className = '',
 }) {
   const copy = HOUSE_BANNER_COPY[slot] || HOUSE_BANNER_COPY[1]

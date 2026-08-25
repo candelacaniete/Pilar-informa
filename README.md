@@ -100,6 +100,7 @@ Ruta: `/admin`
 | `/agenda` · `/eventos/[slug]` | Agenda |
 | `/promociones` | Promociones |
 | `/farmacias` | Farmacias de turno |
+| `/sumar-negocio` | Alta de negocios (formulario → WhatsApp) |
 | `/pilar` | App de la asistente Pilar (PWA) |
 | `/mapa` | Mapa mock con pines dinámicos |
 | `/sitemap.xml` · `/robots.txt` | SEO |
