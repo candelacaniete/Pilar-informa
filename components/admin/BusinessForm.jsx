@@ -339,6 +339,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Plan">
             <select value={form.plan} onChange={(e) => set('plan', e.target.value)} className={inputClass}>
+              <option value="basico">Básico</option>
               <option value="destacado">Destacado</option>
               <option value="premium">Premium</option>
             </select>

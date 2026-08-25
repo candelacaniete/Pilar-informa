@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { AlertTriangle, Building2, CalendarClock, Newspaper, Plus } from 'lucide-react'
+import MetricsDashboard from '@/components/admin/MetricsDashboard'
 import { getAdminDashboardStats } from '@/lib/data'
+import { getAdminMetricsPhase1 } from '@/lib/metrics/dashboard'
 
 export default async function AdminDashboardPage() {
-  const stats = await getAdminDashboardStats()
+  const [stats, metrics] = await Promise.all([getAdminDashboardStats(), getAdminMetricsPhase1()])
 
   const cards = [
     {
@@ -45,9 +47,7 @@ export default async function AdminDashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Hola 👋</h1>
-          <p className="mt-1 text-slate-600">
-            Resumen rápido de lo que hay en Pilar Informa.
-          </p>
+          <p className="mt-1 text-slate-600">Resumen rápido de lo que hay en Guía Pilar.</p>
         </div>
         <Link
           href="/admin/negocios/nuevo"
@@ -58,7 +58,7 @@ export default async function AdminDashboardPage() {
         </Link>
       </div>
 
-      {stats.usingMock && (
+      {(stats.usingMock || metrics.usingMock) && (
         <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Estás viendo datos de ejemplo. Cuando configures Supabase, acá vas a ver la información
           real.
@@ -84,6 +84,8 @@ export default async function AdminDashboardPage() {
           )
         })}
       </div>
+
+      <MetricsDashboard metrics={metrics} />
 
       <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
