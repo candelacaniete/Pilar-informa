@@ -1,7 +1,18 @@
 import Link from 'next/link'
-import { Building2, ImageIcon, MessageSquare, Star } from 'lucide-react'
+import {
+  Bot,
+  Building2,
+  ImageIcon,
+  MessageSquare,
+  RefreshCw,
+  Star,
+  Target,
+  TrendingUp,
+} from 'lucide-react'
 import { METRICS_LAYER, formatArs, PLAN_ORDER } from '@/lib/metrics/config'
 import { planLabel } from '@/lib/utils'
+import MetasEditor from '@/components/admin/MetasEditor'
+import ProyeccionEditor from '@/components/admin/ProyeccionEditor'
 import RevenueCalculator from '@/components/admin/RevenueCalculator'
 
 const activityLabels = {
@@ -26,14 +37,14 @@ export default function MetricsDashboard({ metrics }) {
           </p>
         </div>
         <p className="text-xs text-slate-500">
-          Capas separadas: operación interna vs indicadores comerciales
+          Capas: operación interna vs indicadores comerciales
         </p>
       </div>
 
       <MetricsLayer
         layer={METRICS_LAYER.OPERATIONAL}
         title="Operación interna"
-        description="Vencimientos, gaps de contenido y ocupación detallada."
+        description="Vencimientos, gaps, proyección editable, renovación y uso de Pilar."
       >
         <div className="grid gap-4 lg:grid-cols-2">
           <Panel title="Desglose por plan (activos)" icon={Building2}>
@@ -60,8 +71,41 @@ export default function MetricsDashboard({ metrics }) {
           </Panel>
         </div>
 
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Panel title="Real vs proyectado (mes)" icon={TrendingUp}>
+            <ProyeccionSummary proyeccion={op.proyeccion} />
+          </Panel>
+          <Panel title="Renovación (mes)" icon={RefreshCw}>
+            <RenovacionSummary renovacion={op.renovacion} />
+          </Panel>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Panel title="Bot Pilar (mes)" icon={Bot}>
+            <dl className="grid grid-cols-2 gap-3 text-sm">
+              <MetricItem label="Consultas" value={op.pilar?.consultas ?? 0} />
+              <MetricItem label="Usuarios únicos" value={op.pilar?.usuariosUnicos ?? 0} />
+            </dl>
+          </Panel>
+          <Panel title="Fuente de altas (mes)" icon={Building2}>
+            <FuentesTable rows={op.fuentesAlta} />
+          </Panel>
+        </div>
+
+        <Panel title="Metas de negocios activos" icon={Target}>
+          <MetasProgress metas={op.metas} />
+        </Panel>
+
         <Panel title="Actividad reciente" icon={MessageSquare}>
           <ActivityFeed items={op.actividad} />
+        </Panel>
+
+        <Panel title="Editar proyección" icon={TrendingUp}>
+          <ProyeccionEditor rows={metrics.proyeccionesList} />
+        </Panel>
+
+        <Panel title="Editar metas" icon={Target}>
+          <MetasEditor rows={metrics.metasList} />
         </Panel>
       </MetricsLayer>
 
@@ -80,6 +124,54 @@ export default function MetricsDashboard({ metrics }) {
           />
           <MetricItem label="Ocupación banners" value={sales.banners.ocupacionLabel} large />
         </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricItem
+            label="Facturación real (est.)"
+            value={formatArs(sales.proyeccion?.real || 0)}
+            large
+          />
+          <MetricItem
+            label="Proyectado"
+            value={
+              sales.proyeccion?.sinProyeccion
+                ? '—'
+                : formatArs(sales.proyeccion?.proyectado || 0)
+            }
+            large
+          />
+          <MetricItem
+            label="Delta %"
+            value={
+              sales.proyeccion?.deltaPct == null
+                ? '—'
+                : `${sales.proyeccion.deltaPct > 0 ? '+' : ''}${sales.proyeccion.deltaPct}%`
+            }
+            large
+          />
+          <MetricItem
+            label="Renovación"
+            value={
+              sales.renovacion?.sinDatos ? 'Sin datos' : `${sales.renovacion?.tasaPct ?? '—'}%`
+            }
+            large
+          />
+        </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm">
+            <p className="font-semibold text-slate-800">Pilar</p>
+            <p className="mt-2 text-slate-700">
+              {sales.pilar?.consultas ?? 0} consultas · {sales.pilar?.usuariosUnicos ?? 0} usuarios
+              únicos
+            </p>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm">
+            <p className="font-semibold text-slate-800">Metas</p>
+            <MetasProgress metas={sales.metas} compact />
+          </div>
+        </div>
+
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm">
             <p className="font-semibold text-slate-800">Mix de planes</p>
@@ -127,6 +219,93 @@ function Panel({ title, icon: Icon, children }) {
       </div>
       {children}
     </div>
+  )
+}
+
+function ProyeccionSummary({ proyeccion }) {
+  if (!proyeccion || proyeccion.sinProyeccion) {
+    return (
+      <p className="text-sm text-slate-500">
+        Sin proyección cargada para este mes. Editá la tabla más abajo o corré la migración 012.
+      </p>
+    )
+  }
+  const deltaSign = proyeccion.delta > 0 ? '+' : ''
+  return (
+    <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+      <MetricItem label="Real (est.)" value={formatArs(proyeccion.real)} />
+      <MetricItem label="Proyectado" value={formatArs(proyeccion.proyectado)} />
+      <MetricItem label="Delta" value={`${deltaSign}${formatArs(proyeccion.delta)}`} />
+      <MetricItem
+        label="Delta %"
+        value={`${proyeccion.deltaPct > 0 ? '+' : ''}${proyeccion.deltaPct}%`}
+      />
+      {proyeccion.notas ? (
+        <p className="col-span-full text-xs text-slate-500">{proyeccion.notas}</p>
+      ) : null}
+    </dl>
+  )
+}
+
+function RenovacionSummary({ renovacion }) {
+  if (!renovacion || renovacion.sinDatos) {
+    return (
+      <p className="text-sm text-slate-500">
+        Sin datos todavía. La tasa se calcula cuando haya renovaciones o bajas registradas este mes.
+      </p>
+    )
+  }
+  return (
+    <dl className="grid grid-cols-3 gap-3 text-sm">
+      <MetricItem label="Renovaciones" value={renovacion.renovaciones} />
+      <MetricItem label="Bajas" value={renovacion.bajas} />
+      <MetricItem label="Tasa" value={`${renovacion.tasaPct}%`} />
+    </dl>
+  )
+}
+
+function MetasProgress({ metas = [], compact = false }) {
+  if (!metas.length) {
+    return <p className="text-sm text-slate-500">No hay metas activas en el período actual.</p>
+  }
+  return (
+    <ul className={compact ? 'mt-2 space-y-2' : 'space-y-3'}>
+      {metas.map((m) => (
+        <li key={m.id || `${m.tipo}-${m.periodo}`}>
+          <div className="flex items-center justify-between text-sm">
+            <span className="font-medium capitalize text-slate-800">
+              {m.tipo}
+              {m.periodo ? ` · ${m.periodo}` : ''}
+            </span>
+            <span className="text-slate-600">
+              {m.actual}/{m.objetivo} ({m.pct}%)
+            </span>
+          </div>
+          <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full rounded-full bg-teal" style={{ width: `${Math.min(100, m.pct)}%` }} />
+          </div>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function FuentesTable({ rows = [] }) {
+  const total = rows.reduce((s, r) => s + (r.count || 0), 0)
+  if (!total) {
+    return <p className="text-sm text-slate-500">Sin altas este mes.</p>
+  }
+  return (
+    <ul className="space-y-2 text-sm">
+      {rows
+        .filter((r) => r.count > 0)
+        .map((r) => (
+          <li key={r.fuente ?? 'null'} className="flex justify-between">
+            <span className="text-slate-700">{r.label}</span>
+            <span className="font-semibold text-slate-900">{r.count}</span>
+          </li>
+        ))}
+    </ul>
   )
 }
 
