@@ -6,6 +6,11 @@ import { CONTACT_WHATSAPP_DISPLAY, whatsappUrl } from '@/lib/whatsapp'
 
 const PLANES = [
   {
+    value: 'basico',
+    label: 'Básico',
+    hint: 'Ficha en la guía con datos esenciales.',
+  },
+  {
     value: 'destacado',
     label: 'Destacado',
     hint: 'Ficha en la guía, foto principal y visibilidad en búsquedas.',
