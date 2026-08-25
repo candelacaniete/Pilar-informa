@@ -1,11 +1,7 @@
-'use client'
-
-import { useState } from 'react'
+import Link from 'next/link'
 import { ArrowRight, Check } from 'lucide-react'
 
 export default function BusinessCTA() {
-  const [soon, setSoon] = useState(false)
-
   return (
     <section
       id="sumar-negocio"
@@ -29,23 +25,16 @@ export default function BusinessCTA() {
         </h2>
         <p className="mt-4 text-base leading-relaxed text-paper/70 md:text-lg">
           Llegá a más personas, aparecé en las búsquedas y hacé que tu negocio sea parte de la guía
-          local.
+          local. Completá el formulario y te respondemos por WhatsApp.
         </p>
 
-        <button
-          type="button"
-          onClick={() => setSoon(true)}
+        <Link
+          href="/sumar-negocio"
           className="mt-7 inline-flex items-center gap-2 rounded-xl bg-teal px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-teal-dark"
         >
           Sumar mi negocio
           <ArrowRight className="h-4 w-4" />
-        </button>
-
-        {soon ? (
-          <p className="mt-3 text-sm text-teal-soft">
-            Próximamente. Estamos armando el alta de negocios.
-          </p>
-        ) : null}
+        </Link>
 
         <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-paper/55">
           {['Perfiles destacados', 'Promociones', 'Visibilidad local'].map((item) => (

@@ -82,7 +82,7 @@ export default function Header() {
           </button>
 
           <Link
-            href="/#sumar-negocio"
+            href="/sumar-negocio"
             className="hidden rounded-lg bg-teal px-3.5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:bg-teal-dark md:inline-flex"
           >
             ¿Tenés un negocio?
@@ -138,7 +138,7 @@ export default function Header() {
               </Link>
             ))}
             <Link
-              href="/#sumar-negocio"
+              href="/sumar-negocio"
               className="mt-4 rounded-xl bg-teal px-4 py-3.5 text-center text-base font-semibold text-white"
             >
               ¿Tenés un negocio?

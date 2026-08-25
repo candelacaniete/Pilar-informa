@@ -4,7 +4,7 @@ import { HOUSE_BANNER_COPY } from '@/lib/banners'
 /**
  * @deprecated Preferir BannerSlot en posiciones individuales.
  */
-export default function BannerSlots({ slots = [], columns = 2, houseHref = '/#sumar-negocio' }) {
+export default function BannerSlots({ slots = [], columns = 2, houseHref = '/sumar-negocio' }) {
   if (!slots.length) return null
 
   const colClass =

@@ -9,7 +9,7 @@ const links = [
   { href: '/promociones', label: 'Promociones' },
   { href: '/farmacias', label: 'Farmacias de turno' },
   { href: '/#instalar-pilar', label: 'Instalar Pilar' },
-  { href: '/#sumar-negocio', label: 'Sumar mi negocio' },
+  { href: '/sumar-negocio', label: 'Sumar mi negocio' },
 ]
 
 export default function Footer() {
