@@ -45,8 +45,8 @@ export default function FarmaciaTurnoForm({ initial = null }) {
         horario: form.horario.trim() || '8:00 a 22:00',
         maps_url: form.maps_url.trim() || null,
         notas: form.notas.trim() || null,
-        fuente: 'manual',
       }
+      if (!initial?.id) payload.fuente = 'manual'
 
       if (initial?.id) {
         const { error } = await supabase.from('farmacias_turno').update(payload).eq('id', initial.id)
