@@ -48,7 +48,7 @@ export default function PilarApp() {
         </div>
         <p className="pilar-splash-copy mt-7 font-display text-4xl font-semibold tracking-tight">Pilar</p>
         <p className="pilar-splash-copy mt-2 text-sm text-white/80" style={{ animationDelay: '180ms' }}>
-          Tu guía de Pilar Informa
+          Tu guía local de Pilar
         </p>
         <button
           type="button"
