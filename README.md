@@ -112,7 +112,7 @@ Ruta: `/admin`
 
 Botón flotante en la web pública. Responde en lenguaje natural **solo con datos de la base** (negocios, promos, eventos, noticias, farmacias de turno). Anónimo, sin historial, **35 consultas por mes** (calendario Argentina) por navegador (`pilar_uid` + tabla `pilar_uso_mensual`, con respaldo en cookie). Requiere aceptar cookies técnicas.
 
-Opcional: `GEMINI_API_KEY` en Vercel (Google AI Studio, modelo `gemini-2.0-flash`). Sin la key, Pilar igual responde con las mismas reglas usando los datos cargados.
+Opcional: `GEMINI_API_KEY` en Vercel (Google AI Studio, modelo `gemini-3.1-flash-lite`). Sin la key, Pilar igual responde con las mismas reglas usando los datos cargados.
 
 ## PWA (app Pilar)
 
