@@ -18,6 +18,7 @@ export default async function sitemap() {
     '/agenda',
     '/promociones',
     '/farmacias',
+    '/emergencias',
     '/pilar',
     '/sumar-negocio',
     '/privacidad',

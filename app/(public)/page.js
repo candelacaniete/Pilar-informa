@@ -16,6 +16,7 @@ import {
   getBannersForMonth,
 } from '@/lib/data'
 import { COLFARMA_ATTRIBUTION } from '@/lib/farmacias/constants'
+import { EMERGENCIAS_TEASER } from '@/lib/emergencias/data'
 import { formatDate, formatShortDate } from '@/lib/utils'
 import { emptyHomeSlots, getBannerSlot } from '@/lib/banners'
 import BannerSlot from '@/components/public/BannerSlot'
@@ -205,6 +206,23 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      <section className="mx-auto max-w-6xl px-4 pb-4 md:px-6">
+        <div className="rounded-2xl border border-line/70 bg-white px-5 py-5 md:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Utilidades</p>
+              <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Números de emergencia</h2>
+              <p className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink">
+                {EMERGENCIAS_TEASER.join(' · ')}
+              </p>
+            </div>
+            <Link href="/emergencias" className="text-sm font-semibold text-teal hover:text-teal-dark">
+              Ver todos →
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Banner home · slot 2 — entre farmacias / noticias */}
       <section className="mx-auto max-w-6xl px-4 py-6 md:px-6">
