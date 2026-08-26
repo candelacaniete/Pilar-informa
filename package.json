@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:farmacias": "node --test lib/farmacias/*.test.js"
+    "test:farmacias": "node --test lib/farmacias/*.test.js",
+    "test:pilar": "node --test lib/pilar/*.test.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
