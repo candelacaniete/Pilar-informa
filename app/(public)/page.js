@@ -12,8 +12,10 @@ import {
   getEventos,
   getPromociones,
   getFarmaciasTurno,
+  getFarmaciasScrapeStatus,
   getBannersForMonth,
 } from '@/lib/data'
+import { COLFARMA_ATTRIBUTION } from '@/lib/farmacias/constants'
 import { formatDate, formatShortDate } from '@/lib/utils'
 import { emptyHomeSlots, getBannerSlot } from '@/lib/banners'
 import BannerSlot from '@/components/public/BannerSlot'
@@ -67,7 +69,7 @@ const discoverCards = [
 ]
 
 export default async function HomePage() {
-  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy, homeBanners] =
+  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy, homeBanners, scrape] =
     await Promise.all([
       getCategorias(),
       getNoticias({ limit: 4 }),
@@ -76,6 +78,7 @@ export default async function HomePage() {
       getPromociones({ limit: 3 }),
       getFarmaciasTurno(),
       getBannersForMonth({ ubicacion: 'home' }),
+      getFarmaciasScrapeStatus(),
     ])
 
   const homeCats = categorias.slice(0, 7)
@@ -174,6 +177,17 @@ export default async function HomePage() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Hoy</p>
                 <h2 className="mt-1 font-display text-2xl font-semibold text-ink">Farmacias de turno</h2>
+                <p className="mt-1 text-xs text-muted">
+                  <a
+                    href={scrape.officialHomeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-teal"
+                  >
+                    {COLFARMA_ATTRIBUTION}
+                  </a>
+                  {scrape.stale ? ' · Puede estar desactualizado' : ''}
+                </p>
               </div>
               <Link href="/farmacias" className="text-sm font-semibold text-teal hover:text-teal-dark">
                 Ver la semana →

@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import { getAllFarmaciasTurnoAdmin } from '@/lib/data'
+import FarmaciasScrapeAdminBanner from '@/components/admin/FarmaciasScrapeAdminBanner'
+import { getAllFarmaciasTurnoAdmin, getFarmaciasScrapeStatus } from '@/lib/data'
 import { formatDate, todayInPilar } from '@/lib/utils'
 
 export default async function AdminFarmaciasPage() {
-  const turnos = await getAllFarmaciasTurnoAdmin()
+  const [turnos, scrape] = await Promise.all([
+    getAllFarmaciasTurnoAdmin(),
+    getFarmaciasScrapeStatus(),
+  ])
   const today = todayInPilar()
 
   return (
@@ -13,8 +17,8 @@ export default async function AdminFarmaciasPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Farmacias de turno</h1>
           <p className="mt-1 text-slate-600">
-            Cargá a mano qué farmacia cubre cada zona y cada día. Pilar usa esta lista para
-            responder.
+            El cron trae los turnos de Colfarma cada mañana. También podés cargar o corregir a
+            mano (fuente manual; el scrape no las borra).
           </p>
         </div>
         <Link
@@ -24,6 +28,10 @@ export default async function AdminFarmaciasPage() {
           <Plus className="h-4 w-4" />
           Nuevo turno
         </Link>
+      </div>
+
+      <div className="mt-5">
+        <FarmaciasScrapeAdminBanner status={scrape} showOk />
       </div>
 
       <p className="mt-5 text-sm text-slate-500">
@@ -46,6 +54,15 @@ export default async function AdminFarmaciasPage() {
                       Hoy
                     </span>
                   ) : null}
+                  {turno.fuente === 'colfarma' ? (
+                    <span className="inline-flex rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      Colfarma
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      Manual
+                    </span>
+                  )}
                 </div>
                 <p className="mt-1 text-sm text-slate-600">
                   {formatDate(turno.fecha)} · {turno.localidad} · {turno.horario}
@@ -68,7 +85,7 @@ export default async function AdminFarmaciasPage() {
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
             <p className="font-semibold text-slate-800">Todavía no hay turnos</p>
             <p className="mt-1 text-sm text-slate-500">
-              Cargá el primero para que Pilar pueda responder.
+              Esperá el scrape de la mañana o cargá el primero a mano.
             </p>
           </div>
         )}

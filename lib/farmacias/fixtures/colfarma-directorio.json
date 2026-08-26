@@ -1,0 +1,422 @@
+[
+  {
+    "nombre": "ALTOHEY SCS",
+    "direccion": "Las Madreselvas 558",
+    "localidad": "Pilar",
+    "telefono": "0230 4385805"
+  },
+  {
+    "nombre": "ANTIGUA POZUELO",
+    "direccion": "Rivadavia 600",
+    "localidad": "Pilar",
+    "telefono": "0230 4428619"
+  },
+  {
+    "nombre": "FARMACIA MARQUEZ 1213",
+    "direccion": "Av. Tomas Marquez 1213",
+    "localidad": "Pilar",
+    "telefono": "0230 4426024"
+  },
+  {
+    "nombre": "FARMACIA BARILE",
+    "direccion": "Estanislao Lopez 663",
+    "localidad": "Pilar",
+    "telefono": "0230 4430291"
+  },
+  {
+    "nombre": "FARMACIA DOMENECH",
+    "direccion": "Hipolito Yrigoyen 679",
+    "localidad": "Pilar",
+    "telefono": null
+  },
+  {
+    "nombre": "FARMACIA DEL NUEVO PASEO",
+    "direccion": "La Gaviota 350",
+    "localidad": "Pilar",
+    "telefono": "0230 4374470/72"
+  },
+  {
+    "nombre": "DUARTE",
+    "direccion": "DUARTE",
+    "localidad": "Pilar",
+    "telefono": "0230 4428047"
+  },
+  {
+    "nombre": "BARETTA",
+    "direccion": "Victor Vergani 835",
+    "localidad": "Pilar",
+    "telefono": "0230 4428630"
+  },
+  {
+    "nombre": "BINETTI",
+    "direccion": "Fermin Gamboa",
+    "localidad": "Pilar",
+    "telefono": "0230 4420525"
+  },
+  {
+    "nombre": "TRATADO DEL PILAR",
+    "direccion": "9 de Julio 213",
+    "localidad": "Pilar",
+    "telefono": "0230 4422666"
+  },
+  {
+    "nombre": "MANZONI",
+    "direccion": "11 de Septiembre 489",
+    "localidad": "Pilar",
+    "telefono": "0230 4429538"
+  },
+  {
+    "nombre": "MIETTA",
+    "direccion": "11 de Septiembre 995",
+    "localidad": "Pilar",
+    "telefono": "0230 4427565"
+  },
+  {
+    "nombre": "MUTUAL BOMBEROS",
+    "direccion": "Bolivar 307",
+    "localidad": "Pilar",
+    "telefono": "0230 4434939"
+  },
+  {
+    "nombre": "PILARICA",
+    "direccion": "Ruta 8 Nro 499 E/ Alte Brown",
+    "localidad": "Pilar",
+    "telefono": "0230 4420606"
+  },
+  {
+    "nombre": "NAVARRO",
+    "direccion": "Sarratea 15",
+    "localidad": "Pilar",
+    "telefono": "0230 4424836/889"
+  },
+  {
+    "nombre": "CECILIA SORIA SCS",
+    "direccion": "Ruta 8 Nro 1910",
+    "localidad": "Pilar",
+    "telefono": "011 15 7893 7410"
+  },
+  {
+    "nombre": "SBFARMA SCS",
+    "direccion": "Av. 12 de Octubre Nro 9986",
+    "localidad": "Pilar",
+    "telefono": "011 7143 8188"
+  },
+  {
+    "nombre": "MEAURIO",
+    "direccion": "Hernan Cortiz 605",
+    "localidad": "Pilar Sur",
+    "telefono": "11 5701 8490/ 11 55850 0918"
+  },
+  {
+    "nombre": "NUEVA ASTOLFI",
+    "direccion": "Las Piedras 2865",
+    "localidad": "Astolfi",
+    "telefono": "0230 4435453"
+  },
+  {
+    "nombre": "NUEVA RIVADAVIA",
+    "direccion": "Rivadavia 522",
+    "localidad": "Pilar",
+    "telefono": "0230 4420990"
+  },
+  {
+    "nombre": "SALCEDO",
+    "direccion": "O Higgins 1291",
+    "localidad": "Pilar Sur",
+    "telefono": "0230 4427864"
+  },
+  {
+    "nombre": "SANGUINETTI",
+    "direccion": "Av Tomas Marquez 1000",
+    "localidad": "Pilar",
+    "telefono": "0230 4427101"
+  },
+  {
+    "nombre": "FARMACIA ZAVAGLIA - EX SMAL SCS",
+    "direccion": "12 de Octubre Nro 1453",
+    "localidad": "Pilar",
+    "telefono": "011 15 5897 3694"
+  },
+  {
+    "nombre": "TUCUMAN",
+    "direccion": "Tucuman 431",
+    "localidad": "Pilar",
+    "telefono": "0230 4431811"
+  },
+  {
+    "nombre": "ZUGASTI",
+    "direccion": "Venancio Castro y Rio II",
+    "localidad": "Pilar",
+    "telefono": "0230 4421002"
+  },
+  {
+    "nombre": "DEL CONCORD",
+    "direccion": "Valentin Gomez y Panamericana Km 49,5 (edificio Concord UF 211)",
+    "localidad": "La Lonja",
+    "telefono": "0230 433183"
+  },
+  {
+    "nombre": "PARADIÑEIRO",
+    "direccion": "Chubut e/ Panamericana Km 50,5",
+    "localidad": "Pilar",
+    "telefono": "0230 4473005"
+  },
+  {
+    "nombre": "PATRED",
+    "direccion": "Av Peron e/Storni",
+    "localidad": "Pilar",
+    "telefono": "114949 1600"
+  },
+  {
+    "nombre": "ZONA VITAL PILAR",
+    "direccion": "Las Magnolias 754 (Jumbo)",
+    "localidad": "Pilar",
+    "telefono": "0230 4472770/4472790"
+  },
+  {
+    "nombre": "STRINGA",
+    "direccion": "Av 12 de Octubre Km 56",
+    "localidad": "Pilar",
+    "telefono": "0230 4227730"
+  },
+  {
+    "nombre": "ROSSI",
+    "direccion": "Rafaela y Uriburu",
+    "localidad": "Fátima",
+    "telefono": "0230 4491436"
+  },
+  {
+    "nombre": "EMTM FARMA SCS",
+    "direccion": "Av Mitre 475 Local Nros 1/2",
+    "localidad": "Fátima",
+    "telefono": "0230 4443152"
+  },
+  {
+    "nombre": "MANZANARES",
+    "direccion": "Rincon de la Patria y Acasusso",
+    "localidad": "Manzanares",
+    "telefono": "0230 4491999"
+  },
+  {
+    "nombre": "JUKIC 405",
+    "direccion": "Tte Antonio Jukic Nro 405",
+    "localidad": "Manzanares",
+    "telefono": null
+  },
+  {
+    "nombre": "MISBACK II",
+    "direccion": "Caamaño 1175",
+    "localidad": "La Lonja",
+    "telefono": "0230 4666185"
+  },
+  {
+    "nombre": "LA LONJA",
+    "direccion": "Santiago Cayetano Beliera Nro 4366",
+    "localidad": "La Lonja",
+    "telefono": "0230 4470004 &#8211; Cel 11-3764 4927"
+  },
+  {
+    "nombre": "FARMACIA KM 47,5 SCS",
+    "direccion": "Colectora este ramal Pilar Km 47,5",
+    "localidad": "La Lonja",
+    "telefono": "0230 4384995"
+  },
+  {
+    "nombre": "ALVAREZ",
+    "direccion": "Independencia 902",
+    "localidad": "Pte Derqui",
+    "telefono": "0230 4485611"
+  },
+  {
+    "nombre": "RASPO",
+    "direccion": "Av. De Mayo e/San Martin",
+    "localidad": "Pte Derqui",
+    "telefono": "0230 4485598"
+  },
+  {
+    "nombre": "ESTACION PILARA",
+    "direccion": "Lavalle 995 Local Nro 9",
+    "localidad": "San Francisco",
+    "telefono": "011 7890 4435"
+  },
+  {
+    "nombre": "CIENTIFICA MONTERREY SCS",
+    "direccion": "Corrientes 2094",
+    "localidad": "Pte Derqui",
+    "telefono": "01 15 3123 4873"
+  },
+  {
+    "nombre": "NUEVA DERQUI",
+    "direccion": "Medrano 218",
+    "localidad": "Pte Derqui",
+    "telefono": "0230 4484375"
+  },
+  {
+    "nombre": "CONTRERAS",
+    "direccion": "Av Peron 2510",
+    "localidad": "Pte Derqui",
+    "telefono": "113173 9039"
+  },
+  {
+    "nombre": "DURET",
+    "direccion": "Casella 1743",
+    "localidad": "Villa Rosa",
+    "telefono": "0230 4519632"
+  },
+  {
+    "nombre": "SANTA GUADALUPE",
+    "direccion": "Caamaño 1090 Local D",
+    "localidad": "Villa Rosa",
+    "telefono": null
+  },
+  {
+    "nombre": "NUEVA RAP",
+    "direccion": "Av Juan D. Peron 1024",
+    "localidad": "Villa Rosa",
+    "telefono": "0230 4494548"
+  },
+  {
+    "nombre": "REYNAGA",
+    "direccion": "Alte Brown 2099 e/Bertazzoni",
+    "localidad": "Villa Rosa",
+    "telefono": "011 2143 6829"
+  },
+  {
+    "nombre": "LOPEZ GAGO",
+    "direccion": "Hipolito Yrigoyen 1360",
+    "localidad": "Villa Rosa",
+    "telefono": "0230 4495841"
+  },
+  {
+    "nombre": "SCHMIDT",
+    "direccion": "Moreno 1240",
+    "localidad": "Villa Rosa",
+    "telefono": "0230 4495121"
+  },
+  {
+    "nombre": "LA 25 2080 SCS",
+    "direccion": "Ruta prov 25 Nro 2080",
+    "localidad": "Villa Rosa",
+    "telefono": "011 5119 2820"
+  },
+  {
+    "nombre": "CAAMAÑO FARMA SCS",
+    "direccion": "Verazzi 1665.",
+    "localidad": "Villa Rosa",
+    "telefono": "011 5115 3823"
+  },
+  {
+    "nombre": "QUINTA 46",
+    "direccion": "Sor Teresa 169",
+    "localidad": "Pilar",
+    "telefono": "011 15 3760 9873"
+  },
+  {
+    "nombre": "SCHUBERT 1950 SCS - FARMAPLUS",
+    "direccion": "Schubert 1950",
+    "localidad": "Villa Rosa",
+    "telefono": "011 5505 4536"
+  },
+  {
+    "nombre": "VILLANUEVA",
+    "direccion": "C. Zelaya 912",
+    "localidad": "Zelaya",
+    "telefono": "0348 460476"
+  },
+  {
+    "nombre": "PIERESKO",
+    "direccion": "R. Diesel 1299 Panamericana KM 44",
+    "localidad": "Del Viso",
+    "telefono": "0230 478200"
+  },
+  {
+    "nombre": "BONEL",
+    "direccion": "Av Constitucion 1250",
+    "localidad": "Del Viso",
+    "telefono": "0230 473540"
+  },
+  {
+    "nombre": "ALDASORO",
+    "direccion": "Ruta 26 Nro 3412",
+    "localidad": "Luis Lagomarsino",
+    "telefono": "0348 4468223"
+  },
+  {
+    "nombre": "DE LA RUTA",
+    "direccion": "Av Constitucion 417",
+    "localidad": "Del Viso",
+    "telefono": "02320 400444"
+  },
+  {
+    "nombre": "OROÑO",
+    "direccion": "Berutti 1305",
+    "localidad": "Del Viso",
+    "telefono": "02320 476666"
+  },
+  {
+    "nombre": "ACCESO NORTE",
+    "direccion": "Ruta 26 e/Pacheco",
+    "localidad": "Del Viso",
+    "telefono": "02320 402222"
+  },
+  {
+    "nombre": "DIE APOTHEKE",
+    "direccion": "Av Colectora 12 de Octubre e/Las Camelias Edificio Cibra",
+    "localidad": "Del Viso",
+    "telefono": "02320 409999"
+  },
+  {
+    "nombre": "GUTKIND",
+    "direccion": "Independencia 7032",
+    "localidad": "Del Viso",
+    "telefono": "02320 400400 /470171"
+  },
+  {
+    "nombre": "DEL VISO FARMA SCS",
+    "direccion": "Berutti 1174",
+    "localidad": "Del Viso",
+    "telefono": "02320 470281"
+  },
+  {
+    "nombre": "DEL SOL DE DEL VISO SCS",
+    "direccion": "Av Madero 973 (Ruta 26)",
+    "localidad": "Del Viso",
+    "telefono": "02320 470444/11 64758060"
+  },
+  {
+    "nombre": "WASSERMANN",
+    "direccion": "Directorio 507",
+    "localidad": "Tortuguitas",
+    "telefono": "02320 491321"
+  },
+  {
+    "nombre": "DI NARDO",
+    "direccion": "Av Hipolito Yrigoyen e/ Santa Rita",
+    "localidad": "Manuel Alberti",
+    "telefono": "02320 471310/407297"
+  },
+  {
+    "nombre": "RICCI",
+    "direccion": "Hipolito Yrigoyen 308",
+    "localidad": "Manuel Alberti",
+    "telefono": "02320 621621"
+  },
+  {
+    "nombre": "MISBACK I",
+    "direccion": "Golfers Club de Campo 2972",
+    "localidad": "Manuel Alberti",
+    "telefono": "0348 4689069"
+  },
+  {
+    "nombre": "VILA CENTER III S.C.S",
+    "direccion": "Los Crisantemos 392",
+    "localidad": "Manuel Alberti",
+    "telefono": "011 3826 -8099"
+  },
+  {
+    "nombre": "VIEMAG SCS",
+    "direccion": "Jockey Club 2454",
+    "localidad": "Manuel Alberti",
+    "telefono": "02320 367070"
+  }
+]
