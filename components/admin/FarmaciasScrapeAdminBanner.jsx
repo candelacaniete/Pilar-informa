@@ -14,9 +14,9 @@ export default function FarmaciasScrapeAdminBanner({ status, showOk = false }) {
       <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
         <p className="font-semibold text-slate-900">Scrape de farmacias: todavía no corrió</p>
         <p className="mt-1">
-          Cuando configures <code className="text-xs">CRON_SECRET</code> y{' '}
-          <code className="text-xs">SUPABASE_SERVICE_ROLE_KEY</code> en Vercel, el cron de las
-          08:15 AR va a llenar los turnos solos. Mientras tanto podés cargar turnos a mano.
+          El cron de las 08:15 AR corre solo si ya pasó ese horario después del deploy. Mientras
+          tanto, en esta página usá <strong>Actualizar desde Colfarma</strong> (hace falta{' '}
+          <code className="text-xs">SUPABASE_SERVICE_ROLE_KEY</code> en Vercel).
         </p>
       </div>
     )
@@ -59,7 +59,11 @@ export default function FarmaciasScrapeAdminBanner({ status, showOk = false }) {
             {status.lastRun?.error_message
               ? `Error: ${status.lastRun.error_message}`
               : 'La última actualización automática es vieja o falló.'}{' '}
-            Se mantiene lo último cargado. Revisá el cron o{' '}
+            Se mantiene lo último cargado. Probá <strong>Actualizar desde Colfarma</strong> en{' '}
+            <Link href="/admin/farmacias" className="font-semibold underline underline-offset-2">
+              Farmacias
+            </Link>
+            , o revisá el cron /{' '}
             <a
               href={status.officialTurnoUrl}
               target="_blank"
@@ -68,10 +72,7 @@ export default function FarmaciasScrapeAdminBanner({ status, showOk = false }) {
             >
               Colfarma
             </a>
-            .{' '}
-            <Link href="/admin/farmacias" className="font-semibold underline underline-offset-2">
-              Ir a farmacias
-            </Link>
+            .
           </p>
         </div>
       </div>
