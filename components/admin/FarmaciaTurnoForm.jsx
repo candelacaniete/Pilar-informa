@@ -18,6 +18,7 @@ export default function FarmaciaTurnoForm({ initial = null }) {
     whatsapp: initial?.whatsapp || '',
     fecha: initial?.fecha || new Date().toISOString().slice(0, 10),
     horario: initial?.horario || '8:00 a 22:00',
+    maps_url: initial?.maps_url || '',
     notas: initial?.notas || '',
   })
 
@@ -42,8 +43,10 @@ export default function FarmaciaTurnoForm({ initial = null }) {
         whatsapp: form.whatsapp.trim() || null,
         fecha: form.fecha,
         horario: form.horario.trim() || '8:00 a 22:00',
+        maps_url: form.maps_url.trim() || null,
         notas: form.notas.trim() || null,
       }
+      if (!initial?.id) payload.fuente = 'manual'
 
       if (initial?.id) {
         const { error } = await supabase.from('farmacias_turno').update(payload).eq('id', initial.id)
@@ -70,8 +73,7 @@ export default function FarmaciaTurnoForm({ initial = null }) {
       className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
     >
       <p className="text-sm text-slate-600">
-        Cargá una farmacia por día y zona. Si el mismo local cubre varios días, repetí el turno con
-        cada fecha.
+        Cargá una farmacia por día y zona. Los turnos manuales no los borra el scrape de Colfarma.
       </p>
 
       <label className="block">
@@ -139,6 +141,16 @@ export default function FarmaciaTurnoForm({ initial = null }) {
           onChange={(e) => set('direccion', e.target.value)}
           className={inputClass}
           placeholder="Calle y número"
+        />
+      </label>
+
+      <label className="block">
+        <span className="text-sm font-medium text-slate-700">Link de Google Maps (opcional)</span>
+        <input
+          value={form.maps_url}
+          onChange={(e) => set('maps_url', e.target.value)}
+          className={inputClass}
+          placeholder="https://www.google.com/maps?q=..."
         />
       </label>
 

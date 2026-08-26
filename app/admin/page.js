@@ -1,11 +1,16 @@
 import Link from 'next/link'
 import { AlertTriangle, Building2, CalendarClock, Newspaper, Plus } from 'lucide-react'
+import FarmaciasScrapeAdminBanner from '@/components/admin/FarmaciasScrapeAdminBanner'
 import MetricsDashboard from '@/components/admin/MetricsDashboard'
-import { getAdminDashboardStats } from '@/lib/data'
+import { getAdminDashboardStats, getFarmaciasScrapeStatus } from '@/lib/data'
 import { getAdminMetrics } from '@/lib/metrics/dashboard'
 
 export default async function AdminDashboardPage() {
-  const [stats, metrics] = await Promise.all([getAdminDashboardStats(), getAdminMetrics()])
+  const [stats, metrics, scrape] = await Promise.all([
+    getAdminDashboardStats(),
+    getAdminMetrics(),
+    getFarmaciasScrapeStatus(),
+  ])
 
   const cards = [
     {
@@ -64,6 +69,10 @@ export default async function AdminDashboardPage() {
           real.
         </div>
       )}
+
+      <div className="mt-5">
+        <FarmaciasScrapeAdminBanner status={scrape} />
+      </div>
 
       <div className="admin-cards mt-6">
         {cards.map((card) => {
