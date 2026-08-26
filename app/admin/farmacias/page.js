@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import FarmaciasScrapeAdminBanner from '@/components/admin/FarmaciasScrapeAdminBanner'
+import FarmaciasScrapeNowButton from '@/components/admin/FarmaciasScrapeNowButton'
 import { getAllFarmaciasTurnoAdmin, getFarmaciasScrapeStatus } from '@/lib/data'
 import { formatDate, todayInPilar } from '@/lib/utils'
 
@@ -17,17 +18,20 @@ export default async function AdminFarmaciasPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">Farmacias de turno</h1>
           <p className="mt-1 text-slate-600">
-            El cron trae los turnos de Colfarma cada mañana. También podés cargar o corregir a
-            mano (fuente manual; el scrape no las borra).
+            El cron trae los turnos de Colfarma cada mañana (08:15 AR). También podés disparar el
+            scrape a mano o cargar turnos (fuente manual; el scrape no las borra).
           </p>
         </div>
-        <Link
-          href="/admin/farmacias/nuevo"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal px-4 py-3 text-sm font-semibold text-white hover:bg-teal-dark"
-        >
-          <Plus className="h-4 w-4" />
-          Nuevo turno
-        </Link>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <FarmaciasScrapeNowButton />
+          <Link
+            href="/admin/farmacias/nuevo"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal px-4 py-3 text-sm font-semibold text-white hover:bg-teal-dark"
+          >
+            <Plus className="h-4 w-4" />
+            Nuevo turno
+          </Link>
+        </div>
       </div>
 
       <div className="mt-5">
