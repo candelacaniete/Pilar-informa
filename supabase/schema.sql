@@ -1,5 +1,5 @@
 -- =============================================================================
--- PILAR INFORMA — Esquema Supabase
+-- GUÍA PILAR — Esquema Supabase
 -- Ejecutar en el SQL Editor de Supabase (en orden).
 -- =============================================================================
 
@@ -193,7 +193,7 @@ create table if not exists public.noticias (
   imagen text,
   categoria text,
   publicado_en timestamptz,
-  autor text default 'Redacción Pilar Informa',
+  autor text default 'Redacción Guía Pilar',
   estado public.noticia_estado not null default 'borrador',
   creado_en timestamptz not null default now(),
   actualizado_en timestamptz not null default now()

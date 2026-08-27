@@ -88,7 +88,7 @@ export default function AdminNav() {
         <div className="admin-mobile-bar-inner">
           <div style={{ minWidth: 0 }}>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-teal">Admin</p>
-            <p className="truncate font-bold text-slate-900">Pilar Informa</p>
+            <p className="truncate font-bold text-slate-900">Guía Pilar</p>
           </div>
           <button
             type="button"
@@ -103,7 +103,7 @@ export default function AdminNav() {
 
       <aside className="admin-sidebar">
         <div className="border-b border-slate-200 px-5 py-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Pilar Informa</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Guía Pilar</p>
           <p className="mt-1 text-lg font-bold text-slate-900">Panel de carga</p>
           <p className="mt-1 text-xs text-slate-500">Solo para el equipo</p>
         </div>

@@ -2,7 +2,7 @@ export default function manifest() {
   return {
     name: 'Pilar',
     short_name: 'Pilar',
-    description: 'Tu asistente de Pilar Informa: farmacias de turno, promos, eventos y locales.',
+    description: 'Tu asistente de Guía Pilar: farmacias de turno, promos, eventos y locales.',
     start_url: '/pilar',
     scope: '/pilar',
     id: '/pilar',

@@ -291,7 +291,7 @@ function getDefaults(type, initial, negocios) {
       cuerpo: initial?.cuerpo || '',
       imagen: initial?.imagen || '',
       categoria: initial?.categoria || 'Ciudad',
-      autor: initial?.autor || 'Redacción Pilar Informa',
+      autor: initial?.autor || 'Redacción Guía Pilar',
       estado: initial?.estado || 'borrador',
       publicado_en: initial?.publicado_en
         ? String(initial.publicado_en).slice(0, 16)

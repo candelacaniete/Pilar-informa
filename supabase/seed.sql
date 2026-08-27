@@ -1,5 +1,5 @@
 -- =============================================================================
--- PILAR INFORMA — Datos iniciales de ejemplo
+-- GUÍA PILAR — Datos iniciales de ejemplo
 -- Ejecutar DESPUÉS de schema.sql
 -- =============================================================================
 
@@ -151,7 +151,7 @@ insert into public.noticias (titulo, slug, bajada, cuerpo, imagen, categoria, pu
   'Las obras en las calles céntricas avanzan con veredas renovadas, nueva señalización y desvíos temporarios.',
   'Las obras en las calles céntricas avanzan con veredas renovadas, nueva señalización y desvíos temporarios. Te contamos qué cambia esta semana y cómo circular por el centro de Pilar sin contratiempos.',
   'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1400&q=80',
-  'Ciudad', now() - interval '2 hours', 'Redacción Pilar Informa', 'publicado'
+  'Ciudad', now() - interval '2 hours', 'Redacción Guía Pilar', 'publicado'
 ),
 (
   'Nueva propuesta gastronómica abrió sus puertas en Del Viso',
@@ -159,7 +159,7 @@ insert into public.noticias (titulo, slug, bajada, cuerpo, imagen, categoria, pu
   'Un espacio de cocina de autor y barra de vinos se suma a la escena local.',
   'Un espacio de cocina de autor y barra de vinos se suma a la escena local, con foco en productores de la zona norte.',
   'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80',
-  'Gastronomía', now() - interval '5 hours', 'Redacción Pilar Informa', 'publicado'
+  'Gastronomía', now() - interval '5 hours', 'Redacción Guía Pilar', 'publicado'
 ),
 (
   'La agenda cultural de Pilar para este fin de semana',
@@ -167,7 +167,7 @@ insert into public.noticias (titulo, slug, bajada, cuerpo, imagen, categoria, pu
   'Teatros, ferias, música en vivo y actividades al aire libre.',
   'Teatros, ferias, música en vivo y actividades al aire libre para armar el plan perfecto sin salir del partido.',
   'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80',
-  'Cultura', now() - interval '8 hours', 'Redacción Pilar Informa', 'publicado'
+  'Cultura', now() - interval '8 hours', 'Redacción Guía Pilar', 'publicado'
 )
 on conflict (slug) do nothing;
 
@@ -200,7 +200,7 @@ on conflict (slug) do nothing;
 insert into public.promociones (negocio_id, titulo, descuento, descripcion, imagen, valido_desde, valido_hasta, estado)
 select n.id, v.titulo, v.descuento, v.descripcion, v.imagen, current_date, current_date + 20, 'activa'::public.promocion_estado
 from (values
-  ('casa-marea', '20% OFF en Casa Marea', '20% OFF', 'Presentando esta promoción desde Pilar Informa.',
+  ('casa-marea', '20% OFF en Casa Marea', '20% OFF', 'Presentando esta promoción desde Guía Pilar.',
    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=80'),
   ('belleza-aura', '15% OFF en coloración', '15% OFF', 'Reserva tu turno esta semana y mostrá el cupón digital.',
    'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80'),

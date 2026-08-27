@@ -38,7 +38,7 @@ export default function PilarChat() {
                 </span>
                 <div>
                   <p className="font-bold text-ink">Pilar</p>
-                  <p className="text-xs text-muted">Tu guía de Pilar Informa</p>
+                  <p className="text-xs text-muted">Tu guía local de Pilar</p>
                 </div>
               </div>
               <button

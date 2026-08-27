@@ -69,7 +69,7 @@ export default function AdminLoginForm() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-slate-100 px-4">
       <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Pilar Informa</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">Guía Pilar</p>
         <h1 className="mt-2 text-2xl font-bold text-slate-900">Ingresar al panel</h1>
         <p className="mt-2 text-sm text-slate-600">
           Acá cargás negocios, noticias, eventos y promociones.

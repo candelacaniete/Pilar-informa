@@ -1,4 +1,4 @@
-# Pilar Informa
+# Guía Pilar
 
 Plataforma digital local de Pilar (Buenos Aires): noticias + guía comercial + agenda + promociones + mapa.
 
@@ -118,7 +118,7 @@ Opcional: `GEMINI_API_KEY` en Vercel (Google AI Studio, modelo `gemini-3.1-flash
 
 La PWA **no es la web completa**: al instalarla se abre `/pilar` (pantalla de bienvenida + chat a pantalla completa).
 
-En iPhone: entrar a `/pilar` desde Safari → Compartir → Agregar a pantalla de inicio. En la home de Pilar Informa hay una sección **Instalá a Pilar** con el paso a paso.
+En iPhone: entrar a `/pilar` desde Safari → Compartir → Agregar a pantalla de inicio. En la home de Guía Pilar hay una sección **Instalá a Pilar** con el paso a paso.
 
 ## Vercel
 

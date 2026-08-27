@@ -12,7 +12,7 @@ export const PILAR_SUGGESTIONS = [
 
 const WELCOME = {
   role: 'pilar',
-  text: 'Hola, soy Pilar. Preguntame por farmacias de turno, promos, eventos o locales de la guía. Respondo solo con lo que está cargado en Pilar Informa.',
+  text: 'Hola, soy Pilar. Preguntame por farmacias de turno, promos, eventos o locales de la guía. Respondo solo con lo que está cargado en Guía Pilar.',
 }
 
 function readConsent() {
