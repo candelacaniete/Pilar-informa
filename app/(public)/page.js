@@ -79,7 +79,7 @@ export default async function HomePage() {
     await Promise.all([
       getCategorias(),
       getNoticias({ limit: 4 }),
-      getNegociosActivos({ destacados: true, limit: 6 }),
+      getNegociosActivos({ destacados: true, limit: 3 }),
       getEventos({ fromToday: true, limit: 3 }),
       getPromociones({ limit: 3 }),
       getFarmaciasTurno(),
@@ -90,7 +90,7 @@ export default async function HomePage() {
   const homeCats = categorias.slice(0, 7)
   const [featuredNews, ...secondaryNews] = noticias
   const bannerSlots = emptyHomeSlots(homeBanners)
-  const destacadosGrid = padWithBusinessPlaceholders(destacados, 6)
+  const destacadosGrid = padWithBusinessPlaceholders(destacados, 3)
   const showEventos = showHomeEventosSection()
 
   return (
