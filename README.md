@@ -67,19 +67,19 @@ En Supabase → **Authentication** → **URL Configuration**:
 
 | Campo | Valor en producción |
 |-------|---------------------|
-| **Site URL** | `https://pilar-informa-eosin.vercel.app` (tu dominio real) |
-| **Redirect URLs** | `https://pilar-informa-eosin.vercel.app/**` y `http://localhost:3000/**` |
+| **Site URL** | `https://guia-pilar.com` |
+| **Redirect URLs** | `https://guia-pilar.com/**` y `http://localhost:3000/**` |
 
 Si **Site URL** sigue en `http://localhost:3000`, los emails de reset de contraseña te mandan a localhost y fallan.
 
 En la app, usá **Recuperar acceso** en `/admin/recuperar` (no el botón de reset del panel de Supabase) para que el enlace apunte a tu dominio.
 
-En Vercel, `NEXT_PUBLIC_SITE_URL` tiene que ser la misma URL pública (`https://pilar-informa-eosin.vercel.app`). Si falta, la app igual usa el dominio actual en el navegador al pedir recuperación.
+En Vercel, `NEXT_PUBLIC_SITE_URL` tiene que ser `https://guia-pilar.com` (sin barra final). Si falta, en producción la app usa ese dominio canónico igual; en local, el navegador al pedir recuperación de contraseña.
 
 **Si falla "No pudimos enviar el email":**
 
 1. El usuario tiene que existir en **Authentication → Users** (la fila en `admins` sola no alcanza).
-2. En **Redirect URLs** tiene que estar permitido `https://tu-dominio.vercel.app/**`.
+2. En **Redirect URLs** tiene que estar permitido `https://guia-pilar.com/**`.
 3. Supabase limita cuántos emails envía por hora; esperá unos minutos si probaste muchas veces.
 
 ## Panel de administración
