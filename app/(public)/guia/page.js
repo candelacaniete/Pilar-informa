@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import SearchBar from '@/components/public/SearchBar'
-import BusinessCard from '@/components/public/BusinessCard'
+import BusinessSlot from '@/components/public/BusinessSlot'
 import BannerSlot from '@/components/public/BannerSlot'
 import { getBannersForMonth, getCategorias, getNegociosActivos } from '@/lib/data'
 import { emptyCategoriaSlots, getBannerSlot } from '@/lib/banners'
+import { padWithBusinessPlaceholders } from '@/lib/placeholders'
 import { buildPageMetadata } from '@/lib/seo/metadata'
 
 export const metadata = buildPageMetadata({
@@ -56,9 +57,11 @@ export default async function GuiaPage({ searchParams }) {
       : []
   const bannerSlots = showBanners ? emptyCategoriaSlots(categoryBanners) : []
 
-  const mid = Math.ceil(filtered.length / 2)
-  const firstHalf = filtered.slice(0, mid)
-  const secondHalf = filtered.slice(mid)
+  const gridTarget = filtered.length >= 3 ? filtered.length : filtered.length > 0 ? 3 : 0
+  const gridItems = padWithBusinessPlaceholders(filtered, gridTarget)
+  const mid = Math.ceil(gridItems.length / 2)
+  const firstHalf = gridItems.slice(0, mid)
+  const secondHalf = gridItems.slice(mid)
 
   const buildHref = (slug) => {
     const next = new URLSearchParams()
@@ -134,8 +137,8 @@ export default async function GuiaPage({ searchParams }) {
       {filtered.length > 0 ? (
         <>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {firstHalf.map((business) => (
-              <BusinessCard key={business.id} business={business} />
+            {firstHalf.map((item) => (
+              <BusinessSlot key={item.kind === 'business' ? item.business.id : item.key} item={item} />
             ))}
           </div>
 
@@ -147,8 +150,8 @@ export default async function GuiaPage({ searchParams }) {
 
           {secondHalf.length ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {secondHalf.map((business) => (
-                <BusinessCard key={business.id} business={business} />
+              {secondHalf.map((item) => (
+                <BusinessSlot key={item.kind === 'business' ? item.business.id : item.key} item={item} />
               ))}
             </div>
           ) : null}
