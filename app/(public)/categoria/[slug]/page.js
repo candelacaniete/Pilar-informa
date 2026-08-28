@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import BusinessCard from '@/components/public/BusinessCard'
+import BusinessSlot from '@/components/public/BusinessSlot'
 import BannerSlot from '@/components/public/BannerSlot'
 import { getBannersForMonth, getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
 import { emptyCategoriaSlots, getBannerSlot } from '@/lib/banners'
+import { padWithBusinessPlaceholders } from '@/lib/placeholders'
 import { getCategoryAeo } from '@/lib/seo/categoryCopy'
 import { buildPageMetadata, categoryCollectionJsonLd } from '@/lib/seo/metadata'
 
@@ -35,9 +36,11 @@ export default async function CategoriaPage({ params }) {
   ])
   const bannerSlots = categoria.cerrada ? [] : emptyCategoriaSlots(banners)
   const showBanners = bannerSlots.length > 0
-  const mid = Math.ceil(negocios.length / 2)
-  const firstHalf = negocios.slice(0, mid)
-  const secondHalf = negocios.slice(mid)
+  const gridTarget = negocios.length >= 3 ? negocios.length : negocios.length > 0 ? 3 : 0
+  const gridItems = padWithBusinessPlaceholders(negocios, gridTarget)
+  const mid = Math.ceil(gridItems.length / 2)
+  const firstHalf = gridItems.slice(0, mid)
+  const secondHalf = gridItems.slice(mid)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
@@ -95,8 +98,8 @@ export default async function CategoriaPage({ params }) {
       {negocios.length > 0 ? (
         <>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {firstHalf.map((business) => (
-              <BusinessCard key={business.id} business={business} />
+            {firstHalf.map((item) => (
+              <BusinessSlot key={item.kind === 'business' ? item.business.id : item.key} item={item} />
             ))}
           </div>
 
@@ -108,8 +111,8 @@ export default async function CategoriaPage({ params }) {
 
           {secondHalf.length ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {secondHalf.map((business) => (
-                <BusinessCard key={business.id} business={business} />
+              {secondHalf.map((item) => (
+                <BusinessSlot key={item.kind === 'business' ? item.business.id : item.key} item={item} />
               ))}
             </div>
           ) : null}

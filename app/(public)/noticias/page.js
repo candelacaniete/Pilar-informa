@@ -3,6 +3,7 @@ import { ArrowLeft, Clock } from 'lucide-react'
 import { getNoticias } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
 import { buildPageMetadata } from '@/lib/seo/metadata'
+import NewsImage from '@/components/public/NewsImage'
 
 export const metadata = buildPageMetadata({
   title: 'Noticias de Pilar',
@@ -41,8 +42,7 @@ export default async function NoticiasPage() {
         >
           <article className="grid md:grid-cols-2">
             <div className="aspect-[16/11] md:aspect-auto md:min-h-[360px]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={featured.imagen} alt="" className="h-full w-full object-cover" />
+              <NewsImage src={featured.imagen} alt="" className="h-full w-full object-cover" />
             </div>
             <div className="flex flex-col justify-center p-6 md:p-10">
               <span className="w-fit rounded-md bg-teal-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-teal-dark">
@@ -70,12 +70,10 @@ export default async function NoticiasPage() {
           >
             <article>
               <div className="aspect-[16/10] overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <NewsImage
                   src={item.imagen}
                   alt=""
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  loading="lazy"
                 />
               </div>
               <div className="p-5">

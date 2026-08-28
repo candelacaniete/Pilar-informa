@@ -3,6 +3,9 @@ import { ArrowRight, Clock } from 'lucide-react'
 import SearchBar from '@/components/public/SearchBar'
 import SectionHeading from '@/components/public/SectionHeading'
 import BusinessCard from '@/components/public/BusinessCard'
+import BusinessPlaceholderCard from '@/components/public/BusinessPlaceholderCard'
+import PromoGrid from '@/components/public/PromoGrid'
+import NewsImage from '@/components/public/NewsImage'
 import BusinessCTA from '@/components/public/BusinessCTA'
 import InstalaPilar from '@/components/public/InstalaPilar'
 import {
@@ -20,6 +23,8 @@ import { EMERGENCIAS_TEASER } from '@/lib/emergencias/data'
 import { formatDate, formatShortDate } from '@/lib/utils'
 import { emptyHomeSlots, getBannerSlot } from '@/lib/banners'
 import BannerSlot from '@/components/public/BannerSlot'
+import { padWithBusinessPlaceholders } from '@/lib/placeholders'
+import { showHomeEventosSection } from '@/lib/contentVisibility'
 import { BRAND, BRAND_TAGLINE, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/lib/seo/site'
 import { buildPageMetadata, organizationJsonLd } from '@/lib/seo/metadata'
 
@@ -85,6 +90,8 @@ export default async function HomePage() {
   const homeCats = categorias.slice(0, 7)
   const [featuredNews, ...secondaryNews] = noticias
   const bannerSlots = emptyHomeSlots(homeBanners)
+  const destacadosGrid = padWithBusinessPlaceholders(destacados, 6)
+  const showEventos = showHomeEventosSection()
 
   return (
     <div>
@@ -250,8 +257,7 @@ export default async function HomePage() {
               href={`/noticias/${featuredNews.slug}`}
               className="group relative overflow-hidden rounded-[1.5rem] bg-ink text-white shadow-soft"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <NewsImage
                 src={featuredNews.imagen}
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-700 group-hover:scale-[1.03] group-hover:opacity-60"
@@ -282,12 +288,10 @@ export default async function HomePage() {
                   className="group flex gap-4 rounded-2xl border border-line/70 bg-white p-3 transition hover:border-teal/25 hover:shadow-soft md:p-4"
                 >
                   <div className="h-24 w-28 shrink-0 overflow-hidden rounded-xl md:h-28 md:w-32">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <NewsImage
                       src={item.imagen}
                       alt=""
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                      loading="lazy"
                     />
                   </div>
                   <div className="flex min-w-0 flex-col justify-center">
@@ -373,12 +377,21 @@ export default async function HomePage() {
           }
         />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {destacados.map((business) => (
-            <BusinessCard key={business.id} business={business} />
-          ))}
+          {destacadosGrid.map((item) =>
+            item.kind === 'business' ? (
+              <BusinessCard key={item.business.id} business={item.business} />
+            ) : (
+              <BusinessPlaceholderCard
+                key={item.key}
+                title={item.copy.title}
+                text={item.copy.text}
+              />
+            ),
+          )}
         </div>
       </section>
 
+      {showEventos ? (
       <section className="bg-paper-deep/60 py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 md:px-6">
           <SectionHeading
@@ -422,6 +435,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      ) : null}
 
       {/* Banner home · slot 4 — entre agenda y promociones */}
       <section className="mx-auto max-w-6xl px-4 py-6 md:px-6">
@@ -442,35 +456,7 @@ export default async function HomePage() {
             </Link>
           }
         />
-        <div className="grid gap-4 md:grid-cols-3">
-          {promociones.map((promo) => (
-            <Link
-              key={promo.id}
-              href="/promociones"
-              className="group relative overflow-hidden rounded-2xl border border-line/70 bg-white transition hover:shadow-lift"
-            >
-              <div className="aspect-[16/9] overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={promo.imagen}
-                  alt=""
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-5">
-                <span className="inline-flex rounded-md bg-amber-soft px-2 py-1 text-xs font-bold text-amber">
-                  {promo.descuento}
-                </span>
-                <h3 className="mt-3 font-display text-xl font-semibold text-ink">{promo.titulo}</h3>
-                <p className="mt-2 text-sm text-muted">{promo.descripcion}</p>
-                <p className="mt-3 text-xs font-medium text-ink-soft">
-                  Válido hasta {formatDate(promo.valido_hasta)}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <PromoGrid promociones={promociones} minSlots={3} linkToListing />
       </section>
 
       <section className="mx-auto max-w-6xl space-y-6 px-4 pb-16 md:px-6 md:pb-24">
