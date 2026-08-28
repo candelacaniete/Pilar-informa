@@ -144,7 +144,7 @@ export default async function NegocioPage({ params }) {
                     Verificado
                   </span>
                 ) : null}
-                {negocio.plan && negocio.plan !== 'basico' ? (
+                {negocio.plan ? (
                   <span className="inline-flex items-center gap-1 rounded-md bg-amber-soft px-2.5 py-1 text-xs font-semibold text-amber">
                     <Star className="h-3.5 w-3.5 fill-amber" />
                     {planLabel(negocio.plan)}

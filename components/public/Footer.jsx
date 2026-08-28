@@ -10,6 +10,7 @@ const links = [
   { href: '/farmacias', label: 'Farmacias de turno' },
   { href: '/emergencias', label: 'Números de emergencia' },
   { href: '/#instalar-pilar', label: 'Instalar Pilar' },
+  { href: '/planes', label: 'Planes y precios' },
   { href: '/sumar-negocio', label: 'Sumar mi negocio' },
 ]
 

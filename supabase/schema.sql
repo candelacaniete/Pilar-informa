@@ -49,7 +49,7 @@ create index if not exists categorias_orden_idx on public.categorias (orden);
 -- Negocios
 -- -----------------------------------------------------------------------------
 create type public.negocio_estado as enum ('activo', 'pausado', 'vencido');
-create type public.negocio_plan as enum ('basico', 'destacado', 'premium');
+create type public.negocio_plan as enum ('destacado', 'premium');
 
 create table if not exists public.negocios (
   id uuid primary key default gen_random_uuid(),

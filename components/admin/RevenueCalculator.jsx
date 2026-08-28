@@ -95,8 +95,7 @@ export default function RevenueCalculator({
               </p>
               {weightedAvg > 0 ? (
                 <p className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-                  Con el mix actual ({Math.round((mix.basico || 0) * 100)}% Básico ·{' '}
-                  {Math.round((mix.destacado || 0) * 100)}% Destacado ·{' '}
+                  Con el mix actual ({Math.round((mix.destacado || 0) * 100)}% Destacado ·{' '}
                   {Math.round((mix.premium || 0) * 100)}% Premium, ~{formatArs(weightedAvg)} c/u):{' '}
                   <strong>{byMix || '—'}</strong> negocio{byMix === 1 ? '' : 's'} más.
                 </p>

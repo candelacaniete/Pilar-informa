@@ -34,7 +34,8 @@ Sin variables de Supabase, la web y el panel `/admin` funcionan en **modo demo**
    **Importante para fotos del admin:** corré `007_storage_media_bucket.sql`
    **Importante para el tope mensual de Pilar:** corré `008_pilar_uso_mensual.sql`
    **Importante para reseñas verificadas:** corré `009_resenas_verificadas.sql`
-   **Importante para plan Básico:** corré `010_negocio_plan_basico.sql`
+   **Importante para planes comerciales:** si tu base ya corrió `010_negocio_plan_basico.sql`,
+   aplicá también `017_remove_plan_basico.sql` (elimina el plan Básico; vigentes: Destacado y Premium).
    **Importante para métricas Fase 2:** corré `011`…`015` (fuente_alta, proyección,
    metas, negocio_eventos, RPC `pilar_stats_mes`)
    (crea el bucket público `media` + policies RLS). Sin eso, al subir una imagen
@@ -104,6 +105,7 @@ Ruta: `/admin`
 | `/promociones` | Promociones |
 | `/farmacias` | Farmacias de turno |
 | `/sumar-negocio` | Alta de negocios (formulario → WhatsApp) |
+| `/planes` | Planes y precios (Destacado / Premium) |
 | `/pilar` | App de la asistente Pilar (PWA) |
 | `/mapa` | Mapa mock con pines dinámicos |
 | `/sitemap.xml` · `/robots.txt` | SEO |

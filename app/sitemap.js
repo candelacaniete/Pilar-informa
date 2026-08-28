@@ -21,6 +21,7 @@ export default async function sitemap() {
     '/emergencias',
     '/pilar',
     '/sumar-negocio',
+    '/planes',
     '/privacidad',
     '/terminos',
     '/cookies',
@@ -28,7 +29,7 @@ export default async function sitemap() {
     url: `${base}${path}`,
     lastModified: new Date(),
     changeFrequency: path === '' ? 'daily' : legalPaths.has(path) ? 'yearly' : 'weekly',
-    priority: path === '' ? 1 : legalPaths.has(path) ? 0.3 : path === '/sumar-negocio' ? 0.7 : 0.8,
+    priority: path === '' ? 1 : legalPaths.has(path) ? 0.3 : path === '/sumar-negocio' || path === '/planes' ? 0.7 : 0.8,
   }))
 
   const categoriaRoutes = categorias.map((c) => ({
