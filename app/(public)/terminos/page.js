@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { buildPageMetadata } from '@/lib/seo/metadata'
 import { LegalList, LegalSection, LegalShell } from '@/components/public/LegalShell'
 
@@ -30,9 +31,16 @@ export default function TerminosPage() {
       </LegalSection>
 
       <LegalSection title="3. Alta de negocios y planes pagos">
+        <p className="mb-3 text-sm leading-relaxed text-ink-soft">
+          Los negocios que quieran aparecer en la guía deben completar el formulario de alta y elegir
+          uno de los planes disponibles (
+          <Link href="/planes" className="font-medium text-teal hover:underline">
+            Destacado o Premium
+          </Link>
+          ), cuyos precios y beneficios están publicados en el sitio.
+        </p>
         <LegalList
           items={[
-            'Los negocios que quieran aparecer en la guía deben completar el formulario de alta y elegir uno de los planes disponibles (Básico, Destacado o Premium), cuyos precios y beneficios están publicados en el sitio.',
             'El pago se gestiona mediante un plan de suscripción en Mercado Pago, coordinado por WhatsApp.',
             'Ante la falta de pago, el negocio cuenta con una semana de gracia desde el vencimiento. Pasado ese plazo sin regularizar, su ficha se da de baja de la guía pública.',
             'Los precios pueden actualizarse; los cambios no afectan retroactivamente a períodos ya abonados.',

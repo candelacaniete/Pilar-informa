@@ -2,28 +2,21 @@
 
 import { useMemo, useState } from 'react'
 import { MessageCircle } from 'lucide-react'
+import { PUBLIC_PLAN_CATALOG, formatPlanPriceArs } from '@/lib/plans'
 import { CONTACT_WHATSAPP_DISPLAY, whatsappUrl } from '@/lib/whatsapp'
 
 const PLANES = [
-  {
-    value: 'basico',
-    label: 'Básico',
-    hint: 'Ficha en la guía con datos esenciales.',
-  },
-  {
-    value: 'destacado',
-    label: 'Destacado',
-    hint: 'Ficha en la guía, foto principal y visibilidad en búsquedas.',
-  },
-  {
-    value: 'premium',
-    label: 'Premium',
-    hint: 'Más prioridad, galería de fotos y mayor presencia en home.',
-  },
+  ...PUBLIC_PLAN_CATALOG.map((plan) => ({
+    value: plan.value,
+    label: plan.label,
+    hint: plan.hint,
+    priceLabel: `${formatPlanPriceArs(plan.value)}/mes`,
+  })),
   {
     value: 'consultar',
     label: 'Quiero que me asesoren',
     hint: 'Todavía no sé qué plan me conviene.',
+    priceLabel: null,
   },
 ]
 
@@ -313,7 +306,12 @@ export default function AltaNegocioForm({ categorias = [] }) {
                   className="mt-1 accent-teal"
                 />
                 <span>
-                  <span className="block text-sm font-semibold text-ink">{plan.label}</span>
+                  <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                    <span className="text-sm font-semibold text-ink">{plan.label}</span>
+                    {plan.priceLabel ? (
+                      <span className="text-sm font-semibold text-teal">{plan.priceLabel}</span>
+                    ) : null}
+                  </span>
                   <span className="mt-0.5 block text-xs text-muted">{plan.hint}</span>
                 </span>
               </label>
