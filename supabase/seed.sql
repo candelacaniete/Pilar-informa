@@ -31,7 +31,7 @@ insert into public.noticias (titulo, slug, bajada, cuerpo, imagen, categoria, pu
   'obras-mejoras-escuelas-zelaya',
   'El Municipio de Pilar avanza con trabajos de mejora edilicia en establecimientos educativos de Zelaya.',
   'El Municipio de Pilar avanza con trabajos de mejora edilicia en establecimientos educativos de Zelaya.',
-  null,
+  'https://images.unsplash.com/photo-1592066575517-58df903152f2?fm=jpg&q=60&w=1200&auto=format&fit=crop&ixlib=rb-4.1.0',
   'Ciudad', '2026-08-26 10:00:00-03'::timestamptz, 'Diario Resumen', 'publicado'
 ),
 (
@@ -39,7 +39,7 @@ insert into public.noticias (titulo, slug, bajada, cuerpo, imagen, categoria, pu
   'detencion-robo-moto-villa-rosa',
   'Dos hombres fueron detenidos en La Lonja luego de intentar robar una motocicleta en Villa Rosa. El seguimiento de cámaras del COM permitió coordinar la interceptación con la Guardia Urbana.',
   'Dos hombres fueron detenidos en La Lonja luego de intentar robar una motocicleta en Villa Rosa. El seguimiento de cámaras del COM permitió coordinar la interceptación con la Guardia Urbana.',
-  null,
+  'https://images.unsplash.com/photo-1675430428387-376cabac44dc?fm=jpg&q=60&w=1200&auto=format&fit=crop&ixlib=rb-4.1.0',
   'Seguridad', '2026-08-26 10:00:00-03'::timestamptz, 'Diario Resumen', 'publicado'
 )
 on conflict (slug) do nothing;
