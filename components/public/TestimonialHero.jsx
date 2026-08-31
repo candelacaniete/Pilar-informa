@@ -18,7 +18,6 @@ const POSITION_CLASS = {
   'top-right': 'float-card--pos-tr',
   'bottom-left': 'float-card--pos-bl',
   'bottom-right': 'float-card--pos-br',
-  'middle-right': 'float-card--pos-mr',
 }
 
 function CartBadge() {
@@ -33,14 +32,6 @@ function CartBadge() {
   )
 }
 
-function PlayIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M8 5v14l11-7z" />
-    </svg>
-  )
-}
-
 function FloatCard({ card, variant }) {
   const posClass = POSITION_CLASS[card.position] || ''
   const slotClass = `float-card float-card--${card.slot} ${posClass}`.trim()
@@ -51,7 +42,7 @@ function FloatCard({ card, variant }) {
       <div className={slotClass} {...floatAttr}>
         <div className="float-card__media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={card.image} alt={card.imageAlt || ''} />
+          <img src={card.image} alt={card.imageAlt || ''} loading="eager" decoding="async" />
           {card.cart ? <CartBadge /> : null}
         </div>
         {card.label ? <p className="float-card__label">{card.label}</p> : null}
@@ -119,7 +110,7 @@ function FloatCard({ card, variant }) {
         </div>
         <div className="float-card__media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={card.image} alt={card.imageAlt || ''} />
+          <img src={card.image} alt={card.imageAlt || ''} loading="eager" decoding="async" />
         </div>
       </div>
     )
@@ -142,7 +133,7 @@ function FloatCard({ card, variant }) {
         <div className="float-card__gallery">
           {card.images.map((img) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img key={img.src} src={img.src} alt={img.alt} />
+            <img key={img.src} src={img.src} alt={img.alt} loading="eager" decoding="async" />
           ))}
         </div>
         {card.meta?.map((line) => (
@@ -181,41 +172,38 @@ function FloatCard({ card, variant }) {
 function SlideStage({ slide }) {
   return (
     <div className="testimonial-stage" style={{ '--slide-bg': slide.bg }}>
-      <div className="testimonial-headline">
-        <div className="testimonial-headline__row">
-          <span className="testimonial-headline__part">{slide.titleLeft}</span>
-          <div className="testimonial-portrait">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="testimonial-portrait__img"
-              src={slide.portrait}
-              alt={`${slide.name}, comerciante de Pilar`}
-              width={172}
-              height={172}
-            />
-            <span className="testimonial-portrait__play" aria-hidden="true">
-              <PlayIcon />
-            </span>
-          </div>
-          <span className="testimonial-headline__part">{slide.titleRight}</span>
-        </div>
-        <p className="testimonial-headline__context">{slide.context}</p>
-      </div>
-
-      <div className="testimonial-orbit">
+      <div className="testimonial-orbit" aria-hidden="true">
         <div className="testimonial-cards testimonial-cards--desktop">
           {slide.cards.map((card) => (
             <FloatCard key={`d-${card.slot}`} card={card} variant="desktop" />
           ))}
         </div>
-        <div className="testimonial-cards testimonial-cards--mobile">
-          {slide.cards.map((card) => (
-            <FloatCard key={`m-${card.slot}`} card={card} variant="mobile" />
-          ))}
-        </div>
       </div>
 
-      <p className="testimonial-stage__impact">{slide.impact}</p>
+      <div className="testimonial-core">
+        <p className="testimonial-core__name">
+          {slide.titleLeft} {slide.titleRight}
+        </p>
+        <div className="testimonial-portrait">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="testimonial-portrait__img"
+            src={slide.portrait}
+            alt={`${slide.name}, comerciante de Pilar`}
+            width={280}
+            height={280}
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <p className="testimonial-core__phrase">{slide.impact}</p>
+      </div>
+
+      <div className="testimonial-cards testimonial-cards--mobile">
+        {slide.cards.map((card) => (
+          <FloatCard key={`m-${card.slot}`} card={card} variant="mobile" />
+        ))}
+      </div>
     </div>
   )
 }

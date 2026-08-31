@@ -1,16 +1,16 @@
 /**
- * Testimonial Hero — layout tipo “Mary's Chrome”
- * Responsive:
- * 1. Mobile: stage apilado, título arriba, portrait, cards en grid, impacto abajo
- * 2. Desktop: stage ancho con título partido alrededor del portrait + cards absolutas
+ * Testimonial Hero — collage centrado (referencia Mary's Chrome)
+ * Nombre arriba · portrait grande al centro · frase abajo · 4 cards agrupadas a los lados
  */
 
 .testimonial-hero {
-  --hero-radius: 20px;
+  --hero-radius: 18px;
   --hero-stage-radius: 32px;
   --hero-shadow: 0 20px 50px rgba(15, 23, 42, 0.14), 0 6px 18px rgba(15, 23, 42, 0.08);
-  --hero-shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.1);
+  --hero-shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.12);
   --hero-max: 1180px;
+  --hero-stage-h: clamp(520px, 68vh, 640px);
+  --portrait-size: clamp(168px, 24vw, 272px);
   position: relative;
   width: 100%;
   padding: 1rem 1rem 3.25rem;
@@ -20,14 +20,14 @@
 
 .testimonial-hero__viewport {
   position: relative;
-  display: grid;
+  height: var(--hero-stage-h);
   max-width: var(--hero-max);
   margin: 0 auto;
-  min-height: clamp(520px, 72vh, 680px);
 }
 
 .testimonial-slide {
-  grid-area: 1 / 1;
+  position: absolute;
+  inset: 0;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.9s ease, visibility 0.9s ease;
@@ -42,107 +42,78 @@
   z-index: 1;
 }
 
-/* Stage = contenedor redondeado de color (como el bloque rojo/azul del mock) */
 .testimonial-stage {
   position: relative;
-  min-height: clamp(480px, 68vh, 620px);
-  margin: 0 auto;
-  padding: 2rem 1.25rem 2.5rem;
+  height: 100%;
   border-radius: var(--hero-stage-radius);
   background: var(--slide-bg);
   box-shadow: var(--hero-shadow);
-  overflow: visible;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
 }
 
-/* Título partido: “La Guía de” · portrait · “Carlos” */
-.testimonial-headline {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  z-index: 2;
-}
-
-.testimonial-headline__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem 1rem;
-  width: 100%;
-}
-
-.testimonial-headline__part {
-  font-size: clamp(2rem, 7vw, 3.75rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: #fff;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-  white-space: nowrap;
-}
-
-.testimonial-headline__context {
-  margin: 0;
-  max-width: 36ch;
-  text-align: center;
-  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-/* Portrait central + play */
-.testimonial-portrait {
-  position: relative;
-  flex-shrink: 0;
-  width: clamp(120px, 28vw, 168px);
-  height: clamp(120px, 28vw, 168px);
-  border-radius: 50%;
-  padding: 5px;
-  background: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-  z-index: 3;
-}
-
-.testimonial-portrait__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  display: block;
-}
-
-.testimonial-portrait__play {
+/* Núcleo centrado: nombre · portrait · frase */
+.testimonial-core {
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
-  cursor: default;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2.2vw, 1.15rem);
+  width: min(92%, 360px);
+  transform: translate(-50%, -50%);
+  text-align: center;
   pointer-events: none;
 }
 
-.testimonial-portrait__play svg {
-  width: 2.5rem;
-  height: 2.5rem;
-  fill: rgba(255, 255, 255, 0.92);
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+.testimonial-core__name {
+  margin: 0;
+  font-size: clamp(1.75rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.14);
+  white-space: nowrap;
 }
 
-/* Área visual con cards orbitando */
-.testimonial-orbit {
-  position: relative;
+.testimonial-portrait {
+  flex-shrink: 0;
+  width: var(--portrait-size);
+  height: var(--portrait-size);
+  overflow: hidden;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+  background: #fff;
+}
+
+.testimonial-portrait__img {
+  display: block;
   width: 100%;
-  flex: 1;
-  min-height: 200px;
-  margin-top: 0.5rem;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.testimonial-core__phrase {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  font-weight: 600;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Cards flotantes agrupadas alrededor del centro */
+.testimonial-orbit {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
 }
 
 .testimonial-cards--desktop {
@@ -150,34 +121,7 @@
 }
 
 .testimonial-cards--mobile {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 400px;
-  margin: 1rem auto 0;
-}
-
-@media (min-width: 480px) {
-  .testimonial-cards--mobile {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .testimonial-cards--mobile .float-card:last-child {
-    grid-column: 1 / -1;
-  }
-}
-
-.testimonial-stage__impact {
-  margin: 1.25rem 0 0;
-  padding: 0 0.5rem;
-  text-align: center;
-  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-  font-weight: 600;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.95);
-  max-width: 40ch;
-  z-index: 2;
+  display: none;
 }
 
 /* ─── Cards ─── */
@@ -185,8 +129,9 @@
   background: #fff;
   border-radius: var(--hero-radius);
   box-shadow: var(--hero-shadow-soft);
-  padding: 0.75rem 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  pointer-events: auto;
 }
 
 .float-card__media {
@@ -207,8 +152,8 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  width: 2rem;
-  height: 2rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -221,61 +166,61 @@
 }
 
 .float-card__badge--cart svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 0.9rem;
+  height: 0.9rem;
 }
 
 .float-card__label {
-  margin: 0.45rem 0 0.1rem;
+  margin: 0.4rem 0 0.08rem;
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: #1a2332;
 }
 
 .float-card__meta {
   margin: 0;
-  font-size: 0.72rem;
-  line-height: 1.4;
+  font-size: 0.68rem;
+  line-height: 1.35;
   color: rgba(26, 35, 50, 0.65);
 }
 
 .float-card__header {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.25rem;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
 }
 
 .float-card__google {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%;
   background: conic-gradient(from 180deg, #4285f4, #34a853, #fbbc05, #ea4335, #4285f4);
   color: #fff;
   font-weight: 800;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   display: grid;
   place-items: center;
 }
 
 .float-card__stars {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #f59e0b;
 }
 
 .float-card__chip {
   display: inline-block;
-  margin-top: 0.35rem;
-  padding: 0.15rem 0.5rem;
+  margin-top: 0.3rem;
+  padding: 0.12rem 0.45rem;
   border-radius: 999px;
   background: #e0f2f1;
   color: #0e7c75;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
 }
 
 .float-card__map {
-  height: 64px;
+  height: 56px;
   border-radius: calc(var(--hero-radius) - 8px);
   background: linear-gradient(135deg, #dbeafe 0%, #e5e7eb 50%, #d1fae5 100%);
   position: relative;
@@ -285,17 +230,17 @@
   position: absolute;
   left: 50%;
   top: 42%;
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   background: #ef4444;
   border-radius: 50% 50% 50% 0;
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .float-card__insta {
-  width: 1.2rem;
-  height: 1.2rem;
-  border-radius: 0.3rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 0.28rem;
   background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
   display: inline-block;
 }
@@ -303,67 +248,47 @@
 .float-card__social-head {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.35rem;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
 }
 
 .float-card__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   width: 100%;
-  margin-top: 0.4rem;
-  padding: 0.5rem 0.75rem;
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.65rem;
   border: none;
   border-radius: 999px;
   background: #1a2332;
   color: #fff;
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 600;
   cursor: pointer;
 }
 
 .float-card__btn--large {
-  padding: 0.65rem 0.9rem;
-  font-size: 0.85rem;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.8rem;
 }
 
 .float-card__gallery {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.3rem;
+  gap: 0.25rem;
 }
 
 .float-card__gallery img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 0.55rem;
+  border-radius: 0.5rem;
 }
 
 @keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes float-medium {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
-}
-
-@keyframes float-fast {
   0%,
   100% {
     transform: translateY(0);
@@ -373,62 +298,31 @@
   }
 }
 
-/* ─── Desktop: headline en fila + cards absolutas (mock) ─── */
+@keyframes float-medium {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-11px);
+  }
+}
+
+@keyframes float-fast {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Desktop: 4 cards agrupadas cerca del portrait */
 @media (min-width: 768px) {
   .testimonial-hero {
     padding: 1.5rem 1.5rem 3.5rem;
-  }
-
-  .testimonial-stage {
-    padding: 2.5rem 2rem 2rem;
-    min-height: 560px;
-  }
-
-  .testimonial-headline {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    justify-content: center;
-  }
-
-  .testimonial-headline__row {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    flex-wrap: nowrap;
-    gap: clamp(0.75rem, 3vw, 2rem);
-    width: auto;
-    max-width: 95%;
-  }
-
-  .testimonial-headline__part {
-    font-size: clamp(2.5rem, 5.5vw, 4.25rem);
-  }
-
-  .testimonial-headline__context {
-    position: absolute;
-    bottom: 5.25rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.95rem;
-    max-width: 42ch;
-  }
-
-  .testimonial-portrait {
-    width: clamp(140px, 14vw, 172px);
-    height: clamp(140px, 14vw, 172px);
-  }
-
-  .testimonial-orbit {
-    position: absolute;
-    inset: 0;
-    min-height: 0;
-    margin: 0;
-  }
-
-  .testimonial-cards--mobile {
-    display: none;
+    --portrait-size: clamp(200px, 22vw, 272px);
   }
 
   .testimonial-cards--desktop {
@@ -439,36 +333,29 @@
 
   .testimonial-cards--desktop .float-card {
     position: absolute;
-    width: clamp(140px, 15vw, 200px);
+    width: clamp(118px, 13vw, 168px);
     z-index: 4;
   }
 
-  /* Posiciones tipo collage del mock */
+  /* Agrupadas alrededor del centro, no en las esquinas lejanas */
   .float-card--pos-tl {
-    top: 6%;
-    left: 2%;
+    top: calc(50% - 168px);
+    right: calc(50% + 158px);
   }
 
   .float-card--pos-tr {
-    top: 4%;
-    right: 2%;
+    top: calc(50% - 170px);
+    left: calc(50% + 158px);
   }
 
   .float-card--pos-bl {
-    bottom: 8%;
-    left: 3%;
+    top: calc(50% + 128px);
+    right: calc(50% + 148px);
   }
 
   .float-card--pos-br {
-    bottom: 6%;
-    right: 3%;
-  }
-
-  .float-card--pos-mr {
-    top: 42%;
-    right: 1%;
-    width: clamp(100px, 11vw, 140px) !important;
-    padding: 0.5rem 0.75rem;
+    top: calc(50% + 124px);
+    left: calc(50% + 148px);
   }
 
   .float-card[data-float='slow'] {
@@ -482,38 +369,90 @@
   .float-card[data-float='fast'] {
     animation: float-fast 3.4s ease-in-out infinite;
   }
-
-  .testimonial-stage__impact {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    font-size: 1.05rem;
-    max-width: 90%;
-    white-space: nowrap;
-  }
 }
 
 @media (min-width: 1024px) {
   .float-card--pos-tl {
-    left: 5%;
+    right: calc(50% + 178px);
   }
 
   .float-card--pos-tr {
-    right: 5%;
+    left: calc(50% + 178px);
   }
 
   .float-card--pos-bl {
-    left: 6%;
+    right: calc(50% + 168px);
   }
 
   .float-card--pos-br {
-    right: 6%;
+    left: calc(50% + 168px);
   }
 }
 
-/* Dots — solo indicador, sin flechas */
+/* Mobile: stack vertical */
+@media (max-width: 767px) {
+  .testimonial-hero {
+    --hero-stage-h: auto;
+  }
+
+  .testimonial-hero__viewport {
+    height: auto;
+    min-height: 0;
+  }
+
+  .testimonial-slide {
+    position: relative;
+    inset: auto;
+    height: auto;
+  }
+
+  .testimonial-slide:not(.is-active) {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .testimonial-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: clamp(480px, 85vh, 620px);
+    padding: 1.75rem 1rem 1.5rem;
+  }
+
+  .testimonial-orbit {
+    display: none;
+  }
+
+  .testimonial-core {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    flex: 1;
+    justify-content: center;
+    width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .testimonial-cards--mobile {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 1rem;
+    padding: 0 0.25rem;
+  }
+
+  .testimonial-cards--mobile .float-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 220px;
+    justify-self: center;
+  }
+}
+
+/* Dots */
 .testimonial-hero__dots {
   position: absolute;
   left: 50%;
