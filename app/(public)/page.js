@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { ArrowRight, Clock } from 'lucide-react'
-import SearchBar from '@/components/public/SearchBar'
 import TestimonialHero from '@/components/public/TestimonialHero'
 import SectionHeading from '@/components/public/SectionHeading'
 import BusinessCard from '@/components/public/BusinessCard'
@@ -98,15 +97,6 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
       />
       <TestimonialHero />
-
-      <section className="border-b border-line/60 bg-paper">
-        <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
-          <SearchBar />
-          <p className="mt-3 text-sm text-muted">
-            Restaurantes · Peluquerías · Abogados · Gimnasios · Veterinarias
-          </p>
-        </div>
-      </section>
 
       {/* Banner home · slot 1 — debajo del hero */}
       <section className="mx-auto max-w-6xl px-4 pb-2 pt-4 md:px-6">

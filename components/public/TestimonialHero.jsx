@@ -1,47 +1,36 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Poppins } from 'next/font/google'
-import { TESTIMONIAL_SLIDES } from '@/lib/testimonialHero/slides'
+import { BRAND_TAGLINE } from '@/lib/seo/site'
+import { HERO_SEARCH_HINTS, TESTIMONIAL_SLIDES } from '@/lib/testimonialHero/slides'
+import SearchBar from '@/components/public/SearchBar'
 import './testimonial-hero.css'
 
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-})
-
 const INTERVAL_MS = 3500
+const [TAGLINE_LEAD, TAGLINE_TAIL] = BRAND_TAGLINE.split('. ').map((part, i, arr) =>
+  i < arr.length - 1 ? `${part}.` : part,
+)
 
-function SlideStage({ slide }) {
+function StoryCard({ slide, active }) {
   return (
-    <div className="testimonial-stage" style={{ '--slide-bg': slide.bg }}>
-      <blockquote className="testimonial-quote">
-        <p className="testimonial-quote__lead">{slide.lead}</p>
-        <p className="testimonial-quote__payoff">{slide.payoff}</p>
-      </blockquote>
-
-      <div className="testimonial-portrait">
+    <article
+      className={`street-hero__story${active ? ' is-active' : ''}`}
+      aria-hidden={!active}
+    >
+      <div className="street-hero__story-avatar">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="testimonial-portrait__img"
-          src={slide.portrait}
-          alt=""
-          width={300}
-          height={300}
-          loading="eager"
-          decoding="async"
-        />
+        <img src={slide.image} alt="" width={56} height={56} loading="eager" decoding="async" />
       </div>
-
-      <p className="testimonial-byline">
-        <span className="testimonial-byline__name">{slide.name}</span>
-        <span className="testimonial-byline__sep" aria-hidden="true">
-          ·
-        </span>
-        <span className="testimonial-byline__trade">{slide.trade}</span>
+      <blockquote className="street-hero__quote">
+        <p className="street-hero__quote-lead">{slide.lead}</p>
+        <p className="street-hero__quote-payoff">{slide.payoff}</p>
+      </blockquote>
+      <p className="street-hero__byline">
+        <span className="street-hero__byline-name">{slide.name}</span>
+        <span aria-hidden="true"> · </span>
+        <span className="street-hero__byline-trade">{slide.trade}</span>
       </p>
-    </div>
+    </article>
   )
 }
 
@@ -70,36 +59,67 @@ export default function TestimonialHero() {
   return (
     <section
       id="hero"
-      className={`testimonial-hero ${poppins.className}`}
-      aria-label="Historias de comerciantes en Pilar"
+      className="street-hero"
+      aria-label="Guía Pilar — historias del barrio"
       aria-roledescription="carousel"
       aria-live="polite"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="testimonial-hero__viewport">
+      <div className="street-hero__media" aria-hidden="true">
         {TESTIMONIAL_SLIDES.map((slide, i) => (
-          <article
+          <div
             key={slide.id}
-            className={`testimonial-slide${i === index ? ' is-active' : ''}`}
-            aria-hidden={i !== index}
+            className={`street-hero__scene${i === index ? ' is-active' : ''}`}
           >
-            <SlideStage slide={slide} />
-          </article>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="street-hero__scene-img"
+              src={slide.image}
+              alt=""
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </div>
         ))}
+        <div className="street-hero__overlay" />
       </div>
 
-      <div className="testimonial-hero__dots" role="tablist" aria-label="Historias">
-        {TESTIMONIAL_SLIDES.map((slide, i) => (
-          <button
-            key={slide.id}
-            type="button"
-            className={`testimonial-hero__dot${i === index ? ' is-active' : ''}`}
-            aria-label={`${slide.name}, ${slide.trade}`}
-            aria-selected={i === index}
-            onClick={() => setSlide(i)}
-          />
-        ))}
+      <div className="street-hero__content">
+        <div className="street-hero__main">
+          <div className="street-hero__brand">
+            <p className="street-hero__eyebrow">Guía Pilar</p>
+            <h1 className="street-hero__tagline font-display">
+              {TAGLINE_LEAD}
+              <span className="street-hero__tagline-accent">{TAGLINE_TAIL}</span>
+            </h1>
+            <div className="street-hero__search">
+              <SearchBar />
+              <p className="street-hero__hints">
+                {HERO_SEARCH_HINTS.join(' · ')}
+              </p>
+            </div>
+          </div>
+
+          <div className="street-hero__stories" aria-live="polite">
+            {TESTIMONIAL_SLIDES.map((slide, i) => (
+              <StoryCard key={slide.id} slide={slide} active={i === index} />
+            ))}
+          </div>
+        </div>
+
+        <div className="street-hero__dots" role="tablist" aria-label="Historias del barrio">
+          {TESTIMONIAL_SLIDES.map((slide, i) => (
+            <button
+              key={slide.id}
+              type="button"
+              className={`street-hero__dot${i === index ? ' is-active' : ''}`}
+              aria-label={`${slide.name}, ${slide.trade}`}
+              aria-selected={i === index}
+              onClick={() => setSlide(i)}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
