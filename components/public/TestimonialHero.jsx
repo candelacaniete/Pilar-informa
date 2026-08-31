@@ -11,7 +11,7 @@ const poppins = Poppins({
   display: 'swap',
 })
 
-const INTERVAL_MS = 7000
+const INTERVAL_MS = 3500
 
 const POSITION_CLASS = {
   'top-left': 'float-card--pos-tl',
