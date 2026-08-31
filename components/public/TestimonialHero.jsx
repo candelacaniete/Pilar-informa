@@ -13,6 +13,14 @@ const poppins = Poppins({
 
 const INTERVAL_MS = 7000
 
+const POSITION_CLASS = {
+  'top-left': 'float-card--pos-tl',
+  'top-right': 'float-card--pos-tr',
+  'bottom-left': 'float-card--pos-bl',
+  'bottom-right': 'float-card--pos-br',
+  'middle-right': 'float-card--pos-mr',
+}
+
 function CartBadge() {
   return (
     <span className="float-card__badge float-card__badge--cart" aria-hidden="true">
@@ -25,8 +33,17 @@ function CartBadge() {
   )
 }
 
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  )
+}
+
 function FloatCard({ card, variant }) {
-  const slotClass = `float-card float-card--${card.slot}`
+  const posClass = POSITION_CLASS[card.position] || ''
+  const slotClass = `float-card float-card--${card.slot} ${posClass}`.trim()
   const floatAttr = variant === 'desktop' ? { 'data-float': card.float } : {}
 
   if (card.type === 'product') {
@@ -61,9 +78,6 @@ function FloatCard({ card, variant }) {
         <p className="float-card__label">{card.label}</p>
         {card.meta?.map((line) => (
           <p key={line} className="float-card__meta">
-            <span className="float-card__pin" aria-hidden="true">
-              📍
-            </span>{' '}
             {line}
           </p>
         ))}
@@ -164,60 +178,66 @@ function FloatCard({ card, variant }) {
   return null
 }
 
-function SlideVisual({ slide }) {
+function SlideStage({ slide }) {
   return (
-    <div className="testimonial-visual">
-      <div className="testimonial-visual__portrait-wrap">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="testimonial-visual__portrait"
-          src={slide.portrait}
-          alt={`${slide.name}, comerciante de Pilar`}
-          width={220}
-          height={220}
-        />
+    <div className="testimonial-stage" style={{ '--slide-bg': slide.bg }}>
+      <div className="testimonial-headline">
+        <div className="testimonial-headline__row">
+          <span className="testimonial-headline__part">{slide.titleLeft}</span>
+          <div className="testimonial-portrait">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="testimonial-portrait__img"
+              src={slide.portrait}
+              alt={`${slide.name}, comerciante de Pilar`}
+              width={172}
+              height={172}
+            />
+            <span className="testimonial-portrait__play" aria-hidden="true">
+              <PlayIcon />
+            </span>
+          </div>
+          <span className="testimonial-headline__part">{slide.titleRight}</span>
+        </div>
+        <p className="testimonial-headline__context">{slide.context}</p>
       </div>
 
-      <div className="testimonial-cards testimonial-cards--desktop">
-        {slide.cards.map((card) => (
-          <FloatCard key={`d-${card.slot}`} card={card} variant="desktop" />
-        ))}
+      <div className="testimonial-orbit">
+        <div className="testimonial-cards testimonial-cards--desktop">
+          {slide.cards.map((card) => (
+            <FloatCard key={`d-${card.slot}`} card={card} variant="desktop" />
+          ))}
+        </div>
+        <div className="testimonial-cards testimonial-cards--mobile">
+          {slide.cards.map((card) => (
+            <FloatCard key={`m-${card.slot}`} card={card} variant="mobile" />
+          ))}
+        </div>
       </div>
 
-      <div className="testimonial-cards testimonial-cards--mobile">
-        {slide.cards.map((card) => (
-          <FloatCard key={`m-${card.slot}`} card={card} variant="mobile" />
-        ))}
-      </div>
+      <p className="testimonial-stage__impact">{slide.impact}</p>
     </div>
   )
 }
 
 export default function TestimonialHero() {
   const [index, setIndex] = useState(0)
-  const [autoplay, setAutoplay] = useState(true)
-  const [hoverPaused, setHoverPaused] = useState(false)
+  const [paused, setPaused] = useState(false)
 
   const setSlide = useCallback((next) => {
     setIndex((next + TESTIMONIAL_SLIDES.length) % TESTIMONIAL_SLIDES.length)
   }, [])
 
-  const next = useCallback(() => setSlide(index + 1), [index, setSlide])
-  const prev = useCallback(() => setSlide(index - 1), [index, setSlide])
-
   useEffect(() => {
-    if (!autoplay || hoverPaused) return undefined
+    if (paused) return undefined
     const timer = window.setInterval(() => {
       setIndex((i) => (i + 1) % TESTIMONIAL_SLIDES.length)
     }, INTERVAL_MS)
     return () => window.clearInterval(timer)
-  }, [autoplay, hoverPaused])
+  }, [paused])
 
   useEffect(() => {
-    const onVisibility = () => {
-      if (document.hidden) setHoverPaused(true)
-      else setHoverPaused(false)
-    }
+    const onVisibility = () => setPaused(document.hidden)
     document.addEventListener('visibilitychange', onVisibility)
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [])
@@ -225,82 +245,36 @@ export default function TestimonialHero() {
   return (
     <section
       id="hero"
-      className={`testimonial-hero border-b border-line/40 ${poppins.className}`}
+      className={`testimonial-hero ${poppins.className}`}
       aria-label="Historias de comercios en Guía Pilar"
-      onMouseEnter={() => setHoverPaused(true)}
-      onMouseLeave={() => setHoverPaused(false)}
+      aria-roledescription="carousel"
+      aria-live="polite"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <div className="testimonial-hero__viewport">
         {TESTIMONIAL_SLIDES.map((slide, i) => (
           <article
             key={slide.id}
             className={`testimonial-slide${i === index ? ' is-active' : ''}`}
-            style={{ '--slide-bg': slide.bg }}
             aria-hidden={i !== index}
           >
-            <div className="testimonial-slide__inner">
-              <div className="testimonial-slide__columns">
-                <div className="testimonial-slide__text">
-                  <h1 className="testimonial-slide__title">{slide.title}</h1>
-                  <p className="testimonial-slide__context">{slide.context}</p>
-                </div>
-                <div className="testimonial-slide__visual">
-                  <SlideVisual slide={slide} />
-                </div>
-              </div>
-              <p className="testimonial-slide__impact">{slide.impact}</p>
-            </div>
+            <SlideStage slide={slide} />
           </article>
         ))}
       </div>
 
-      <button
-        type="button"
-        className="testimonial-hero__arrow testimonial-hero__arrow--prev"
-        aria-label="Slide anterior"
-        onClick={() => {
-          prev()
-          setAutoplay(true)
-        }}
-      >
-        &lt;
-      </button>
-      <button
-        type="button"
-        className="testimonial-hero__arrow testimonial-hero__arrow--next"
-        aria-label="Slide siguiente"
-        onClick={() => {
-          next()
-          setAutoplay(true)
-        }}
-      >
-        &gt;
-      </button>
-
-      <div className="testimonial-hero__footer">
-        <button
-          type="button"
-          className="testimonial-hero__reproducer"
-          aria-pressed={!autoplay}
-          onClick={() => setAutoplay((p) => !p)}
-        >
-          Reproducer
-        </button>
-        <div className="testimonial-hero__dots" role="tablist" aria-label="Slides del carrusel">
-          {TESTIMONIAL_SLIDES.map((slide, i) => (
-            <button
-              key={slide.id}
-              type="button"
-              className={`testimonial-hero__dot${i === index ? ' is-active' : ''}`}
-              aria-label={slide.name}
-              aria-selected={i === index}
-              onClick={() => {
-                setSlide(i)
-                setAutoplay(true)
-              }}
-            />
-          ))}
-        </div>
+      <div className="testimonial-hero__dots" role="tablist" aria-label="Historias">
+        {TESTIMONIAL_SLIDES.map((slide, i) => (
+          <button
+            key={slide.id}
+            type="button"
+            className={`testimonial-hero__dot${i === index ? ' is-active' : ''}`}
+            aria-label={slide.name}
+            aria-selected={i === index}
+            onClick={() => setSlide(i)}
+          />
+        ))}
       </div>
     </section>
   )
