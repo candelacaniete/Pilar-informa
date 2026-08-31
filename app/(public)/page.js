@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, Clock } from 'lucide-react'
 import SearchBar from '@/components/public/SearchBar'
+import TestimonialHero from '@/components/public/TestimonialHero'
 import SectionHeading from '@/components/public/SectionHeading'
 import BusinessCard from '@/components/public/BusinessCard'
 import BusinessPlaceholderCard from '@/components/public/BusinessPlaceholderCard'
@@ -39,9 +40,6 @@ export const metadata = {
     absolute: `${BRAND} — ${BRAND_TAGLINE}`,
   },
 }
-
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1607252111857-f3ac1e40babc?auto=format&fit=crop&w=1800&q=80'
 
 const discoverCards = [
   {
@@ -99,42 +97,14 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
       />
-      <section className="relative overflow-hidden border-b border-line/60">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${HERO_IMAGE}')` }}
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-ink/85 via-ink/72 to-paper"
-          aria-hidden
-        />
-        <div
-          className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-paper via-paper/90 to-transparent"
-          aria-hidden
-        />
+      <TestimonialHero />
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-14 md:px-6 md:pb-16 md:pt-20">
-          <div className="fade-up max-w-3xl">
-            <p className="text-sm font-extrabold uppercase tracking-[0.28em] text-teal-soft md:text-base">
-              Guía Pilar
-            </p>
-            <h1 className="mt-4 font-display text-[2.85rem] font-semibold leading-[1.02] text-white md:text-6xl lg:text-[4.4rem]">
-              Todo Pilar.
-              <br />
-              En un solo lugar.
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
-              Noticias, comercios, servicios, eventos y todo lo que pasa cerca tuyo.
-            </p>
-          </div>
-
-          <div className="fade-up mt-8 max-w-2xl md:mt-10" style={{ animationDelay: '80ms' }}>
-            <SearchBar />
-            <p className="mt-3 rounded-lg bg-ink/35 px-3 py-2 text-sm text-white/90 backdrop-blur-sm md:inline-block md:bg-ink/40">
-              Restaurantes · Peluquerías · Abogados · Gimnasios · Veterinarias
-            </p>
-          </div>
+      <section className="border-b border-line/60 bg-paper">
+        <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+          <SearchBar />
+          <p className="mt-3 text-sm text-muted">
+            Restaurantes · Peluquerías · Abogados · Gimnasios · Veterinarias
+          </p>
         </div>
       </section>
 

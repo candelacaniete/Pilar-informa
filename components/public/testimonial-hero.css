@@ -26,17 +26,19 @@
 /* ─── Viewport & cross-fade slides ─── */
 .testimonial-hero__viewport {
   position: relative;
+  display: grid;
   min-height: clamp(640px, 88vh, 920px);
 }
 
 .testimonial-slide {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
+  position: relative;
   background: var(--slide-bg);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.85s ease, visibility 0.85s ease;
   pointer-events: none;
+  z-index: 0;
 }
 
 .testimonial-slide.is-active {
