@@ -119,6 +119,22 @@ create table if not exists public.negocio_fotos (
 
 create index if not exists negocio_fotos_negocio_idx on public.negocio_fotos (negocio_id, orden);
 
+-- Posts de Instagram cacheados (Premium)
+create table if not exists public.negocio_instagram_posts (
+  id uuid primary key default gen_random_uuid(),
+  negocio_id uuid not null references public.negocios (id) on delete cascade,
+  post_url text not null,
+  thumbnail_url text,
+  caption text,
+  orden smallint not null default 0,
+  synced_at timestamptz,
+  creado_en timestamptz not null default now(),
+  constraint negocio_instagram_posts_url_unique unique (negocio_id, post_url)
+);
+
+create index if not exists negocio_instagram_posts_negocio_idx
+  on public.negocio_instagram_posts (negocio_id, orden);
+
 -- Reseñas verificadas (código del negocio)
 create type public.resena_estado as enum ('publicada', 'oculta');
 
@@ -296,6 +312,7 @@ alter table public.admins enable row level security;
 alter table public.categorias enable row level security;
 alter table public.negocios enable row level security;
 alter table public.negocio_fotos enable row level security;
+alter table public.negocio_instagram_posts enable row level security;
 alter table public.resenas enable row level security;
 alter table public.noticias enable row level security;
 alter table public.eventos enable row level security;
@@ -371,6 +388,28 @@ create policy "fotos_public_read"
 drop policy if exists "fotos_admin_write" on public.negocio_fotos;
 create policy "fotos_admin_write"
   on public.negocio_fotos for all
+  to authenticated
+  using (public.es_admin())
+  with check (public.es_admin());
+
+drop policy if exists "instagram_posts_public_read" on public.negocio_instagram_posts;
+create policy "instagram_posts_public_read"
+  on public.negocio_instagram_posts for select
+  to anon, authenticated
+  using (
+    public.es_admin()
+    or exists (
+      select 1
+      from public.negocios n
+      where n.id = negocio_id
+        and n.estado = 'activo'
+        and n.plan = 'premium'
+    )
+  );
+
+drop policy if exists "instagram_posts_admin_write" on public.negocio_instagram_posts;
+create policy "instagram_posts_admin_write"
+  on public.negocio_instagram_posts for all
   to authenticated
   using (public.es_admin())
   with check (public.es_admin());
