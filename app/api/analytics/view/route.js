@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/admin'
+import { createServerWriteClient } from '@/lib/supabase/admin'
 import { classifyTrafficSource } from '@/lib/analytics/referrer'
 
 export const runtime = 'nodejs'
@@ -28,9 +28,13 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, error: 'Falta entityId' }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
+  // UUID check — evitar inserts inválidos que rompen la tabla
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityId)) {
+    return NextResponse.json({ ok: true, skipped: true })
+  }
+
+  const { client: supabase } = createServerWriteClient()
   if (!supabase) {
-    // Silent no-op in demo / misconfigured env
     return NextResponse.json({ ok: true, skipped: true })
   }
 
@@ -50,7 +54,6 @@ export async function POST(request) {
   })
 
   if (error) {
-    // Table may not exist yet — don't break the page
     console.error('page_views insert', error.message)
     return NextResponse.json({ ok: false }, { status: 500 })
   }

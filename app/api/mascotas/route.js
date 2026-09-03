@@ -1,8 +1,7 @@
 import { randomBytes } from 'crypto'
 import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/admin'
-import { slugify } from '@/lib/utils'
-import { siteUrl } from '@/lib/utils'
+import { createServerWriteClient } from '@/lib/supabase/admin'
+import { slugify, siteUrl } from '@/lib/utils'
 import {
   isValidWhatsappAr,
   isZonaPilar,
@@ -25,24 +24,13 @@ function makeResolveToken() {
   return randomBytes(24).toString('hex')
 }
 
-async function uniqueSlug(supabase, base) {
-  let candidate = base || `aviso-${Date.now()}`
-  for (let i = 0; i < 8; i += 1) {
-    const { data } = await supabase
-      .from('mascotas_avisos')
-      .select('id')
-      .eq('slug', candidate)
-      .maybeSingle()
-    if (!data) return candidate
-    candidate = `${base}-${randomBytes(2).toString('hex')}`
-  }
-  return `${base}-${Date.now()}`
-}
-
 export async function POST(request) {
-  const supabase = createServiceClient()
+  const { client: supabase, mode } = createServerWriteClient()
   if (!supabase) {
-    return jsonError('El servicio de mascotas no está configurado todavía.', 503)
+    return jsonError(
+      'Falta configurar Supabase (NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY) en Vercel.',
+      503,
+    )
   }
 
   let form
@@ -104,7 +92,15 @@ export async function POST(request) {
   })
   if (uploadError) {
     console.error('mascotas upload error', uploadError)
-    return jsonError('No pudimos subir la foto. Probá de nuevo.', 500)
+    const detail = uploadError.message || ''
+    const needsMigration =
+      /row-level security|policy|permission|not allowed|Unauthorized/i.test(detail)
+    return jsonError(
+      needsMigration
+        ? 'No pudimos subir la foto. Corré la migración 021 en Supabase (upload público a media/mascotas).'
+        : 'No pudimos subir la foto. Probá de nuevo.',
+      500,
+    )
   }
 
   const { data: publicUrlData } = supabase.storage.from('media').getPublicUrl(path)
@@ -113,40 +109,54 @@ export async function POST(request) {
     return jsonError('No pudimos obtener la URL de la foto.', 500)
   }
 
-  const baseSlug = slugify(`${titulo}-${zona}-${tipo}`)
-  const slug = await uniqueSlug(supabase, baseSlug)
+  // Sufijo random: evita colisiones sin leer filas pendientes (RLS anon no las ve)
+  const slug = `${slugify(`${titulo}-${zona}-${tipo}`) || 'aviso'}-${randomBytes(3).toString('hex')}`
   const resolveToken = makeResolveToken()
+
+  const payload = {
+    slug,
+    titulo,
+    tipo,
+    zona,
+    foto_url: fotoUrl,
+    whatsapp_e164: whatsappE164,
+    fecha_hecho: fechaHecho,
+    estado: 'pendiente',
+    resolve_token: resolveToken,
+  }
 
   const { data, error } = await supabase
     .from('mascotas_avisos')
-    .insert({
-      slug,
-      titulo,
-      tipo,
-      zona,
-      foto_url: fotoUrl,
-      whatsapp_e164: whatsappE164,
-      fecha_hecho: fechaHecho,
-      estado: 'pendiente',
-      resolve_token: resolveToken,
-    })
+    .insert(payload)
     .select('id, slug, resolve_token')
-    .single()
+    .maybeSingle()
 
   if (error) {
     console.error('mascotas insert error', error)
+    const detail = error.message || ''
+    if (/relation|does not exist|schema cache/i.test(detail)) {
+      return jsonError('Falta correr la migración 019 (tabla mascotas_avisos) en Supabase.', 503)
+    }
+    if (/row-level security|policy/i.test(detail)) {
+      return jsonError(
+        'No se pudo guardar el aviso (RLS). Corré la migración 021 en Supabase.',
+        503,
+      )
+    }
     return jsonError('No pudimos guardar el aviso. Probá más tarde.', 500)
   }
 
   const base = siteUrl().replace(/\/$/, '')
-  const manageUrl = `${base}/mascotas/gestionar/${data.resolve_token}`
+  const token = data?.resolve_token || resolveToken
+  const manageUrl = `${base}/mascotas/gestionar/${token}`
 
   return NextResponse.json({
     ok: true,
     message: 'Tu aviso está en revisión',
-    id: data.id,
-    slug: data.slug,
+    id: data?.id || null,
+    slug: data?.slug || slug,
     manageUrl,
     expiresInDays: MASCOTA_EXPIRA_DIAS,
+    writeMode: mode,
   })
 }

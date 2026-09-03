@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/admin'
+import { createServerWriteClient } from '@/lib/supabase/admin'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -17,7 +17,7 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, error: 'Link inválido.' }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
+  const { client: supabase } = createServerWriteClient()
   if (!supabase) {
     return NextResponse.json(
       { ok: false, error: 'Servicio no configurado.' },
@@ -25,6 +25,23 @@ export async function POST(request) {
     )
   }
 
+  // Prefer RPC (works with anon + migration 021); fallback to direct update with service role
+  const { data: rpcData, error: rpcError } = await supabase.rpc('mascota_aviso_resolver', {
+    p_token: token,
+  })
+
+  if (!rpcError && rpcData) {
+    const row = typeof rpcData === 'object' ? rpcData : null
+    if (row?.ok) {
+      return NextResponse.json({ ok: true, message: row.mensaje || 'Resuelto.' })
+    }
+    return NextResponse.json(
+      { ok: false, error: row?.mensaje || 'No se pudo resolver.' },
+      { status: 400 },
+    )
+  }
+
+  // Fallback sin RPC: solo si hay service role (bypassa RLS)
   const { data: aviso, error: findError } = await supabase
     .from('mascotas_avisos')
     .select('id, estado, titulo')
@@ -32,7 +49,16 @@ export async function POST(request) {
     .maybeSingle()
 
   if (findError || !aviso) {
-    return NextResponse.json({ ok: false, error: 'No encontramos ese aviso.' }, { status: 404 })
+    const needsRpc = /function|does not exist|schema cache/i.test(rpcError?.message || '')
+    return NextResponse.json(
+      {
+        ok: false,
+        error: needsRpc
+          ? 'Falta correr la migración 021 en Supabase (función mascota_aviso_resolver).'
+          : 'No encontramos ese aviso.',
+      },
+      { status: needsRpc ? 503 : 404 },
+    )
   }
 
   if (aviso.estado === 'resuelto') {
