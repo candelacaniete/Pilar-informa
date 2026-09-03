@@ -13,6 +13,7 @@ import {
 import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
 import ResenasSection from '@/components/public/ResenasSection'
+import ViewTracker from '@/components/public/ViewTracker'
 import { getNegocioBySlug, getNegociosActivos, getResenasPublicas } from '@/lib/data'
 import { resolvePremiumGalleryFotos } from '@/lib/gallery'
 import { horariosTexto, planLabel, principalFoto } from '@/lib/utils'
@@ -70,6 +71,12 @@ export default async function NegocioPage({ params }) {
 
   return (
     <div className="bg-paper pb-4 pt-8 md:pt-10">
+      <ViewTracker
+        entityType="negocio"
+        entityId={negocio.id}
+        entitySlug={negocio.slug}
+        entityTitle={negocio.nombre}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
