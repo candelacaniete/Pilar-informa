@@ -7,8 +7,7 @@ export const dynamic = 'force-dynamic'
 
 /**
  * Admin moderation: approve or reject a pet notice.
- * Auth: requires logged-in admin (cookie session + es_admin via RLS update).
- * Uses service role only after verifying the caller is admin via user client.
+ * Verifies the session user exists in public.admins (columna id = auth.users.id).
  */
 export async function POST(request) {
   let body
@@ -42,16 +41,22 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, error: 'No autenticado.' }, { status: 401 })
   }
 
-  const { data: adminRow } = await userClient
+  // public.admins.id referencia auth.users.id (NO user_id)
+  const { data: adminRow, error: adminError } = await userClient
     .from('admins')
-    .select('user_id')
-    .eq('user_id', user.id)
+    .select('id')
+    .eq('id', user.id)
     .maybeSingle()
+
+  if (adminError) {
+    console.error('mascotas moderar admin check', adminError)
+  }
 
   if (!adminRow) {
     return NextResponse.json({ ok: false, error: 'Sin permiso de admin.' }, { status: 403 })
   }
 
+  // Preferir service role; si no hay, el update va con la sesión (RLS es_admin)
   const supabase = createServiceClient() || userClient
 
   if (action === 'aprobar') {
@@ -71,7 +76,10 @@ export async function POST(request) {
 
     if (error) {
       console.error('mascotas approve', error)
-      return NextResponse.json({ ok: false, error: 'No se pudo aprobar.' }, { status: 500 })
+      return NextResponse.json(
+        { ok: false, error: error.message || 'No se pudo aprobar.' },
+        { status: 500 },
+      )
     }
     return NextResponse.json({ ok: true, message: 'Aviso aprobado.' })
   }
@@ -88,7 +96,10 @@ export async function POST(request) {
 
   if (error) {
     console.error('mascotas reject', error)
-    return NextResponse.json({ ok: false, error: 'No se pudo rechazar.' }, { status: 500 })
+    return NextResponse.json(
+      { ok: false, error: error.message || 'No se pudo rechazar.' },
+      { status: 500 },
+    )
   }
 
   return NextResponse.json({ ok: true, message: 'Aviso rechazado.' })

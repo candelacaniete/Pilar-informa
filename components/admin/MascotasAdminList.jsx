@@ -70,7 +70,7 @@ function AvisoRow({ aviso }) {
         <p className="mt-1 text-sm text-slate-600">
           {aviso.zona}
           {aviso.fecha_hecho ? ` · Hecho ${formatDate(aviso.fecha_hecho)}` : ''}
-          {' · '}
+          {' · Publicado '}
           {formatDate(aviso.creado_en)}
         </p>
         {aviso.rechazo_motivo ? (
