@@ -113,48 +113,70 @@ export async function POST(request) {
   const slug = `${slugify(`${titulo}-${zona}-${tipo}`) || 'aviso'}-${randomBytes(3).toString('hex')}`
   const resolveToken = makeResolveToken()
 
-  const payload = {
-    slug,
-    titulo,
-    tipo,
-    zona,
-    foto_url: fotoUrl,
-    whatsapp_e164: whatsappE164,
-    fecha_hecho: fechaHecho,
-    estado: 'pendiente',
-    resolve_token: resolveToken,
-  }
+  // RPC security definer (migración 022) — no depende del INSERT RLS
+  const { data: rpcData, error: rpcError } = await supabase.rpc('mascota_aviso_crear', {
+    p_slug: slug,
+    p_titulo: titulo,
+    p_tipo: tipo,
+    p_zona: zona,
+    p_foto_url: fotoUrl,
+    p_whatsapp_e164: whatsappE164,
+    p_fecha_hecho: fechaHecho,
+    p_resolve_token: resolveToken,
+  })
 
-  const { data, error } = await supabase
-    .from('mascotas_avisos')
-    .insert(payload)
-    .select('id, slug, resolve_token')
-    .maybeSingle()
+  if (rpcError) {
+    console.error('mascotas rpc error', rpcError)
+    const detail = rpcError.message || ''
 
-  if (error) {
-    console.error('mascotas insert error', error)
-    const detail = error.message || ''
-    if (/relation|does not exist|schema cache/i.test(detail)) {
-      return jsonError('Falta correr la migración 019 (tabla mascotas_avisos) en Supabase.', 503)
-    }
-    if (/row-level security|policy/i.test(detail)) {
+    // Fallback: insert directo si la 022 aún no está
+    if (/function|does not exist|schema cache|Could not find the function/i.test(detail)) {
+      const { error: insertError } = await supabase.from('mascotas_avisos').insert({
+        slug,
+        titulo,
+        tipo,
+        zona,
+        foto_url: fotoUrl,
+        whatsapp_e164: whatsappE164,
+        fecha_hecho: fechaHecho,
+        estado: 'pendiente',
+        resolve_token: resolveToken,
+      })
+
+      if (insertError) {
+        console.error('mascotas insert fallback error', insertError)
+        const insertDetail = insertError.message || ''
+        if (/row-level security|policy/i.test(insertDetail)) {
+          return jsonError(
+            'Falta correr la migración 022 en Supabase (función mascota_aviso_crear). Si ya la corriste, recargá el schema cache: Settings → API → Reload.',
+            503,
+          )
+        }
+        return jsonError(
+          `No pudimos guardar el aviso.${insertDetail ? ` (${insertDetail})` : ''}`,
+          500,
+        )
+      }
+    } else {
       return jsonError(
-        'No se pudo guardar el aviso (RLS). Corré la migración 021 en Supabase.',
-        503,
+        `No pudimos guardar el aviso.${detail ? ` (${detail})` : ''}`,
+        500,
       )
     }
-    return jsonError('No pudimos guardar el aviso. Probá más tarde.', 500)
+  } else {
+    const row = typeof rpcData === 'object' && rpcData ? rpcData : null
+    if (row && row.ok === false) {
+      return jsonError(row.mensaje || 'No pudimos guardar el aviso.', 400)
+    }
   }
 
   const base = siteUrl().replace(/\/$/, '')
-  const token = data?.resolve_token || resolveToken
-  const manageUrl = `${base}/mascotas/gestionar/${token}`
+  const manageUrl = `${base}/mascotas/gestionar/${resolveToken}`
 
   return NextResponse.json({
     ok: true,
     message: 'Tu aviso está en revisión',
-    id: data?.id || null,
-    slug: data?.slug || slug,
+    slug,
     manageUrl,
     expiresInDays: MASCOTA_EXPIRA_DIAS,
     writeMode: mode,
