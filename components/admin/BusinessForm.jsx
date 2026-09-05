@@ -8,7 +8,12 @@ import { recordNegocioEvents } from '@/lib/metrics/negocioEvents'
 import { horariosTexto, slugify } from '@/lib/utils'
 import ImageUpload from './ImageUpload'
 import CodigoResenaField from './CodigoResenaField'
+import InstagramPostsEditor, {
+  emptyPosts,
+  normalizeFromInitial,
+} from './InstagramPostsEditor'
 import { useToast } from './Toast'
+import { normalizeInstagramPostUrl } from '@/lib/instagram/utils'
 
 const empty = {
   nombre: '',
@@ -35,6 +40,7 @@ const empty = {
   fuente_alta: '',
   foto: '',
   galeria: ['', '', '', '', ''],
+  instagram_posts: emptyPosts(),
 }
 
 export default function BusinessForm({ categorias = [], initial = null }) {
@@ -74,6 +80,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       fuente_alta: initial.fuente_alta || '',
       foto: principal,
       galeria,
+      instagram_posts: normalizeFromInitial(initial.negocio_instagram_posts),
     }
   }, [initial, categoriasDisponibles])
 
@@ -143,6 +150,15 @@ export default function BusinessForm({ categorias = [], initial = null }) {
       )
     }
 
+    const isMissingInstagramTable = (error) => {
+      const msg = String(error?.message || '').toLowerCase()
+      return (
+        error?.code === '42P01' ||
+        error?.code === 'PGRST205' ||
+        msg.includes('negocio_instagram_posts')
+      )
+    }
+
     try {
       if (!isSupabaseConfigured()) {
         showToast('Modo demo: configurá Supabase para guardar', 'error')
@@ -206,6 +222,36 @@ export default function BusinessForm({ categorias = [], initial = null }) {
           }))
           const { error: fotoError } = await supabase.from('negocio_fotos').insert(rows)
           if (fotoError) throw fotoError
+        }
+
+        const { error: deleteIgError } = await supabase
+          .from('negocio_instagram_posts')
+          .delete()
+          .eq('negocio_id', negocioId)
+        if (deleteIgError && !isMissingInstagramTable(deleteIgError)) throw deleteIgError
+
+        if (form.plan === 'premium') {
+          const igRows = (form.instagram_posts || [])
+            .map((post) => ({
+              post_url: normalizeInstagramPostUrl(post.post_url) || String(post.post_url || '').trim(),
+              thumbnail_url: post.thumbnail_url || null,
+              caption: post.caption || null,
+            }))
+            .filter((post) => post.post_url)
+            .slice(0, 6)
+            .map((post, orden) => ({
+              negocio_id: negocioId,
+              post_url: post.post_url,
+              thumbnail_url: post.thumbnail_url,
+              caption: post.caption,
+              orden,
+              synced_at: post.thumbnail_url ? new Date().toISOString() : null,
+            }))
+
+          if (igRows.length) {
+            const { error: igError } = await supabase.from('negocio_instagram_posts').insert(igRows)
+            if (igError && !isMissingInstagramTable(igError)) throw igError
+          }
         }
       }
 
@@ -330,8 +376,13 @@ export default function BusinessForm({ categorias = [], initial = null }) {
           <Field label="WhatsApp">
             <input value={form.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} className={inputClass} />
           </Field>
-          <Field label="Instagram">
-            <input value={form.instagram} onChange={(e) => set('instagram', e.target.value)} className={inputClass} />
+          <Field label="Instagram" hint="Usuario o link al perfil. En Premium también alimenta el bloque de publicaciones.">
+            <input
+              value={form.instagram}
+              onChange={(e) => set('instagram', e.target.value)}
+              className={inputClass}
+              placeholder="@tallerpilar"
+            />
           </Field>
           <Field label="Sitio web">
             <input value={form.web} onChange={(e) => set('web', e.target.value)} className={inputClass} />
@@ -376,6 +427,19 @@ export default function BusinessForm({ categorias = [], initial = null }) {
           </div>
         ) : null}
       </Section>
+
+      {form.plan === 'premium' ? (
+        <Section
+          title="Instagram Premium"
+          subtitle="Mostrá hasta 6 publicaciones en la ficha del negocio. Pegá los links y actualizá las vistas previas."
+        >
+          <InstagramPostsEditor
+            value={form.instagram_posts}
+            onChange={(next) => set('instagram_posts', next)}
+            disabled={saving}
+          />
+        </Section>
+      ) : null}
 
       <Section title="Plan y pago" subtitle="Todos los negocios pagan para aparecer. No hay plan gratis.">
         {initial?.codigo_resena ? (

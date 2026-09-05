@@ -9,12 +9,16 @@ import {
   MessageCircle,
   Navigation,
   Star,
+  Instagram,
 } from 'lucide-react'
 import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
+import PremiumInstagramFeed from '@/components/public/PremiumInstagramFeed'
 import ResenasSection from '@/components/public/ResenasSection'
 import { getNegocioBySlug, getNegociosActivos, getResenasPublicas } from '@/lib/data'
 import { resolvePremiumGalleryFotos } from '@/lib/gallery'
+import { resolvePremiumInstagramPosts } from '@/lib/instagram/resolve'
+import { instagramProfileUrl } from '@/lib/instagram/utils'
 import { horariosTexto, planLabel, principalFoto } from '@/lib/utils'
 import { buildPageMetadata, localBusinessJsonLd } from '@/lib/seo/metadata'
 
@@ -50,6 +54,8 @@ export default async function NegocioPage({ params }) {
   )
   const isPremium = negocio.plan === 'premium'
   const showGallery = isPremium && fotos.length > 0
+  const instagramPosts = resolvePremiumInstagramPosts(negocio)
+  const instagramUrl = instagramProfileUrl(negocio.instagram)
   const image = principalFoto(negocio) || fotos[0]?.url || null
   const wa = (negocio.whatsapp || '').replace(/\D/g, '')
   const hours = horariosTexto(negocio.horarios)
@@ -234,8 +240,21 @@ export default async function NegocioPage({ params }) {
               ) : (
                 <p className="mt-2 text-sm text-muted">Sin sitio web</p>
               )}
+              {instagramUrl ? (
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
+                >
+                  <Instagram className="h-4 w-4" />
+                  {negocio.instagram?.startsWith('http') ? 'Instagram' : `@${negocio.instagram.replace(/^@/, '')}`}
+                </a>
+              ) : null}
             </section>
           </div>
+
+          <PremiumInstagramFeed posts={instagramPosts} instagramHandle={negocio.instagram} />
 
           <ResenasSection negocio={negocio} resenasIniciales={resenas} />
         </div>
