@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
+  BarChart3,
   Building2,
   CalendarDays,
   Cross,
@@ -11,6 +12,7 @@ import {
   LogOut,
   Menu,
   Newspaper,
+  PawPrint,
   Tag,
   X,
 } from 'lucide-react'
@@ -25,6 +27,8 @@ const items = [
   { href: '/admin/eventos', label: 'Eventos', icon: CalendarDays },
   { href: '/admin/promociones', label: 'Promociones', icon: Tag },
   { href: '/admin/farmacias', label: 'Farmacias de turno', icon: Cross },
+  { href: '/admin/mascotas', label: 'Mascotas', icon: PawPrint },
+  { href: '/admin/vistas', label: 'Vistas', icon: BarChart3 },
 ]
 
 function NavLinks({ pathname, onNavigate, onLogout }) {

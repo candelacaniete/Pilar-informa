@@ -1,13 +1,20 @@
-import { getNegociosActivos, getNoticias, getEventos, getCategorias } from '@/lib/data'
+import {
+  getNegociosActivos,
+  getNoticias,
+  getEventos,
+  getCategorias,
+  getMascotasAvisosPublicos,
+} from '@/lib/data'
 import { siteUrl } from '@/lib/utils'
 
 export default async function sitemap() {
   const base = siteUrl()
-  const [negocios, noticias, eventos, categorias] = await Promise.all([
+  const [negocios, noticias, eventos, categorias, mascotas] = await Promise.all([
     getNegociosActivos(),
     getNoticias(),
     getEventos({ fromToday: false }),
     getCategorias(),
+    getMascotasAvisosPublicos(),
   ])
 
   const legalPaths = new Set(['/privacidad', '/terminos', '/cookies'])
@@ -18,6 +25,7 @@ export default async function sitemap() {
     '/agenda',
     '/promociones',
     '/farmacias',
+    '/mascotas',
     '/emergencias',
     '/pilar',
     '/sumar-negocio',
@@ -60,5 +68,19 @@ export default async function sitemap() {
     priority: 0.5,
   }))
 
-  return [...staticRoutes, ...categoriaRoutes, ...negocioRoutes, ...noticiaRoutes, ...eventoRoutes]
+  const mascotaRoutes = mascotas.map((m) => ({
+    url: `${base}/mascotas/${m.slug}`,
+    lastModified: m.creado_en ? new Date(m.creado_en) : new Date(),
+    changeFrequency: 'daily',
+    priority: 0.65,
+  }))
+
+  return [
+    ...staticRoutes,
+    ...categoriaRoutes,
+    ...negocioRoutes,
+    ...noticiaRoutes,
+    ...eventoRoutes,
+    ...mascotaRoutes,
+  ]
 }

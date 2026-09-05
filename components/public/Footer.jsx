@@ -7,6 +7,7 @@ const links = [
   { href: '/guia', label: 'Guía' },
   { href: '/agenda', label: 'Eventos' },
   { href: '/promociones', label: 'Promociones' },
+  { href: '/mascotas', label: 'Mascotas' },
   { href: '/farmacias', label: 'Farmacias de turno' },
   { href: '/emergencias', label: 'Números de emergencia' },
   { href: '/#instalar-pilar', label: 'Instalar Pilar' },

@@ -15,6 +15,7 @@ import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
 import PremiumInstagramFeed from '@/components/public/PremiumInstagramFeed'
 import ResenasSection from '@/components/public/ResenasSection'
+import ViewTracker from '@/components/public/ViewTracker'
 import { getNegocioBySlug, getNegociosActivos, getResenasPublicas } from '@/lib/data'
 import { resolvePremiumGalleryFotos } from '@/lib/gallery'
 import { resolvePremiumInstagramPosts } from '@/lib/instagram/resolve'
@@ -76,6 +77,12 @@ export default async function NegocioPage({ params }) {
 
   return (
     <div className="bg-paper pb-4 pt-8 md:pt-10">
+      <ViewTracker
+        entityType="negocio"
+        entityId={negocio.id}
+        entitySlug={negocio.slug}
+        entityTitle={negocio.nombre}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

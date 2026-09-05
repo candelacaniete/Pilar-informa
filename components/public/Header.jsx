@@ -11,6 +11,7 @@ const navItems = [
   { href: '/guia', label: 'Guía' },
   { href: '/agenda', label: 'Eventos' },
   { href: '/promociones', label: 'Promociones' },
+  { href: '/mascotas', label: 'Mascotas' },
   { href: '/farmacias', label: 'Farmacias' },
   { href: '/emergencias', label: 'Emergencias' },
   { href: '/#instalar-pilar', label: 'App Pilar' },
