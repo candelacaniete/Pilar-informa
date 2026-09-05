@@ -1,0 +1,332 @@
+/**
+ * Hero “La calle de Pilar” — foto full-bleed, overlay editorial, buscador + testimonio en vidrio.
+ */
+
+.street-hero {
+  --hero-max: 1180px;
+  --hero-radius: 28px;
+  --hero-h: clamp(560px, 78vh, 720px);
+  position: relative;
+  margin: 0 auto;
+  max-width: calc(var(--hero-max) + 2rem);
+  padding: 1rem;
+}
+
+/* Marco único: recorta fondo + contenido a la misma caja redondeada */
+.street-hero__frame {
+  position: relative;
+  max-width: var(--hero-max);
+  min-height: var(--hero-h);
+  margin: 0 auto;
+  border-radius: var(--hero-radius);
+  overflow: hidden;
+  isolation: isolate;
+  background: #121816;
+}
+
+.street-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.street-hero__scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.street-hero__scene.is-active {
+  opacity: 1;
+}
+
+.street-hero__scene-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  transform: scale(1);
+}
+
+.street-hero__scene.is-active .street-hero__scene-img {
+  animation: street-ken-burns 9s ease-out forwards;
+}
+
+.street-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, rgba(10, 92, 87, 0.88) 0%, rgba(18, 24, 22, 0.55) 48%, rgba(18, 24, 22, 0.35) 100%),
+    linear-gradient(to top, rgba(18, 24, 22, 0.65) 0%, transparent 42%);
+  pointer-events: none;
+}
+
+.street-hero__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: var(--hero-h);
+  padding: 2.5rem 1.5rem 3.25rem;
+}
+
+.street-hero__main {
+  display: grid;
+  gap: 2rem;
+  align-items: end;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Marca + buscador */
+.street-hero__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.street-hero__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.street-hero__tagline {
+  margin: 0;
+  font-size: clamp(2.25rem, 6.5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.street-hero__tagline-accent {
+  display: block;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.street-hero__search {
+  max-width: 34rem;
+  margin-top: 0.25rem;
+}
+
+.street-hero__hints {
+  margin: 0.65rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Tarjeta testimonio — vidrio */
+.street-hero__stories {
+  position: relative;
+  min-height: 11.5rem;
+  min-width: 0;
+  width: 100%;
+  max-width: 20rem;
+}
+
+.street-hero__story {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 1.15rem 1.2rem 1.1rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    visibility 0.55s ease;
+  box-sizing: border-box;
+}
+
+.street-hero__story.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.street-hero__story-avatar {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.street-hero__story-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.street-hero__quote {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.street-hero__quote-lead {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.street-hero__quote-payoff {
+  margin: 0.4rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.street-hero__byline {
+  margin: 0.85rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.street-hero__byline-trade {
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+/* Dots */
+.street-hero__dots {
+  display: flex;
+  gap: 0.45rem;
+  justify-content: flex-start;
+  margin-top: 1.75rem;
+}
+
+.street-hero__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.38);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.street-hero__dot.is-active {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+@keyframes street-ken-burns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.09) translate(-1.2%, -0.8%);
+  }
+}
+
+@media (min-width: 768px) {
+  .street-hero {
+    padding: 1.5rem;
+  }
+
+  .street-hero__content {
+    padding: 3.5rem 2.5rem 3rem;
+    justify-content: center;
+  }
+
+  .street-hero__main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
+    gap: 2rem 2.5rem;
+    align-items: center;
+  }
+
+  .street-hero__stories {
+    min-height: 13rem;
+    justify-self: end;
+    max-width: 18rem;
+  }
+
+  .street-hero__story {
+    padding: 1.35rem 1.4rem 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .street-hero__main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+    gap: 2.5rem 3rem;
+  }
+
+  .street-hero__stories {
+    max-width: 20rem;
+  }
+
+  .street-hero__tagline {
+    font-size: clamp(2.75rem, 4.5vw, 4.25rem);
+  }
+
+  .street-hero__quote-payoff {
+    font-size: 1.12rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .street-hero {
+    --hero-h: clamp(640px, 94vh, 780px);
+  }
+
+  .street-hero__content {
+    padding: 2rem 1.25rem 2.5rem;
+    justify-content: flex-end;
+  }
+
+  .street-hero__main {
+    gap: 1.5rem;
+  }
+
+  .street-hero__stories {
+    min-height: 12.5rem;
+    max-width: none;
+  }
+
+  .street-hero__dots {
+    margin-top: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .street-hero__scene {
+    transition: none;
+  }
+
+  .street-hero__scene.is-active .street-hero__scene-img {
+    animation: none;
+  }
+
+  .street-hero__story {
+    transition: none;
+  }
+}
