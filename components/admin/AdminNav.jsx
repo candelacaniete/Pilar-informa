@@ -13,6 +13,7 @@ import {
   Menu,
   Newspaper,
   PawPrint,
+  MousePointerClick,
   Tag,
   X,
 } from 'lucide-react'
@@ -28,6 +29,7 @@ const items = [
   { href: '/admin/promociones', label: 'Promociones', icon: Tag },
   { href: '/admin/farmacias', label: 'Farmacias de turno', icon: Cross },
   { href: '/admin/mascotas', label: 'Mascotas', icon: PawPrint },
+  { href: '/admin/metricas', label: 'Métricas', icon: MousePointerClick },
   { href: '/admin/vistas', label: 'Vistas', icon: BarChart3 },
 ]
 

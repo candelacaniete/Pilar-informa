@@ -1,4 +1,5 @@
 import { Manrope, Newsreader } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 import CookieConsent from '@/components/public/CookieConsent'
 import { safeSiteUrl } from '@/lib/supabase/config'
@@ -72,6 +73,7 @@ export default function RootLayout({ children }) {
       >
         {children}
         <CookieConsent />
+        <Analytics />
       </body>
     </html>
   )
