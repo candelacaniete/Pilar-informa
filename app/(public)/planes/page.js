@@ -7,7 +7,7 @@ import { PUBLIC_PLAN_CATALOG } from '@/lib/plans'
 export const metadata = buildPageMetadata({
   title: 'Planes y precios',
   description:
-    'Planes Destacado y Premium para aparecer en Guía Pilar. Precios mensuales en pesos argentinos y beneficios de cada plan.',
+    'Planes Básico (gratis), Destacado y Premium para aparecer en Guía Pilar. Beneficios de cada plan.',
   path: '/planes',
 })
 
@@ -27,8 +27,8 @@ export default function PlanesPage() {
         Planes y precios
       </h1>
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-        Todos los negocios en la guía pagan una suscripción mensual. Elegí el plan que mejor se adapte
-        a tu comercio o profesional en Pilar.
+        Empezá gratis con el plan Básico (card en el listado, sin perfil propio) o elegí Destacado /
+        Premium para una ficha completa en Pilar.
       </p>
 
       <div className="mt-10 overflow-hidden rounded-[1.5rem] border border-line/70 bg-white shadow-soft">
@@ -55,8 +55,8 @@ export default function PlanesPage() {
                     <p className="mt-1 text-xs text-muted sm:hidden">{plan.hint}</p>
                   </td>
                   <td className="px-5 py-5 align-top font-semibold text-teal md:px-6">
-                    {formatArs(plan.priceArs)}
-                    <span className="block text-xs font-normal text-muted">ARS / mes</span>
+                    {plan.priceArs === 0 ? 'Gratis' : formatArs(plan.priceArs)}
+                    <span className="block text-xs font-normal text-muted">{plan.priceArs === 0 ? 'sin cargo' : 'ARS / mes'}</span>
                   </td>
                   <td className="hidden px-5 py-5 align-top sm:table-cell md:px-6">
                     <ul className="space-y-2">

@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { FUENTE_ALTA_OPTIONS } from '@/lib/metrics/config'
+import { subcategoriaSelectOptions } from '@/lib/subcategorias'
+import { ZONAS_PILAR } from '@/lib/zonas'
 import { recordNegocioEvents } from '@/lib/metrics/negocioEvents'
 import { horariosTexto, slugify } from '@/lib/utils'
 import ImageUpload from './ImageUpload'
@@ -85,6 +87,18 @@ export default function BusinessForm({ categorias = [], initial = null }) {
   }, [initial, categoriasDisponibles])
 
   const [form, setForm] = useState(initialValues)
+
+  const categoriaActual = useMemo(
+    () =>
+      categorias.find((c) => c.id === form.categoria_id) ||
+      categoriasDisponibles.find((c) => c.id === form.categoria_id) ||
+      null,
+    [categorias, categoriasDisponibles, form.categoria_id],
+  )
+  const subcategoriaOptions = useMemo(
+    () => subcategoriaSelectOptions(categoriaActual?.slug, form.subcategoria),
+    [categoriaActual, form.subcategoria],
+  )
   const [saving, setSaving] = useState(false)
   const [slugTouched, setSlugTouched] = useState(Boolean(initial))
 
@@ -294,7 +308,10 @@ export default function BusinessForm({ categorias = [], initial = null }) {
             <select
               required
               value={form.categoria_id}
-              onChange={(e) => set('categoria_id', e.target.value)}
+              onChange={(e) => {
+                set('categoria_id', e.target.value)
+                set('subcategoria', '')
+              }}
               className={inputClass}
             >
               {categoriasDisponibles.map((c) => (
@@ -305,12 +322,19 @@ export default function BusinessForm({ categorias = [], initial = null }) {
               ))}
             </select>
           </Field>
-          <Field label="Subcategoría" hint="Ej: Café & brunch">
-            <input
+          <Field label="Subcategoría" hint="Rubro dentro de la categoría">
+            <select
               value={form.subcategoria}
               onChange={(e) => set('subcategoria', e.target.value)}
               className={inputClass}
-            />
+            >
+              <option value="">Sin rubro</option>
+              {subcategoriaOptions.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
           </Field>
         </div>
         <Field label="Descripción corta" hint="Una o dos oraciones.">
@@ -341,12 +365,21 @@ export default function BusinessForm({ categorias = [], initial = null }) {
           />
         </Field>
         <Field label="Localidad">
-          <input
+          <select
             value={form.localidad}
             onChange={(e) => set('localidad', e.target.value)}
             className={inputClass}
-            placeholder="Pilar Centro, Del Viso…"
-          />
+          >
+            <option value="">Elegí una zona</option>
+            {ZONAS_PILAR.map((z) => (
+              <option key={z} value={z}>
+                {z}
+              </option>
+            ))}
+            {form.localidad && !ZONAS_PILAR.includes(form.localidad) ? (
+              <option value={form.localidad}>{form.localidad}</option>
+            ) : null}
+          </select>
         </Field>
         <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Latitud" hint="Opcional, para el mapa">
@@ -403,7 +436,9 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         subtitle={
           form.plan === 'premium'
             ? 'Premium: hasta 6 fotos (1 principal + 5 de galería).'
-            : 'Destacado: una foto principal. La galería es solo Premium.'
+            : form.plan === 'basico'
+              ? 'Básico: una foto para la card del listado. Sin página de perfil.'
+              : 'Destacado: una foto principal. La galería es solo Premium.'
         }
       >
         <ImageUpload
@@ -441,7 +476,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         </Section>
       ) : null}
 
-      <Section title="Plan y pago" subtitle="Todos los negocios pagan para aparecer. No hay plan gratis.">
+      <Section title="Plan y pago" subtitle="Básico es gratis (solo card). Destacado y Premium incluyen perfil propio.">
         {initial?.codigo_resena ? (
           <CodigoResenaField codigo={initial.codigo_resena} />
         ) : null}
@@ -455,6 +490,7 @@ export default function BusinessForm({ categorias = [], initial = null }) {
         <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Plan">
             <select value={form.plan} onChange={(e) => set('plan', e.target.value)} className={inputClass}>
+              <option value="basico">Básico (gratis, sin perfil)</option>
               <option value="destacado">Destacado</option>
               <option value="premium">Premium</option>
             </select>

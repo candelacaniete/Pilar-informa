@@ -30,19 +30,20 @@ export default function TerminosPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="3. Alta de negocios y planes pagos">
+      <LegalSection title="3. Alta de negocios y planes">
         <p className="mb-3 text-sm leading-relaxed text-ink-soft">
           Los negocios que quieran aparecer en la guía deben completar el formulario de alta y elegir
           uno de los planes disponibles (
           <Link href="/planes" className="font-medium text-teal hover:underline">
-            Destacado o Premium
+            Básico, Destacado o Premium
           </Link>
-          ), cuyos precios y beneficios están publicados en el sitio.
+          ), cuyos precios y beneficios están publicados en el sitio. El plan Básico es gratuito y
+          muestra el negocio en el listado de su categoría sin página de perfil propia.
         </p>
         <LegalList
           items={[
-            'El pago se gestiona mediante un plan de suscripción en Mercado Pago, coordinado por WhatsApp.',
-            'Ante la falta de pago, el negocio cuenta con una semana de gracia desde el vencimiento. Pasado ese plazo sin regularizar, su ficha se da de baja de la guía pública.',
+            'El pago de los planes Destacado y Premium se gestiona mediante un plan de suscripción en Mercado Pago, coordinado por WhatsApp.',
+            'Ante la falta de pago de un plan pago, el negocio cuenta con una semana de gracia desde el vencimiento. Pasado ese plazo sin regularizar, su ficha se da de baja de la guía pública.',
             'Los precios pueden actualizarse; los cambios no afectan retroactivamente a períodos ya abonados.',
             'Guía Pilar se reserva el derecho de admisión y permanencia de negocios en la guía, pudiendo rechazar o dar de baja fichas que incumplan estos Términos o contengan información falsa.',
           ]}
