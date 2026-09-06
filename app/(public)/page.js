@@ -25,6 +25,7 @@ import { emptyHomeSlots, getBannerSlot } from '@/lib/banners'
 import BannerSlot from '@/components/public/BannerSlot'
 import { padWithBusinessPlaceholders } from '@/lib/placeholders'
 import { showHomeEventosSection } from '@/lib/contentVisibility'
+import { categoriasConNegocios } from '@/lib/subcategorias'
 import { BRAND, BRAND_TAGLINE, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE } from '@/lib/seo/site'
 import { buildPageMetadata, organizationJsonLd } from '@/lib/seo/metadata'
 
@@ -72,7 +73,7 @@ const discoverCards = [
 ]
 
 export default async function HomePage() {
-  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy, homeBanners, scrape] =
+  const [categorias, noticias, destacados, eventos, promociones, farmaciasHoy, homeBanners, scrape, todosNegocios] =
     await Promise.all([
       getCategorias(),
       getNoticias({ limit: 4 }),
@@ -82,9 +83,10 @@ export default async function HomePage() {
       getFarmaciasTurno(),
       getBannersForMonth({ ubicacion: 'home' }),
       getFarmaciasScrapeStatus(),
+      getNegociosActivos(),
     ])
 
-  const homeCats = categorias.slice(0, 7)
+  const homeCats = categoriasConNegocios(categorias, todosNegocios).slice(0, 7)
   const [featuredNews, ...secondaryNews] = noticias
   const bannerSlots = emptyHomeSlots(homeBanners)
   const destacadosGrid = padWithBusinessPlaceholders(destacados, 3)

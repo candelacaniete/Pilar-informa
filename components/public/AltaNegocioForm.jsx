@@ -3,15 +3,20 @@
 import { useMemo, useState } from 'react'
 import { MessageCircle } from 'lucide-react'
 import { PUBLIC_PLAN_CATALOG, formatPlanPriceArs } from '@/lib/plans'
+import { subcategoriasForSlug } from '@/lib/subcategorias'
+import { ZONAS_PILAR } from '@/lib/zonas'
 import { CONTACT_WHATSAPP_DISPLAY, whatsappUrl } from '@/lib/whatsapp'
 
 const PLANES = [
-  ...PUBLIC_PLAN_CATALOG.map((plan) => ({
-    value: plan.value,
-    label: plan.label,
-    hint: plan.hint,
-    priceLabel: `${formatPlanPriceArs(plan.value)}/mes`,
-  })),
+  ...PUBLIC_PLAN_CATALOG.map((plan) => {
+    const price = formatPlanPriceArs(plan.value)
+    return {
+      value: plan.value,
+      label: plan.label,
+      hint: plan.hint,
+      priceLabel: price === 'Gratis' ? 'Gratis' : `${price}/mes`,
+    }
+  }),
   {
     value: 'consultar',
     label: 'Quiero que me asesoren',
@@ -79,7 +84,19 @@ export default function AltaNegocioForm({ categorias = [] }) {
   })
   const [error, setError] = useState('')
 
+  const categoriaSeleccionada = useMemo(
+    () => categoriasAbiertas.find((c) => c.nombre === form.categoria) || null,
+    [categoriasAbiertas, form.categoria],
+  )
+  const subcategoriasDisponibles = useMemo(
+    () => subcategoriasForSlug(categoriaSeleccionada?.slug),
+    [categoriaSeleccionada],
+  )
+
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
+  const onCategoriaChange = (nombre) => {
+    setForm((prev) => ({ ...prev, categoria: nombre, subcategoria: '' }))
+  }
 
   const onSubmit = (event) => {
     event.preventDefault()
@@ -138,7 +155,7 @@ export default function AltaNegocioForm({ categorias = [] }) {
             <select
               id="alta-categoria"
               value={form.categoria}
-              onChange={(e) => set('categoria', e.target.value)}
+              onChange={(e) => onCategoriaChange(e.target.value)}
               className={inputClass}
               required
             >
@@ -158,13 +175,22 @@ export default function AltaNegocioForm({ categorias = [] }) {
             <label htmlFor="alta-subcategoria" className={labelClass}>
               Rubro / especialidad
             </label>
-            <input
+            <select
               id="alta-subcategoria"
               value={form.subcategoria}
               onChange={(e) => set('subcategoria', e.target.value)}
               className={inputClass}
-              placeholder="Ej: Café & brunch"
-            />
+              disabled={!subcategoriasDisponibles.length}
+            >
+              <option value="">
+                {subcategoriasDisponibles.length ? 'Elegí un rubro' : 'Sin rubros para esta categoría'}
+              </option>
+              {subcategoriasDisponibles.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -200,13 +226,19 @@ export default function AltaNegocioForm({ categorias = [] }) {
             <label htmlFor="alta-localidad" className={labelClass}>
               Localidad
             </label>
-            <input
+            <select
               id="alta-localidad"
               value={form.localidad}
               onChange={(e) => set('localidad', e.target.value)}
               className={inputClass}
-              placeholder="Pilar Centro, Del Viso…"
-            />
+            >
+              <option value="">Elegí una zona</option>
+              {ZONAS_PILAR.map((z) => (
+                <option key={z} value={z}>
+                  {z}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

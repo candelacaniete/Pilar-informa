@@ -27,7 +27,7 @@ import { buildPageMetadata, localBusinessJsonLd } from '@/lib/seo/metadata'
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const negocio = await getNegocioBySlug(slug)
-  if (!negocio) return { title: 'Negocio no encontrado' }
+  if (!negocio || negocio.plan === 'basico') return { title: 'Negocio no encontrado' }
 
   const image = principalFoto(negocio)
   const description =
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }) {
 export default async function NegocioPage({ params }) {
   const { slug } = await params
   const negocio = await getNegocioBySlug(slug)
-  if (!negocio) notFound()
+  if (!negocio || negocio.plan === 'basico') notFound()
 
   const fotos = resolvePremiumGalleryFotos(
     negocio.slug,

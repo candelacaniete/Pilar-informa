@@ -6,6 +6,7 @@ import { getBannersForMonth, getCategorias, getNegociosActivos } from '@/lib/dat
 import { emptyCategoriaSlots, getBannerSlot } from '@/lib/banners'
 import { padWithBusinessPlaceholders } from '@/lib/placeholders'
 import { buildPageMetadata } from '@/lib/seo/metadata'
+import { categoriasConNegocios } from '@/lib/subcategorias'
 
 export const metadata = buildPageMetadata({
   title: 'Guía de comercios, profesionales y servicios en Pilar',
@@ -19,7 +20,8 @@ export default async function GuiaPage({ searchParams }) {
   const q = (params?.q || '').trim()
   const categoriaParam = (params?.categoria || '').trim()
 
-  const [categorias, negocios] = await Promise.all([getCategorias(), getNegociosActivos()])
+  const [categoriasAll, negocios] = await Promise.all([getCategorias(), getNegociosActivos()])
+  const categorias = categoriasConNegocios(categoriasAll, negocios)
 
   const categoriaActiva = categorias.find(
     (c) => c.slug === categoriaParam || c.nombre.toLowerCase() === categoriaParam.toLowerCase(),

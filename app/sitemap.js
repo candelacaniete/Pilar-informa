@@ -6,6 +6,8 @@ import {
   getMascotasAvisosPublicos,
 } from '@/lib/data'
 import { siteUrl } from '@/lib/utils'
+import { hasPublicProfile } from '@/lib/plans'
+import { categoriasConNegocios } from '@/lib/subcategorias'
 
 export default async function sitemap() {
   const base = siteUrl()
@@ -40,14 +42,16 @@ export default async function sitemap() {
     priority: path === '' ? 1 : legalPaths.has(path) ? 0.3 : path === '/sumar-negocio' || path === '/planes' ? 0.7 : 0.8,
   }))
 
-  const categoriaRoutes = categorias.map((c) => ({
+  const categoriasVisibles = categoriasConNegocios(categorias, negocios)
+
+  const categoriaRoutes = categoriasVisibles.map((c) => ({
     url: `${base}/categoria/${c.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.75,
   }))
 
-  const negocioRoutes = negocios.map((n) => ({
+  const negocioRoutes = negocios.filter((n) => hasPublicProfile(n.plan)).map((n) => ({
     url: `${base}/negocio/${n.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',

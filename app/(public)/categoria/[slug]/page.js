@@ -1,11 +1,10 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import BusinessSlot from '@/components/public/BusinessSlot'
-import BannerSlot from '@/components/public/BannerSlot'
+import CategoriaListing from '@/components/public/CategoriaListing'
 import { getBannersForMonth, getCategoriaBySlug, getNegociosActivos } from '@/lib/data'
-import { emptyCategoriaSlots, getBannerSlot } from '@/lib/banners'
-import { padWithBusinessPlaceholders } from '@/lib/placeholders'
+import { emptyCategoriaSlots } from '@/lib/banners'
 import { getCategoryAeo } from '@/lib/seo/categoryCopy'
 import { buildPageMetadata, categoryCollectionJsonLd } from '@/lib/seo/metadata'
 
@@ -36,11 +35,6 @@ export default async function CategoriaPage({ params }) {
   ])
   const bannerSlots = categoria.cerrada ? [] : emptyCategoriaSlots(banners)
   const showBanners = bannerSlots.length > 0
-  const gridTarget = negocios.length >= 3 ? negocios.length : negocios.length > 0 ? 3 : 0
-  const gridItems = padWithBusinessPlaceholders(negocios, gridTarget)
-  const mid = Math.ceil(gridItems.length / 2)
-  const firstHalf = gridItems.slice(0, mid)
-  const secondHalf = gridItems.slice(mid)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
@@ -89,50 +83,14 @@ export default async function CategoriaPage({ params }) {
         ) : null}
       </div>
 
-      {showBanners ? (
-        <div className="mt-8">
-          <BannerSlot {...getBannerSlot(bannerSlots, 1)} />
-        </div>
-      ) : null}
-
-      {negocios.length > 0 ? (
-        <>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {firstHalf.map((item) => (
-              <BusinessSlot key={item.kind === 'business' ? item.business.id : item.key} item={item} />
-            ))}
-          </div>
-
-          {showBanners ? (
-            <div className="my-8">
-              <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
-            </div>
-          ) : null}
-
-          {secondHalf.length ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {secondHalf.map((item) => (
-                <BusinessSlot key={item.kind === 'business' ? item.business.id : item.key} item={item} />
-              ))}
-            </div>
-          ) : null}
-        </>
-      ) : (
-        <>
-          {showBanners ? (
-            <div className="mt-8">
-              <BannerSlot {...getBannerSlot(bannerSlots, 2)} />
-            </div>
-          ) : null}
-          <div className="mt-10 rounded-2xl border border-dashed border-line bg-white/60 px-6 py-16 text-center">
-            <p className="font-display text-2xl font-semibold text-ink">Todavía no hay negocios</p>
-            <p className="mt-2 text-sm text-muted">Volvé pronto o explorá otra categoría.</p>
-            <Link href="/guia" className="mt-6 inline-flex text-sm font-semibold text-teal">
-              Ir a la guía
-            </Link>
-          </div>
-        </>
-      )}
+      <Suspense fallback={<div className="mt-10 h-40 animate-pulse rounded-2xl bg-paper-deep/60" />}>
+        <CategoriaListing
+          categoriaSlug={slug}
+          negocios={negocios}
+          bannerSlots={bannerSlots}
+          showBanners={showBanners}
+        />
+      </Suspense>
     </div>
   )
 }

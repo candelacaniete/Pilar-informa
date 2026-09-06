@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import { MapPin, MessageCircle, Star } from 'lucide-react'
+import ContactClickLink from '@/components/public/ContactClickLink'
+import { hasPublicProfile } from '@/lib/plans'
 import { principalFoto } from '@/lib/utils'
 
 export default function BusinessCard({ business }) {
   const image = principalFoto(business)
   const wa = (business.whatsapp || '').replace(/\D/g, '')
+  const showProfile = hasPublicProfile(business.plan)
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line/80 bg-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:shadow-lift">
@@ -56,22 +59,28 @@ export default function BusinessCard({ business }) {
         </p>
 
         <div className="mt-5 flex gap-2">
-          <Link
-            href={`/negocio/${business.slug}`}
-            className="inline-flex flex-1 items-center justify-center rounded-xl bg-ink px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-soft"
-          >
-            Ver perfil
-          </Link>
+          {showProfile ? (
+            <Link
+              href={`/negocio/${business.slug}`}
+              className="inline-flex flex-1 items-center justify-center rounded-xl bg-ink px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-soft"
+            >
+              Ver perfil
+            </Link>
+          ) : null}
           {wa ? (
-            <a
+            <ContactClickLink
+              negocioId={business.id}
+              tipo="whatsapp"
               href={`https://wa.me/${wa}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-line px-3 py-2.5 text-sm font-semibold text-ink transition hover:border-teal/40 hover:bg-teal-soft hover:text-teal-dark"
+              className={`inline-flex items-center justify-center gap-1.5 rounded-xl border border-line px-3 py-2.5 text-sm font-semibold text-ink transition hover:border-teal/40 hover:bg-teal-soft hover:text-teal-dark ${
+                showProfile
+                  ? ''
+                  : 'flex-1 border-transparent bg-ink text-white hover:bg-ink-soft hover:text-white'
+              }`}
             >
               <MessageCircle className="h-4 w-4" />
               WhatsApp
-            </a>
+            </ContactClickLink>
           ) : null}
         </div>
       </div>

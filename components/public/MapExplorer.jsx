@@ -201,12 +201,14 @@ export default function MapExplorer({ businesses = [] }) {
                   ) : null}
                 </div>
                 <p className="mt-2 text-sm text-muted">{selectedBusiness.localidad || 'Pilar'}</p>
-                <Link
-                  href={`/negocio/${selectedBusiness.slug}`}
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-teal px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-dark"
-                >
-                  Ver perfil
-                </Link>
+                {selectedBusiness.plan !== 'basico' ? (
+                  <Link
+                    href={`/negocio/${selectedBusiness.slug}`}
+                    className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-teal px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-dark"
+                  >
+                    Ver perfil
+                  </Link>
+                ) : null}
               </div>
             </div>
           </div>
