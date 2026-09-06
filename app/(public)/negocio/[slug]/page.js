@@ -14,6 +14,7 @@ import {
 import BusinessCard from '@/components/public/BusinessCard'
 import PremiumGallery from '@/components/public/PremiumGallery'
 import PremiumInstagramFeed from '@/components/public/PremiumInstagramFeed'
+import ContactClickLink from '@/components/public/ContactClickLink'
 import ResenasSection from '@/components/public/ResenasSection'
 import ViewTracker from '@/components/public/ViewTracker'
 import { getNegocioBySlug, getNegociosActivos, getResenasPublicas } from '@/lib/data'
@@ -168,15 +169,15 @@ export default async function NegocioPage({ params }) {
 
             <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto md:flex-col">
               {wa ? (
-                <a
+                <ContactClickLink
+                  negocioId={negocio.id}
+                  tipo="whatsapp"
                   href={`https://wa.me/${wa}`}
-                  target="_blank"
-                  rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-teal-dark"
                 >
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp
-                </a>
+                </ContactClickLink>
               ) : null}
               <a
                 href={mapsUrl}
@@ -222,41 +223,58 @@ export default async function NegocioPage({ params }) {
             <section className="rounded-2xl border border-line/70 bg-paper/70 p-5">
               <h2 className="font-display text-xl font-semibold text-ink">Cómo contactarlos</h2>
               {wa ? (
-                <a
+                <ContactClickLink
+                  negocioId={negocio.id}
+                  tipo="whatsapp"
                   href={`https://wa.me/${wa}`}
-                  target="_blank"
-                  rel="noreferrer"
                   className="mt-3 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
                 >
                   <MessageCircle className="h-4 w-4" />
                   {negocio.whatsapp}
-                </a>
+                </ContactClickLink>
               ) : (
                 <p className="mt-3 text-sm text-muted">WhatsApp no informado</p>
               )}
               {negocio.web ? (
-                <a
+                <ContactClickLink
+                  negocioId={negocio.id}
+                  tipo="web"
                   href={negocio.web.startsWith('http') ? negocio.web : `https://${negocio.web}`}
-                  target="_blank"
-                  rel="noreferrer"
                   className="mt-2 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
                 >
                   <ExternalLink className="h-4 w-4" />
                   {negocio.web}
-                </a>
+                </ContactClickLink>
               ) : (
                 <p className="mt-2 text-sm text-muted">Sin sitio web</p>
               )}
               {instagramUrl ? (
-                <a
+                <ContactClickLink
+                  negocioId={negocio.id}
+                  tipo="instagram"
                   href={instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
                   className="mt-2 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
                 >
                   <Instagram className="h-4 w-4" />
-                  {negocio.instagram?.startsWith('http') ? 'Instagram' : `@${negocio.instagram.replace(/^@/, '')}`}
-                </a>
+                  {negocio.instagram?.startsWith('http')
+                    ? 'Instagram'
+                    : `@${negocio.instagram.replace(/^@/, '')}`}
+                </ContactClickLink>
+              ) : null}
+              {negocio.facebook ? (
+                <ContactClickLink
+                  negocioId={negocio.id}
+                  tipo="facebook"
+                  href={
+                    negocio.facebook.startsWith('http')
+                      ? negocio.facebook
+                      : `https://facebook.com/${String(negocio.facebook).replace(/^@/, '')}`
+                  }
+                  className="mt-2 flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-teal"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Facebook
+                </ContactClickLink>
               ) : null}
             </section>
           </div>
