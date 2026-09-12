@@ -1,0 +1,66 @@
+{
+  "id": "guia-pilar",
+  "name": "Guía Pilar",
+  "product": "Guía comercial digital local de Pilar (BA)",
+  "siteUrl": "https://guia-pilar.com",
+  "locale": "es-AR",
+  "geo": {
+    "label": "Pilar, Buenos Aires, Argentina",
+    "lat": -34.4587,
+    "lng": -58.9142,
+    "radiusMeters": 12000,
+    "includeLocalidades": [
+      "Pilar",
+      "Del Viso",
+      "Zelaya",
+      "Derqui",
+      "Manzanares",
+      "La Lonja",
+      "Villa Rosa",
+      "Fátima",
+      "Manuel Alberti",
+      "Presidente Derqui"
+    ]
+  },
+  "queries": [
+    "restaurante en Pilar Buenos Aires",
+    "peluquería en Pilar Buenos Aires",
+    "gimnasio en Pilar Buenos Aires",
+    "veterinaria en Pilar Buenos Aires",
+    "taller mecánico en Pilar Buenos Aires",
+    "odontólogo en Pilar Buenos Aires",
+    "inmobiliaria en Pilar Buenos Aires",
+    "panadería en Pilar Buenos Aires",
+    "café en Pilar Buenos Aires",
+    "estudio contable en Pilar Buenos Aires",
+    "tienda de ropa en Pilar Buenos Aires",
+    "ferretería en Pilar Buenos Aires"
+  ],
+  "excludedTypes": ["school", "university", "church", "mosque", "synagogue", "cemetery", "local_government_office", "police", "hospital"],
+  "scoring": {
+    "weights": {
+      "hasMobile": 25,
+      "hasAnyPhone": 10,
+      "hasWebsite": 10,
+      "hasInstagramHint": 8,
+      "ratingGood": 12,
+      "reviewVolume": 10,
+      "inTargetLocalidad": 15,
+      "ownerNameFound": 10
+    },
+    "thresholds": {
+      "hot": 70,
+      "warm": 45
+    }
+  },
+  "offer": {
+    "planHint": "Destacado / Premium",
+    "valueProp": "aparecer en la guía local que vecinos de Pilar usan para elegir dónde comprar y contratar",
+    "cta": "te armo la ficha gratis para que la veas en 2 minutos"
+  },
+  "message": {
+    "channelPreferred": "whatsapp",
+    "tone": "cercano, concreto, sin humo, 1 CTA",
+    "maxChars": 420
+  }
+}
