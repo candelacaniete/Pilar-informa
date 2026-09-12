@@ -33,6 +33,10 @@ yarn-error.log*
 .env
 .env*.local
 
+# prospección B2B — exports con teléfonos/leads
+/tools/b2b-prospecting/exports/*
+!/tools/b2b-prospecting/exports/.gitignore
+
 # vercel
 .vercel
 

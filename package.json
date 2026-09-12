@@ -9,7 +9,10 @@
     "start": "next start",
     "lint": "next lint",
     "test:farmacias": "node --test lib/farmacias/*.test.js",
-    "test:pilar": "node --test lib/pilar/*.test.js"
+    "test:pilar": "node --test lib/pilar/*.test.js",
+    "test:prospect": "node --test tools/b2b-prospecting/src/*.test.js",
+    "prospect:dry": "node tools/b2b-prospecting/src/cli.js --client guia-pilar --dry-run --no-enrich",
+    "prospect": "node tools/b2b-prospecting/src/cli.js --client guia-pilar"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
