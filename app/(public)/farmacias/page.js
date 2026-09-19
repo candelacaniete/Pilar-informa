@@ -28,13 +28,14 @@ export default async function FarmaciasPage() {
   const today = todayInPilar()
   const { fromDate, toDate } = weekRange()
   const [hoy, semana, scrape, directorio] = await Promise.all([
-    getFarmaciasTurno({ fromDate: today, toDate: today }),
+    getFarmaciasTurno({ activosAhora: true }),
     getFarmaciasTurno({ fromDate, toDate }),
     getFarmaciasScrapeStatus(),
     getFarmaciasDirectorio(),
   ])
 
-  const restoSemana = semana.filter((f) => f.fecha !== today)
+  const hoyIds = new Set(hoy.map((f) => f.id))
+  const restoSemana = semana.filter((f) => !hoyIds.has(f.id))
   const porLocalidad = groupByLocalidad(directorio)
 
   return (

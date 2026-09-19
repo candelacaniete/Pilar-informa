@@ -80,7 +80,7 @@ export default async function HomePage() {
       getNegociosActivos({ destacados: true, limit: 3 }),
       getEventos({ fromToday: true, limit: 3 }),
       getPromociones({ limit: 3 }),
-      getFarmaciasTurno(),
+      getFarmaciasTurno({ activosAhora: true }),
       getBannersForMonth({ ubicacion: 'home' }),
       getFarmaciasScrapeStatus(),
       getNegociosActivos(),
